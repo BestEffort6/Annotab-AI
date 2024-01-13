@@ -11,7 +11,7 @@ describe('Index page', () => {
       render(
         <NextIntlClientProvider locale="en" messages={messages}>
           <Index />
-        </NextIntlClientProvider>,
+        </NextIntlClientProvider>
       );
 
       const heading = screen.getByRole('heading', {

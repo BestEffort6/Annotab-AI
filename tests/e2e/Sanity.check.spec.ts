@@ -11,7 +11,7 @@ const targetUrl = process.env.ENVIRONMENT_URL || process.env.PRODUCTION_URL;
 
 if (!targetUrl) {
   throw new Error(
-    'Please set the ENVIRONMENT_URL or PRODUCTION_URL environment variable',
+    'Please set the ENVIRONMENT_URL or PRODUCTION_URL environment variable'
   );
 }
 
@@ -23,7 +23,7 @@ test.describe('Sanity', () => {
       await expect(
         page.getByRole('heading', {
           name: 'Boilerplate code for your Nextjs project with Tailwind CSS',
-        }),
+        })
       ).toBeVisible();
     });
 
@@ -34,7 +34,7 @@ test.describe('Sanity', () => {
       await expect(page).toHaveURL(/about$/);
 
       await expect(
-        page.getByText('Welcome to our About page', { exact: false }),
+        page.getByText('Welcome to our About page', { exact: false })
       ).toBeVisible();
     });
 
@@ -47,7 +47,7 @@ test.describe('Sanity', () => {
       await expect(
         page.locator('main').getByRole('link', {
           name: /^Portfolio/,
-        }),
+        })
       ).toHaveCount(6);
     });
   });
