@@ -29,6 +29,7 @@
         "project": "./tsconfig.json"
       },
       "rules": {
+        "no-param-reassign": "off", // Allow to reassign parameters, it's useful for React Hooks
         "prettier/prettier": ["error"], // Avoid conflict rule between Prettier and Airbnb Eslint
         "import/extensions": "off", // Avoid missing file extension errors, TypeScript already provides a similar feature
         "react/function-component-definition": "off", // Disable Airbnb's specific function type

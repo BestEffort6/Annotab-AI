@@ -1,4 +1,3 @@
-import { UserProfile } from '@clerk/nextjs';
 import { getTranslations } from 'next-intl/server';
 
 export async function generateMetadata(props: { params: { locale: string } }) {
@@ -14,7 +13,7 @@ export async function generateMetadata(props: { params: { locale: string } }) {
 
 const UserProfilePage = () => (
   <div className="my-6 -ml-16">
-    <UserProfile />
+    <h1 className="text-3xl font-bold">User Profile</h1>
   </div>
 );
 
