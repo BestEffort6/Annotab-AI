@@ -11,7 +11,7 @@ describe('About page', () => {
       render(
         <NextIntlClientProvider locale="en" messages={messages}>
           <About />
-        </NextIntlClientProvider>,
+        </NextIntlClientProvider>
       );
 
       const paragraph = screen.getByText(/Welcome to our About page/);

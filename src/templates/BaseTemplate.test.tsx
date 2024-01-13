@@ -21,7 +21,7 @@ describe('Base template', () => {
           >
             {null}
           </BaseTemplate>
-        </NextIntlClientProvider>,
+        </NextIntlClientProvider>
       );
 
       const menuItemList = screen.getAllByRole('listitem');
@@ -33,7 +33,7 @@ describe('Base template', () => {
       render(
         <NextIntlClientProvider locale="en" messages={messages}>
           <BaseTemplate leftNav={<li>1</li>}>{null}</BaseTemplate>
-        </NextIntlClientProvider>,
+        </NextIntlClientProvider>
       );
 
       const copyrightSection = screen.getByText(/© Copyright/);
@@ -47,7 +47,7 @@ describe('Base template', () => {
        */
       expect(copyrightLink).toHaveAttribute(
         'href',
-        'https://creativedesignsguru.com',
+        'https://creativedesignsguru.com'
       );
     });
   });
