@@ -1,31 +1,21 @@
 'use client';
 
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { useFormik } from 'formik';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import * as Yup from 'yup';
+import type { z } from 'zod';
 
 import useWindowSize from '@/libs/hooks/use-window-size';
+import { SignUpValidation } from '@/validations/AuthValidation';
 
 import Loading from '../../loading';
 import PolicyModal from '../../policy-modal';
 import toast from '../../toast';
-
-interface RegisterForm {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  confirmPassword: string;
-  isAcceptedTermsCond: boolean;
-  isAcceptedPrivacy: boolean;
-  isAcceptedDataProcAdde: boolean;
-  isAcceptedOverEighteen: boolean;
-}
 
 type SignUpFormProps = {
   documents: [];
@@ -93,79 +83,43 @@ const SignUpForm = ({ documents }: SignUpFormProps) => {
     setIsOpen(true);
   };
 
-  const formik = useFormik<RegisterForm>({
-    initialValues: {
-      email: '',
-      password: '',
-      firstName: '',
-      lastName: '',
-      confirmPassword: '',
-      isAcceptedTermsCond: false,
-      isAcceptedPrivacy: false,
-      isAcceptedDataProcAdde: false,
-      isAcceptedOverEighteen: false,
-    },
-    validationSchema: Yup.object().shape({
-      email: Yup.string().email().required('Please enter email address'),
-      password: Yup.string()
-        .matches(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/,
-          'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character'
-        )
-        .required('Please enter password'),
-      firstName: Yup.string().required('Please enter first name'),
-      lastName: Yup.string().required('Please enter last name'),
-      confirmPassword: Yup.string().oneOf(
-        [Yup.ref('password'), undefined],
-        'Passwords must match'
-      ),
-      isAcceptedTermsCond: Yup.boolean().oneOf(
-        [true],
-        'This field must be checked'
-      ),
-      isAcceptedPrivacy: Yup.boolean().oneOf(
-        [true],
-        'This field must be checked'
-      ),
-      isAcceptedDataProcAdde: Yup.boolean().oneOf(
-        [true],
-        'This field must be checked'
-      ),
-      isAcceptedOverEighteen: Yup.boolean().oneOf(
-        [true],
-        'This field must be checked'
-      ),
-    }),
-    onSubmit: (values: RegisterForm) => {
-      setLoading(true);
-      fetch('/api/auth/sign-up', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<z.infer<typeof SignUpValidation>>({
+    resolver: zodResolver(SignUpValidation),
+  });
+
+  const handleRegister = handleSubmit(async (data) => {
+    setLoading(true);
+    fetch('/api/auth/sign-up', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(() => {
+        router.push('/sign-in');
+        toast({ type: 'success', content: 'Register successfully' });
       })
-        .then(() => {
-          router.push('/sign-in');
-          toast({ type: 'success', content: 'Register successfully' });
-        })
-        .catch((err) => {
-          if (err.response.status === 409) {
-            toast({
-              type: 'error',
-              content: 'User already exists with this email address',
-            });
-          } else {
-            toast({
-              type: 'error',
-              content: err.response.data.message,
-            });
-          }
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    },
+      .catch((err) => {
+        if (err.response.status === 409) {
+          toast({
+            type: 'error',
+            content: 'User already exists with this email address',
+          });
+        } else {
+          toast({
+            type: 'error',
+            content: err.response.data.message,
+          });
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   });
 
   return (
@@ -200,51 +154,51 @@ const SignUpForm = ({ documents }: SignUpFormProps) => {
                 Sign Up
               </p>
               <form
-                onSubmit={formik.handleSubmit}
+                onSubmit={handleRegister}
                 className="flex w-full flex-col gap-y-4"
               >
                 <div className="flex flex-col">
                   <input
-                    onChange={formik.handleChange}
+                    {...register('firstName')}
                     type="text"
                     id="firstName"
                     name="firstName"
                     placeholder="First Name"
                     className="w-full rounded-full bg-light-pastel-purple px-10 py-3 text-white shadow-md placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-navy-blue focus:ring-opacity-50"
                   />
-                  {formik.errors.firstName && (
+                  {errors.firstName?.message && (
                     <div className="text-sm text-red-500">
-                      {formik.errors.firstName}
+                      {errors.firstName.message.toString()}
                     </div>
                   )}
                 </div>
                 <div className="flex flex-col">
                   <input
-                    onChange={formik.handleChange}
+                    {...register('lastName')}
                     type="text"
                     id="lastName"
                     name="lastName"
                     placeholder="Last Name"
                     className="w-full rounded-full bg-light-pastel-purple px-10 py-3 text-white shadow-md placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-navy-blue focus:ring-opacity-50"
                   />
-                  {formik.errors.lastName && (
+                  {errors.lastName?.message && (
                     <div className="text-sm text-red-500">
-                      {formik.errors.lastName}
+                      {errors.lastName.message.toString()}
                     </div>
                   )}
                 </div>
                 <div className="block">
                   <input
-                    onChange={formik.handleChange}
+                    {...register('email')}
                     type="email"
                     id="email"
                     name="email"
                     placeholder="Email"
                     className="w-full rounded-full bg-light-pastel-purple px-10 py-3 text-white shadow-md placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-navy-blue focus:ring-opacity-50"
                   />
-                  {formik.errors.email && (
+                  {errors.email?.message && (
                     <div className="text-sm text-red-500">
-                      {formik.errors.email}
+                      {errors.email.message.toString()}
                     </div>
                   )}
                 </div>
@@ -252,7 +206,7 @@ const SignUpForm = ({ documents }: SignUpFormProps) => {
                 <div className="block">
                   <div className="relative">
                     <input
-                      onChange={formik.handleChange}
+                      {...register('password')}
                       type={showPass === false ? 'password' : 'text'}
                       placeholder="Password"
                       name="password"
@@ -275,16 +229,16 @@ const SignUpForm = ({ documents }: SignUpFormProps) => {
                       )}
                     </div>
                   </div>
-                  {formik.errors.password && (
+                  {errors.password?.message && (
                     <div className="text-sm text-red-500">
-                      {formik.errors.password}
+                      {errors.password.message.toString()}
                     </div>
                   )}
                 </div>
                 <div className="block">
                   <div className="relative">
                     <input
-                      onChange={formik.handleChange}
+                      {...register('confirmPassword')}
                       id="confirmPassword"
                       type={showPass === false ? 'password' : 'text'}
                       minLength={6}
@@ -308,9 +262,9 @@ const SignUpForm = ({ documents }: SignUpFormProps) => {
                       )}
                     </div>
                   </div>
-                  {formik.errors.confirmPassword && (
+                  {errors.confirmPassword?.message && (
                     <div className="text-sm text-red-500">
-                      {formik.errors.confirmPassword}
+                      {errors.confirmPassword.message.toString()}
                     </div>
                   )}
                 </div>
@@ -320,11 +274,10 @@ const SignUpForm = ({ documents }: SignUpFormProps) => {
                   </p>
                   <div className="flex flex-row items-start gap-3 text-start">
                     <input
+                      {...register('isAcceptedTermsCond')}
                       type="checkbox"
                       className="bg-grey-700 h-5 w-5 flex-shrink-0 rounded-md border-2 border-grey-purple-white/70 accent-light-pastel-purple"
                       name="isAcceptedTermsCond"
-                      checked={formik.values.isAcceptedTermsCond}
-                      onChange={formik.handleChange}
                     />
                     <button
                       type="button"
@@ -336,11 +289,10 @@ const SignUpForm = ({ documents }: SignUpFormProps) => {
                   </div>
                   <div className="flex flex-row items-start gap-3 text-start">
                     <input
+                      {...register('isAcceptedPrivacy')}
                       type="checkbox"
                       className="bg-grey-700 h-5 w-5 flex-shrink-0 rounded-md border-2 border-grey-purple-white/70 accent-light-pastel-purple"
                       name="isAcceptedPrivacy"
-                      checked={formik.values.isAcceptedPrivacy}
-                      onChange={formik.handleChange}
                     />
                     <button
                       type="button"
@@ -352,11 +304,10 @@ const SignUpForm = ({ documents }: SignUpFormProps) => {
                   </div>
                   <div className="flex flex-row items-start gap-3 text-start">
                     <input
+                      {...register('isAcceptedDataProcAdde')}
                       type="checkbox"
                       className="bg-grey-700 h-5 w-5 flex-shrink-0 rounded-md border-2 border-grey-purple-white/70 accent-light-pastel-purple"
                       name="isAcceptedDataProcAdde"
-                      checked={formik.values.isAcceptedDataProcAdde}
-                      onChange={formik.handleChange}
                     />
                     <button
                       type="button"
@@ -368,11 +319,10 @@ const SignUpForm = ({ documents }: SignUpFormProps) => {
                   </div>
                   <div className="flex items-center gap-3">
                     <input
+                      {...register('isAcceptedOverEighteen')}
                       type="checkbox"
                       className="bg-grey-700 h-5 w-5 flex-shrink-0 rounded-md border-2 border-grey-purple-white/70 accent-light-pastel-purple"
                       name="isAcceptedOverEighteen"
-                      checked={formik.values.isAcceptedOverEighteen}
-                      onChange={formik.handleChange}
                     />
                     <p className="cursor-pointer">
                       I&apos;m over&nbsp;
@@ -386,7 +336,7 @@ const SignUpForm = ({ documents }: SignUpFormProps) => {
                   <div className="absolute -inset-1 rounded-lg bg-gradient-to-tl from-neon-blue from-30% via-chili-red via-60% to-corn-flower-blue to-20% opacity-40 blur" />
                   <button
                     type="submit"
-                    disabled={!formik.isValid}
+                    disabled={loading}
                     className="relative w-full rounded-full bg-purple-navy-blue py-3 text-transparent shadow-md hover:bg-purple-navy-blue/80 focus:bg-purple-navy-blue/70 focus:outline-none"
                   >
                     <p className="bg-gradient-to-r from-neon-blue from-40% to-purple-pink to-60% bg-clip-text text-base font-normal">

@@ -1,23 +1,20 @@
 'use client';
 
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { useFormik } from 'formik';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import * as Yup from 'yup';
+import type { z } from 'zod';
 
 import useWindowSize from '@/libs/hooks/use-window-size';
+import { SignInValidation } from '@/validations/AuthValidation';
 
 import Loading from '../../loading';
-
-interface LoginForm {
-  email: string;
-  password: string;
-}
 
 const SignInForm = () => {
   const router = useRouter();
@@ -29,30 +26,23 @@ const SignInForm = () => {
     setOpen(!open);
   };
 
-  const formik = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-    },
-    validationSchema: Yup.object().shape({
-      email: Yup.string().required(
-        'Please enter your username or email address'
-      ),
-    }),
-    onSubmit: async (values: LoginForm) => {
-      setLoading(true);
-      signIn('credentials', {
-        email: values.email,
-        password: values.password,
-        redirect: false,
+  const { handleSubmit, register } = useForm<z.infer<typeof SignInValidation>>({
+    resolver: zodResolver(SignInValidation),
+  });
+
+  const handleLogin = handleSubmit(async (values) => {
+    setLoading(true);
+    signIn('credentials', {
+      email: values.email,
+      password: values.password,
+      redirect: false,
+    })
+      .then(() => {
+        router.push('/');
       })
-        .then(() => {
-          router.push('/');
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    },
+      .finally(() => {
+        setLoading(false);
+      });
   });
 
   return (
@@ -86,11 +76,11 @@ const SignInForm = () => {
               Sign In
             </p>
             <form
-              onSubmit={formik.handleSubmit}
+              onSubmit={handleLogin}
               className="flex w-full flex-col gap-y-4"
             >
               <input
-                onChange={formik.handleChange}
+                {...register('email')}
                 type="email"
                 id="email"
                 name="email"
@@ -99,7 +89,7 @@ const SignInForm = () => {
               />
               <div className="relative">
                 <input
-                  onChange={formik.handleChange}
+                  {...register('password')}
                   type={open === false ? 'password' : 'text'}
                   placeholder="Password"
                   name="password"
