@@ -2,10 +2,8 @@
   "name": "next-js-boilerplate",
   "version": "3.36.0",
   "scripts": {
-    "dev:spotlight": "spotlight-sidecar",
-    "dev:next": "next dev",
-    "dev": "run-p dev:*",
-    "build": "npm run db:migrate && next build",
+    "dev": "next dev -p 8000",
+    "build": "next build",
     "start": "next start",
     "build-stats": "cross-env ANALYZE=true npm run build",
     "clean": "rimraf .next .swc out coverage",
@@ -24,22 +22,26 @@
     "postbuild": "next-sitemap"
   },
   "dependencies": {
-    "@clerk/localizations": "^1.26.13",
-    "@clerk/nextjs": "^4.29.1",
+    "@headlessui/react": "^1.7.18",
+    "@heroicons/react": "^2.1.1",
     "@hookform/resolvers": "^3.3.3",
-    "@libsql/client": "^0.3.6",
-    "@sentry/nextjs": "^7.91.0",
-    "@spotlightjs/spotlight": "^1.2.6",
     "@t3-oss/env-nextjs": "^0.7.1",
-    "checkly": "^4.5.2",
-    "drizzle-orm": "^0.29.2",
+    "clsx": "^2.1.0",
+    "dayjs": "^1.11.10",
+    "formik": "^2.4.5",
+    "framer-motion": "^10.18.0",
     "next": "^14.0.4",
+    "next-auth": "^4.24.5",
     "next-intl": "^3.4.0",
     "next-sitemap": "^4.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.49.2",
+    "react-lazy-load-image-component": "^1.6.0",
+    "react-pdf": "^7.7.0",
+    "react-toastify": "^9.1.3",
     "sharp": "^0.33.1",
+    "yup": "^1.3.3",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -66,6 +68,7 @@
     "@types/jest": "^29.5.11",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
+    "@types/react-lazy-load-image-component": "^1.6.3",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
     "autoprefixer": "^10.4.16",
@@ -73,7 +76,6 @@
     "cross-env": "^7.0.3",
     "cssnano": "^6.0.2",
     "dotenv-cli": "^7.3.0",
-    "drizzle-kit": "^0.20.9",
     "encoding": "^0.1.13",
     "eslint": "^8.56.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -91,7 +93,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-storybook": "^0.6.15",
-    "eslint-plugin-tailwindcss": "^3.13.1",
     "eslint-plugin-testing-library": "^6.2.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "http-server": "^14.1.1",
@@ -103,6 +104,7 @@
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.32",
     "prettier": "^3.1.1",
+    "prettier-plugin-tailwindcss": "^0.5.11",
     "rimraf": "^5.0.5",
     "semantic-release": "^22.0.12",
     "start-server-and-test": "^2.0.3",
@@ -134,5 +136,5 @@
       "@semantic-release/github"
     ]
   },
-  "author": "Ixartz (https://github.com/ixartz)"
+  "author": "Nam Nguyen (https://github.com/xSavior-of-Godx)"
 }
