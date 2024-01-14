@@ -1,0 +1,16 @@
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.291 9.75977H18.416" stroke="#F5F5F9" stroke-width="1.5"/>
+<mask id="path-2-inside-1_566_119032" fill="white">
+<rect x="1" y="0.259766" width="11.0833" height="4.75" rx="1"/>
+</mask>
+<rect x="1" y="0.259766" width="11.0833" height="4.75" rx="1" stroke="#F5F5F9" stroke-width="3" mask="url(#path-2-inside-1_566_119032)"/>
+<mask id="path-3-inside-2_566_119032" fill="white">
+<rect x="1" y="6.59326" width="11.0833" height="6.33333" rx="1"/>
+</mask>
+<rect x="1" y="6.59326" width="11.0833" height="6.33333" rx="1" stroke="#F5F5F9" stroke-width="3" mask="url(#path-3-inside-2_566_119032)"/>
+<mask id="path-4-inside-3_566_119032" fill="white">
+<rect x="1" y="14.5098" width="11.0833" height="4.75" rx="1"/>
+</mask>
+<rect x="1" y="14.5098" width="11.0833" height="4.75" rx="1" stroke="#F5F5F9" stroke-width="3" mask="url(#path-4-inside-3_566_119032)"/>
+<path d="M11.2917 2.63477H17.4167C17.969 2.63477 18.4167 3.08248 18.4167 3.63477V15.8848C18.4167 16.4371 17.969 16.8848 17.4167 16.8848H10.5" stroke="#F5F5F9" stroke-width="1.5"/>
+</svg>

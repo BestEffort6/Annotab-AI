@@ -6,20 +6,26 @@
     "plugin:prettier/recommended"
   ],
   "rules": {
-    "prettier/prettier": ["error"] // Avoid conflict rule between Prettier and Airbnb Eslint
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto",
+        "trailingComma": "es5",
+        "semi": true,
+        "singleQuote": true,
+        "tabWidth": 2,
+        "plugins": ["prettier-plugin-tailwindcss"],
+        "tailwindConfig": "./tailwind.config.ts",
+        "tailwindFunctions": ["clsx"]
+      }
+    ] // Avoid conflict rule between Prettier and Airbnb Eslint
   },
   "overrides": [
     // Configuration for TypeScript files
     {
       "files": ["**/*.ts", "**/*.tsx"],
-      "plugins": [
-        "@typescript-eslint",
-        "unused-imports",
-        "tailwindcss",
-        "simple-import-sort"
-      ],
+      "plugins": ["@typescript-eslint", "unused-imports", "simple-import-sort"],
       "extends": [
-        "plugin:tailwindcss/recommended",
         "airbnb",
         "airbnb-typescript",
         "next/core-web-vitals",
@@ -29,8 +35,22 @@
         "project": "./tsconfig.json"
       },
       "rules": {
+        "no-nested-ternary": "off", // Allow nested ternary, it's useful for React Hooks
+        "@typescript-eslint/no-shadow": "off", // Allow to shadow variables, it's useful for React Hooks
         "no-param-reassign": "off", // Allow to reassign parameters, it's useful for React Hooks
-        "prettier/prettier": ["error"], // Avoid conflict rule between Prettier and Airbnb Eslint
+        "prettier/prettier": [
+          "error",
+          {
+            "endOfLine": "auto",
+            "trailingComma": "es5",
+            "semi": true,
+            "singleQuote": true,
+            "tabWidth": 2,
+            "plugins": ["prettier-plugin-tailwindcss"],
+            "tailwindConfig": "./tailwind.config.ts",
+            "tailwindFunctions": ["clsx"]
+          }
+        ], // Avoid conflict rule between Prettier and Airbnb Eslint
         "import/extensions": "off", // Avoid missing file extension errors, TypeScript already provides a similar feature
         "react/function-component-definition": "off", // Disable Airbnb's specific function type
         "react/destructuring-assignment": "off", // Vscode doesn't support automatically destructuring, it's a pain to add a new variable
