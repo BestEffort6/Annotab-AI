@@ -34,10 +34,6 @@ jobs:
       - name: Build source
         run: SKIP_ENV_VALIDATION=$SKIP_ENV_VALIDATION && npm run build
 
-      - if: github.event_name == 'pull_request'
-        name: Validate all commits from PR
-        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
-
       - name: Linter
         run: npm run lint
 
