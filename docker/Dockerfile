@@ -12,6 +12,8 @@ RUN apk add --no-cache git \
 # Build DEV
 FROM node:18-alpine as build
 
+ENV SKIP_ENV_VALIDATION true
+
 WORKDIR /app
 
 COPY --from=base /app/node_modules ./node_modules
