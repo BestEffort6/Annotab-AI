@@ -27,4 +27,6 @@ export const Env = createEnv({
     CMS_API_URL: process.env.CMS_API_URL,
     CMS_API_KEY: process.env.CMS_API_KEY,
   },
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
+  emptyStringAsUndefined: true,
 });

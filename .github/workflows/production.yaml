@@ -29,7 +29,7 @@ jobs:
         run: npm ci
 
       - name: Build source
-        run: npm run build
+        run: SKIP_ENV_VALIDATION=$SKIP_ENV_VALIDATION && npm run build
 
       - if: github.event_name == 'pull_request'
         name: Validate all commits from PR
