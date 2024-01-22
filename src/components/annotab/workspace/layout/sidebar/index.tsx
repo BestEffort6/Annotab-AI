@@ -15,35 +15,6 @@ const WorkspaceSidebar = () => {
   const handleOpen = () => {
     setIsOpen(!isOpen);
   };
-  const menuItemsTop = [
-    {
-      value: 'Dataset',
-      link: '/',
-      src: '/images/svg/icon/menu-bar/icon-dataset-darknavyblue-light.svg',
-      srcActive:
-        '/images/svg/icon/menu-bar/icon-dataset-darknavyblue-light.svg',
-    },
-    {
-      value: 'Workflow',
-      link: '/workflow',
-      src: '/images/svg/icon/menu-bar/icon-workflow-darknavyblue-light.svg',
-      srcActive:
-        '/images/svg/icon/menu-bar/icon-workflow-darknavyblue-light.svg',
-    },
-    {
-      value: 'Class Management',
-      link: '/class',
-      src: '/images/svg/icon/menu-bar/icon-classmanagement-darknavyblue-light.svg',
-      srcActive:
-        '/images/svg/icon/menu-bar/icon-classmanagement-darknavyblue-light.svg',
-    },
-    {
-      value: 'Model',
-      link: '/model',
-      src: '/images/svg/icon/menu-bar/icon-model-darknavyblue-light.svg',
-      srcActive: '/images/svg/icon/menu-bar/icon-model-darknavyblue-light.svg',
-    },
-  ];
 
   const menuItemsBottom = [
     {
@@ -64,11 +35,7 @@ const WorkspaceSidebar = () => {
           : 'left-0 w-64 justify-start transition-all duration-300 ease-out'
       )}
     >
-      <div className="flex flex-col gap-y-5 py-12">
-        {menuItemsTop.map((item) => (
-          <SidebarItem key={item.value} item={item} isOpen={isOpen} />
-        ))}
-      </div>
+      <div className="flex flex-col gap-y-5 py-12" />
       <div className="flex flex-col justify-end gap-y-5 py-12">
         {menuItemsBottom.map((item) => (
           <SidebarItem key={item.value} item={item} isOpen={isOpen} />
