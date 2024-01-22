@@ -6,7 +6,8 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useState } from 'react';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { FaCcMastercard } from 'react-icons/fa';
+import { RiVisaLine } from 'react-icons/ri';
 
 import Popup from '@/components/annotab/popup';
 
@@ -424,16 +425,8 @@ const BillingPaymentinfoTab = () => {
                   className="block h-[32px] w-full border-b border-dark-navy-blue/10 p-1.5 text-sm text-gray-900   focus:outline-none"
                 />
                 <div className="absolute right-[10px] top-[50%] flex translate-y-[-50%] gap-[5px]">
-                  <LazyLoadImage
-                    src="/images/svg/icon/billing/master-card.svg"
-                    wrapperClassName="w-[20px]"
-                    effect="blur"
-                  />
-                  <LazyLoadImage
-                    src="/images/svg/icon/billing/visa-card.svg"
-                    wrapperClassName="w-[20px]"
-                    effect="blur"
-                  />
+                  <FaCcMastercard />
+                  <RiVisaLine />
                 </div>
               </div>
               <div className="flex flex-wrap">

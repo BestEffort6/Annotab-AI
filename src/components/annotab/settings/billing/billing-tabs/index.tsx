@@ -1,19 +1,17 @@
 import { Tab } from '@headlessui/react';
+import clsx from 'clsx';
 
 import BillingEmailsTab from '../billing-emails-tab';
 import BillingOverviewTab from '../billing-overview-tab';
-import BillingPaymentinfoTab from '../BillingPaymentinfoTab';
+import BillingPaymentinfoTab from '../billing-paymentinfo-tab';
 
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(' ');
-}
 const BillingTabs = () => {
   return (
     <Tab.Group>
       <Tab.List className="flex gap-[30px] px-[10px]">
         <Tab
           className={({ selected }) =>
-            classNames(
+            clsx(
               'relative px-[4px] pb-[9px] text-[14px] text-dark-navy-blue transition-all after:absolute after:bottom-[-2px] after:left-0 after:h-[3px] after:w-full after:content-[""] focus:outline-none',
               selected ? 'font-[500] after:bg-sea-green' : 'font-normal'
             )
@@ -23,7 +21,7 @@ const BillingTabs = () => {
         </Tab>
         <Tab
           className={({ selected }) =>
-            classNames(
+            clsx(
               'relative px-[4px] pb-[9px] text-[14px] text-dark-navy-blue transition-all after:absolute after:bottom-[-2px] after:left-0 after:h-[3px] after:w-full after:content-[""] focus:outline-none',
               selected ? 'font-[500] after:bg-sea-green' : 'font-normal'
             )
@@ -33,7 +31,7 @@ const BillingTabs = () => {
         </Tab>
         <Tab
           className={({ selected }) =>
-            classNames(
+            clsx(
               'relative px-[4px] pb-[9px] text-[14px] text-dark-navy-blue transition-all after:absolute after:bottom-[-2px] after:left-0 after:h-[3px] after:w-full after:content-[""] focus:outline-none',
               selected ? 'font-[500] after:bg-sea-green' : 'font-normal'
             )
