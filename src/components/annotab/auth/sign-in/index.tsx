@@ -116,9 +116,9 @@ const SignInForm = () => {
                 </button>
               </div>
               <div className="flex w-full flex-row items-center justify-center">
-                <hr className="border-1 h-px w-40 bg-white" />
+                <hr className="h-px w-40 border-1 bg-white" />
                 <span className="px-4 font-medium text-white">or</span>
-                <hr className="border-1 h-px w-40 bg-white" />
+                <hr className="h-px w-40 border-1 bg-white" />
               </div>
               <div className="relative">
                 <div className="absolute -inset-1 rounded-lg bg-corn-flower-blue opacity-20 blur" />

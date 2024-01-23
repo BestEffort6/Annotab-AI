@@ -27,7 +27,6 @@ const SettingsSidebar = () => {
       {
         value: 'Dataset Management',
         link: '/settings/dataset-management',
-        horizontalLine: true,
       },
       {
         parentLabel: 'Billing and Plans',
