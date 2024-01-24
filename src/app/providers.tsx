@@ -1,5 +1,6 @@
 'use client';
 
+import { NextUIProvider } from '@nextui-org/react';
 import { SessionProvider } from 'next-auth/react';
 import { useEffect } from 'react';
 import { pdfjs } from 'react-pdf';
@@ -16,8 +17,10 @@ export default function Provider({ children }: Props) {
 
   return (
     <SessionProvider>
-      {children}
-      <ToastContainer />
+      <NextUIProvider>
+        {children}
+        <ToastContainer />
+      </NextUIProvider>
     </SessionProvider>
   );
 }

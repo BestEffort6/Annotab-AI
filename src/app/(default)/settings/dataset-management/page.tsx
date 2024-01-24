@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
-import SettingsBilling from '@/components/annotab/settings/billing';
+import DatasetManagementList from '@/components/annotab/settings/dataset-management/dataset-management-list';
 
-export default async function BillingSetting() {
+export default async function DatasetManagement() {
   return (
     <div className="w-2/4 pt-6 2xl:w-3/4">
       <Link
@@ -11,7 +11,7 @@ export default async function BillingSetting() {
       >
         Go to your personal setting
       </Link>
-      <SettingsBilling />
+      <DatasetManagementList />
     </div>
   );
 }

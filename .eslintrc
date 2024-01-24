@@ -35,6 +35,7 @@
         "project": "./tsconfig.json"
       },
       "rules": {
+        "import/no-extraneous-dependencies": "off",
         "no-useless-escape": "off", // Allow to use `\` in regex, it's useful for React Hooks
         "prefer-regex-literals": "off", // Allow to use regex in `replace` function
         "no-nested-ternary": "off", // Allow nested ternary, it's useful for React Hooks
