@@ -51,6 +51,7 @@ export default function DefaultLayout({
       case path.includes('settings/general'):
       case path.includes('settings/notification'):
       case path.includes('settings/dataset-management'):
+      case path.includes('settings/account'):
         return (
           <div className="min-h-screen w-full bg-mostly-white ">
             <SettingsNavbar />
