@@ -1,4 +1,4 @@
-import type { NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 
 import { authOptions } from '@/libs/auth';
@@ -19,20 +19,32 @@ export async function PATCH(request: NextRequest) {
       body: JSON.stringify(json),
     });
 
-    return {
-      status: 200,
-      body: {
-        success: true,
-        message: 'Settings updated',
-      },
-    };
+    return new NextResponse(
+      JSON.stringify({
+        status: 200,
+        body: {
+          success: true,
+          message: 'Settings updated',
+        },
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   } catch (error) {
-    return {
-      status: 500,
-      body: {
-        success: false,
-        message: 'Something went wrong',
-      },
-    };
+    return new NextResponse(
+      JSON.stringify({
+        status: 500,
+        body: {
+          success: false,
+          message: 'Something went wrong',
+        },
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   }
 }
