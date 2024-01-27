@@ -16,10 +16,20 @@ const WorkspaceSidebar = () => {
     setIsOpen(!isOpen);
   };
 
+  const menuItemsTop = [
+    {
+      value: 'Dataset',
+      link: '/',
+      src: '/images/svg/icon/menu-bar/icon-dataset-darknavyblue-light.svg',
+      srcActive:
+        '/images/svg/icon/menu-bar/icon-dataset-darknavyblue-light.svg',
+    },
+  ];
+
   const menuItemsBottom = [
     {
       value: 'Settings',
-      link: '/settings/billing',
+      link: '/settings/general',
       src: '/images/svg/icon/left-side-bar/icon-settings-greypuplewhite-light.svg',
       srcActive:
         '/images/svg/icon/left-side-bar/icon-settings-greypuplewhite-light.svg',
@@ -35,7 +45,11 @@ const WorkspaceSidebar = () => {
           : 'left-0 w-64 justify-start transition-all duration-300 ease-out'
       )}
     >
-      <div className="flex flex-col gap-y-5 py-12" />
+      <div className="flex flex-col gap-y-5 py-12">
+        {menuItemsTop.map((item) => (
+          <SidebarItem key={item.value} item={item} isOpen={isOpen} />
+        ))}
+      </div>
       <div className="flex flex-col justify-end gap-y-5 py-12">
         {menuItemsBottom.map((item) => (
           <SidebarItem key={item.value} item={item} isOpen={isOpen} />

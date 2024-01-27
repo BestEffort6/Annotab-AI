@@ -109,7 +109,8 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                     src={
                       selectedFile
                         ? URL.createObjectURL(selectedFile)
-                        : currentWorkspace?.profilePicture.url
+                        : currentWorkspace?.profilePicture?.url ||
+                          '/images/no-image.png'
                     }
                     alt="Profile"
                     className="h-[185px] w-[185px] rounded-full object-cover"
