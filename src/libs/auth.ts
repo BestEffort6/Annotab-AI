@@ -34,7 +34,6 @@ export const authOptions: NextAuthOptions = {
             }),
           }
         ).then((response) => response.json());
-
         const { data } = res;
         if (!data || !data.accessToken || !data.refreshToken) {
           return false;

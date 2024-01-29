@@ -1,26 +1,93 @@
 'use client';
 
 import { CheckIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 import type { IGeneralSettings } from '@/interfaces/setting';
 
 const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
-  const [selectedFile, setSelectedFile] = useState<File | undefined>();
+  const [formData, setFormData] = useState({
+    name: currentWorkspace?.name || '',
+    description: currentWorkspace?.description || '',
+    profilePicture: currentWorkspace?.profilePicture?.url || '',
+  });
+  useEffect(() => {
+    setFormData({
+      name: currentWorkspace?.name || '',
+      description: currentWorkspace?.description || '',
+      profilePicture: currentWorkspace?.profilePicture?.url || '',
+    });
+  }, [currentWorkspace]);
 
+  const [selectedFile, setSelectedFile] = useState<File | undefined>();
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setSelectedFile(event?.target?.files?.[0]);
     }
   };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdate = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    try {
+      const formDataObject = new FormData();
+      formDataObject.append('name', formData.name);
+      formDataObject.append('description', formData.description);
+
+      if (selectedFile) {
+        formDataObject.append('file', selectedFile);
+      }
+      fetch('/api/workspace/current', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: formDataObject,
+      }).then((response) => {
+        console.log({ response });
+      });
+      // const response = await fetch(
+      //   `${process.env.NEXT_PUBLIC_API_URL}/api/v1/workspace/current`,
+      //   {
+      //     method: 'PATCH',
+      //     headers: {
+      //       // 'Content-Type': 'application/json',
+      //       Authorization: `Bearer ${accessToken}`,
+      //     },
+      //     body: formDataObject,
+      //   }
+      // );
+
+      // if (response.ok) {
+      //   console.log('Workspace data updated successfully', response);
+      // } else {
+      //   console.error('Error updating workspace data:', response.statusText);
+      // }
+    } catch (error) {
+      console.error('Error updating workspace data:', error);
+    }
+  };
+
   return (
     <div className="w-2/4 pt-6 2xl:w-3/4">
       <h4 className="mb-[6px] text-[18px] font-normal text-dark-navy-blue">
         General
       </h4>
       <hr className="" />
-      <form className="mb-[18px] mt-[23px]" id="general-setting">
+      <form
+        className="mb-[18px] mt-[23px]"
+        id="general-setting"
+        onSubmit={handleUpdate}
+      >
         <div className="grid gap-6 md:grid-cols-2">
           <div>
             <div className="mb-[18px]">
@@ -30,10 +97,11 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
               >
                 Workspace
                 <input
-                  value={currentWorkspace?.name}
+                  value={formData.name}
                   type="text"
                   id="Workspace"
-                  name="Workspace"
+                  name="name"
+                  onChange={handleInputChange}
                   className="block w-full rounded-[8px] border border-dark-navy-blue/10 bg-[#F2F2F8] p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
                 />
               </label>
@@ -45,9 +113,11 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
               >
                 Description
                 <input
+                  value={formData.description}
+                  onChange={handleInputChange}
                   type="text"
                   id="Description"
-                  name="Description"
+                  name="description"
                   className="block w-full rounded-[8px] border border-dark-navy-blue/10 bg-[#F2F2F8] p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
                 />
               </label>
@@ -62,6 +132,7 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                   id="Location"
                   name="Location"
                   className="block w-full rounded-[8px] border border-dark-navy-blue/10 bg-[#F2F2F8] p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
+                  disabled
                 >
                   <option value="">1</option>
                   <option value="">1</option>
@@ -80,6 +151,7 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                   id="BillingEmail"
                   name="BillingEmail"
                   className="block w-full rounded-[8px] border border-dark-navy-blue/10 bg-[#F2F2F8] p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
+                  disabled
                 />
               </label>
             </div>
@@ -99,7 +171,7 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                 <input
                   type="file"
                   id="profile"
-                  name="profile"
+                  name="file"
                   className="hidden"
                   onChange={handleFileChange}
                 />
@@ -109,8 +181,7 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                     src={
                       selectedFile
                         ? URL.createObjectURL(selectedFile)
-                        : currentWorkspace?.profilePicture?.url ||
-                          '/images/no-image.png'
+                        : formData.profilePicture
                     }
                     alt="Profile"
                     className="h-[185px] w-[185px] rounded-full object-cover"

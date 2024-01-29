@@ -16,7 +16,7 @@ export async function PATCH(request: NextRequest) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify(json),
+      body: json,
     });
 
     return new NextResponse(

@@ -34,5 +34,5 @@ export default async function GeneralSettingsPage() {
     return <Loading />;
   }
 
-  return <GeneralSettings currentWorkspace={data} />;
+  return <GeneralSettings currentWorkspace={data} accessToken={accessToken} />;
 }
