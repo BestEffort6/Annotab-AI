@@ -6,11 +6,13 @@ import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useMemo } from 'react';
 
+import Loading from '@/components/annotab/loading';
 import SettingsNavbar from '@/components/annotab/settings/layout/navbar';
 import SettingsSidebar from '@/components/annotab/settings/layout/sidebar';
 import WorkspaceSidebar from '@/components/annotab/workspace/layout/sidebar';
 import Navbar from '@/components/layout/navbar';
 import Sidebar from '@/components/layout/sidebar';
+import { useLayout } from '@/components/providers/LayoutProvider';
 
 export default function DefaultLayout({
   children,
@@ -20,6 +22,7 @@ export default function DefaultLayout({
   dayjs.extend(relativeTime);
   const path = usePathname();
   const { data, status } = useSession();
+  const { loading } = useLayout();
 
   useEffect(() => {
     if (dayjs().isAfter(dayjs(data?.expires))) {
@@ -74,5 +77,10 @@ export default function DefaultLayout({
     }
   }, [path]);
 
-  return renderLayout;
+  return (
+    <>
+      <Loading loading={loading} />
+      {renderLayout}
+    </>
+  );
 }

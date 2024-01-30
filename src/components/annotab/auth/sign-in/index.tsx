@@ -11,16 +11,15 @@ import { useForm } from 'react-hook-form';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import type { z } from 'zod';
 
+import { useLayoutActions } from '@/components/providers/LayoutProvider';
 import useWindowSize from '@/libs/hooks/use-window-size';
 import { SignInValidation } from '@/validations/AuthValidation';
 
-import Loading from '../../loading';
-
 const SignInForm = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const { isDesktop } = useWindowSize();
+  const { setLoading } = useLayoutActions();
 
   const toggle = () => {
     setOpen(!open);
@@ -52,7 +51,6 @@ const SignInForm = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
-      {loading && <Loading />}
       <div className="flex h-[90vh] w-full items-center justify-center">
         <div className="relative max-w-sm flex-auto px-4 md:px-0">
           <div className="absolute -inset-1 hidden rounded-lg bg-gradient-to-tr from-neon-blue from-30% via-chili-red via-40% to-corn-flower-blue to-80% opacity-30 blur md:block" />

@@ -10,10 +10,13 @@ import { useForm } from 'react-hook-form';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import type { z } from 'zod';
 
+import {
+  useLayout,
+  useLayoutActions,
+} from '@/components/providers/LayoutProvider';
 import useWindowSize from '@/libs/hooks/use-window-size';
 import { SignUpValidation } from '@/validations/AuthValidation';
 
-import Loading from '../../loading';
 import PolicyModal from '../../policy-modal';
 import toast from '../../toast';
 
@@ -38,11 +41,12 @@ type Type = 'terms_cond' | 'privacy' | 'data_processing';
 
 const SignUpForm = ({ documents }: SignUpFormProps) => {
   const router = useRouter();
+  const { setLoading } = useLayoutActions();
+  const { loading } = useLayout();
 
   const [showPass, setShowPass] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [type, setType] = useState<Type>('terms_cond');
-  const [loading, setLoading] = useState(false);
   const [documentt, setDocumentt] = useState<Document>();
 
   const { isDesktop } = useWindowSize();
@@ -124,7 +128,6 @@ const SignUpForm = ({ documents }: SignUpFormProps) => {
 
   return (
     <>
-      {loading && <Loading />}
       <motion.div
         className="z-10 w-screen"
         initial={{ opacity: 0 }}

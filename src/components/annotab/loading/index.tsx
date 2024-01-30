@@ -1,4 +1,6 @@
-export default function Loading() {
+export default function Loading({ loading }: { loading: boolean }) {
+  if (!loading) return null;
+
   return (
     <div className="fixed inset-0 z-50 flex flex-row bg-gray-100 bg-opacity-10 backdrop-blur">
       <div aria-label="Loading..." role="status" className="m-auto">
