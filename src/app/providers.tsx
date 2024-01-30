@@ -22,7 +22,6 @@ export default function Provider({ children }: Props) {
       <NextUIProvider>
         <LayoutProvider>
           {children}
-
           <ToastContainer />
         </LayoutProvider>
       </NextUIProvider>
