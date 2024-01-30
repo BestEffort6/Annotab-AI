@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/libs/auth';
 
 export async function PATCH(request: NextRequest) {
-  const json = await request.json();
+  const form = await request.formData();
 
   const session = await getServerSession(authOptions);
   const accessToken = session?.user ? session.user.access.token : null;
@@ -13,10 +13,10 @@ export async function PATCH(request: NextRequest) {
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/workspace/current`, {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${accessToken}`,
       },
-      body: json,
+      body: form,
     });
 
     return new NextResponse(

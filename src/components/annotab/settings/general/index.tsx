@@ -1,12 +1,41 @@
 'use client';
 
 import { CheckIcon } from '@heroicons/react/24/outline';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import type { z } from 'zod';
 
 import type { IGeneralSettings } from '@/interfaces/setting';
+import { UpdateWorkspaceValidation } from '@/validations/WorkspaceValidation';
 
 const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<z.infer<typeof UpdateWorkspaceValidation>>({
+    resolver: zodResolver(UpdateWorkspaceValidation),
+  });
+
+  const handleUpdateWorkspace = handleSubmit(async (data) => {
+    const formDataObject = new FormData();
+    Object.entries(data).map(([key, value]) =>
+      formDataObject.append(key, value)
+    );
+
+    fetch('/api/workspace/current', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      body: formDataObject,
+    }).then((response) => {
+      console.log({ response });
+    });
+  });
+
   const [formData, setFormData] = useState({
     name: currentWorkspace?.name || '',
     description: currentWorkspace?.description || '',
@@ -20,12 +49,7 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
     });
   }, [currentWorkspace]);
 
-  const [selectedFile, setSelectedFile] = useState<File | undefined>();
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setSelectedFile(event?.target?.files?.[0]);
-    }
-  };
+  const [selectedFile] = useState<File | undefined>();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -35,59 +59,13 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
     }));
   };
 
-  const handleUpdate = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    try {
-      const formDataObject = new FormData();
-      formDataObject.append('name', formData.name);
-      formDataObject.append('description', formData.description);
-
-      if (selectedFile) {
-        formDataObject.append('file', selectedFile);
-      }
-      fetch('/api/workspace/current', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: formDataObject,
-      }).then((response) => {
-        console.log({ response });
-      });
-      // const response = await fetch(
-      //   `${process.env.NEXT_PUBLIC_API_URL}/api/v1/workspace/current`,
-      //   {
-      //     method: 'PATCH',
-      //     headers: {
-      //       // 'Content-Type': 'application/json',
-      //       Authorization: `Bearer ${accessToken}`,
-      //     },
-      //     body: formDataObject,
-      //   }
-      // );
-
-      // if (response.ok) {
-      //   console.log('Workspace data updated successfully', response);
-      // } else {
-      //   console.error('Error updating workspace data:', response.statusText);
-      // }
-    } catch (error) {
-      console.error('Error updating workspace data:', error);
-    }
-  };
-
   return (
     <div className="w-2/4 pt-6 2xl:w-3/4">
       <h4 className="mb-[6px] text-[18px] font-normal text-dark-navy-blue">
         General
       </h4>
       <hr className="" />
-      <form
-        className="mb-[18px] mt-[23px]"
-        id="general-setting"
-        onSubmit={handleUpdate}
-      >
+      <form className="mb-[18px] mt-[23px]" onSubmit={handleUpdateWorkspace}>
         <div className="grid gap-6 md:grid-cols-2">
           <div>
             <div className="mb-[18px]">
@@ -97,6 +75,7 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
               >
                 Workspace
                 <input
+                  {...register('name')}
                   value={formData.name}
                   type="text"
                   id="Workspace"
@@ -105,6 +84,11 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                   className="block w-full rounded-[8px] border border-dark-navy-blue/10 bg-[#F2F2F8] p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
                 />
               </label>
+              {errors.name?.message && (
+                <div className="text-sm text-red-500">
+                  {errors.name.message.toString()}
+                </div>
+              )}
             </div>
             <div className="mb-[18px]">
               <label
@@ -113,6 +97,7 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
               >
                 Description
                 <input
+                  {...register('description')}
                   value={formData.description}
                   onChange={handleInputChange}
                   type="text"
@@ -121,6 +106,11 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                   className="block w-full rounded-[8px] border border-dark-navy-blue/10 bg-[#F2F2F8] p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
                 />
               </label>
+              {errors.description?.message && (
+                <div className="text-sm text-red-500">
+                  {errors.description.message.toString()}
+                </div>
+              )}
             </div>
             <div className="mb-[18px] max-w-[220px]">
               <label
@@ -169,11 +159,12 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
             <div className="flex flex-col items-center">
               <label htmlFor="profile" className="relative cursor-pointer">
                 <input
+                  {...register('file')}
                   type="file"
                   id="profile"
                   name="file"
                   className="hidden"
-                  onChange={handleFileChange}
+                  // onChange={handleFileChange}
                 />
                 <div className="h-[185px] w-[185px] overflow-hidden rounded-full drop-shadow-[0px_2px_4px_rgba(0,0,0,0.25)]">
                   <LazyLoadImage
@@ -191,6 +182,11 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                 <span className="absolute bottom-[15px] left-[10px] block rounded-md border border-dark-navy-blue/25 bg-mostly-white px-[16px] py-[6px] text-[14px] font-normal text-dark-navy-blue">
                   Edit
                 </span>
+                {errors.file?.message && (
+                  <div className="text-sm text-red-500">
+                    {errors.file.message.toString()}
+                  </div>
+                )}
               </label>
             </div>
           </div>
