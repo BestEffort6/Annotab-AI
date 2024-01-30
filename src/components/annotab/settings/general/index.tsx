@@ -11,11 +11,9 @@ import type { IGeneralSettings } from '@/interfaces/setting';
 import { UpdateWorkspaceValidation } from '@/validations/WorkspaceValidation';
 
 const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
-  const [formData, setFormData] = useState({
-    name: currentWorkspace?.name || '',
-    description: currentWorkspace?.description || '',
-    profilePicture: currentWorkspace?.profilePicture?.url || '',
-  });
+  const [profileUrl, setProfileUrl] = useState(
+    currentWorkspace?.profilePicture?.url
+  );
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
 
   const {
@@ -24,6 +22,10 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
     formState: { errors },
   } = useForm<z.infer<typeof UpdateWorkspaceValidation>>({
     resolver: zodResolver(UpdateWorkspaceValidation),
+    defaultValues: {
+      name: currentWorkspace?.name || '',
+      description: currentWorkspace?.description || '',
+    },
   });
 
   const handleUpdateWorkspace = handleSubmit(async (data) => {
@@ -47,25 +49,13 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
   });
 
   useEffect(() => {
-    setFormData({
-      name: currentWorkspace?.name || '',
-      description: currentWorkspace?.description || '',
-      profilePicture: currentWorkspace?.profilePicture?.url || '',
-    });
+    setProfileUrl(currentWorkspace?.profilePicture?.url);
   }, [currentWorkspace]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setSelectedFile(event?.target?.files?.[0]);
     }
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
   };
 
   return (
@@ -85,11 +75,9 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                 Workspace
                 <input
                   {...register('name')}
-                  value={formData.name}
                   type="text"
                   id="Workspace"
                   name="name"
-                  onChange={handleInputChange}
                   className="block w-full rounded-[8px] border border-dark-navy-blue/10 bg-[#F2F2F8] p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
                 />
               </label>
@@ -107,8 +95,6 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                 Description
                 <input
                   {...register('description')}
-                  value={formData.description}
-                  onChange={handleInputChange}
                   type="text"
                   id="Description"
                   name="description"
@@ -180,7 +166,7 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                     src={
                       selectedFile
                         ? URL.createObjectURL(selectedFile)
-                        : formData.profilePicture
+                        : profileUrl
                     }
                     alt="Profile"
                     className="h-[185px] w-[185px] rounded-full object-cover"
