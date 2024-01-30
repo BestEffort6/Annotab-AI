@@ -1,4 +1,5 @@
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import 'react-toastify/dist/ReactToastify.css';
 import '@/styles/global.css';
 
 import Provider from './providers';

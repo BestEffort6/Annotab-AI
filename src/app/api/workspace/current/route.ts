@@ -10,14 +10,24 @@ export async function PATCH(request: NextRequest) {
   const accessToken = session?.user ? session.user.access.token : null;
 
   try {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/workspace/current`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: form,
-    });
+    if (!accessToken) {
+      throw new Error('No access token');
+    }
+
+    const response = await fetch(
+      `${process.env.BACKEND_URL}/api/v1/workspace/current`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: form,
+      }
+    ).then((res) => res.json());
+
+    if (response.statusCode !== 200) {
+      throw new Error(response.message);
+    }
 
     return new NextResponse(
       JSON.stringify({

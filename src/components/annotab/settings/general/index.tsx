@@ -2,18 +2,19 @@
 
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import type { z } from 'zod';
 
+import { useLayoutActions } from '@/components/providers/LayoutProvider';
 import type { IGeneralSettings } from '@/interfaces/setting';
 import { UpdateWorkspaceValidation } from '@/validations/WorkspaceValidation';
 
+import toast from '../../toast';
+
 const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
-  const [profileUrl, setProfileUrl] = useState(
-    currentWorkspace?.profilePicture?.url
-  );
+  const { setLoading } = useLayoutActions();
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
 
   const {
@@ -29,28 +30,37 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
   });
 
   const handleUpdateWorkspace = handleSubmit(async (data) => {
+    setLoading(true);
+
     const formDataObject = new FormData();
     Object.entries(data).map(([key, value]) =>
       formDataObject.append(key, value)
     );
+
     if (selectedFile) {
       formDataObject.append('file', selectedFile);
     }
 
     fetch('/api/workspace/current', {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
       body: formDataObject,
-    }).then((response) => {
-      console.log({ response });
-    });
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.status !== 200) {
+          toast({
+            type: 'error',
+            content: res.body.message,
+          });
+        } else {
+          toast({
+            type: 'success',
+            content: 'Workspace updated successfully',
+          });
+        }
+      })
+      .finally(() => setLoading(false));
   });
-
-  useEffect(() => {
-    setProfileUrl(currentWorkspace?.profilePicture?.url);
-  }, [currentWorkspace]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -166,7 +176,8 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                     src={
                       selectedFile
                         ? URL.createObjectURL(selectedFile)
-                        : profileUrl
+                        : currentWorkspace?.profilePicture?.url ||
+                          '/images/no-image.png'
                     }
                     alt="Profile"
                     className="h-[185px] w-[185px] rounded-full object-cover"

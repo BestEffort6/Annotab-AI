@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import { pdfjs } from 'react-pdf';
 import { ToastContainer } from 'react-toastify';
 
+import LayoutProvider from '@/components/providers/LayoutProvider';
+
 type Props = {
   children?: React.ReactNode;
 };
@@ -18,8 +20,11 @@ export default function Provider({ children }: Props) {
   return (
     <SessionProvider>
       <NextUIProvider>
-        {children}
-        <ToastContainer />
+        <LayoutProvider>
+          {children}
+
+          <ToastContainer />
+        </LayoutProvider>
       </NextUIProvider>
     </SessionProvider>
   );
