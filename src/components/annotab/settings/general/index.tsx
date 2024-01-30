@@ -11,6 +11,13 @@ import type { IGeneralSettings } from '@/interfaces/setting';
 import { UpdateWorkspaceValidation } from '@/validations/WorkspaceValidation';
 
 const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
+  const [formData, setFormData] = useState({
+    name: currentWorkspace?.name || '',
+    description: currentWorkspace?.description || '',
+    profilePicture: currentWorkspace?.profilePicture?.url || '',
+  });
+  const [selectedFile, setSelectedFile] = useState<File | undefined>();
+
   const {
     handleSubmit,
     register,
@@ -24,6 +31,9 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
     Object.entries(data).map(([key, value]) =>
       formDataObject.append(key, value)
     );
+    if (selectedFile) {
+      formDataObject.append('file', selectedFile);
+    }
 
     fetch('/api/workspace/current', {
       method: 'PATCH',
@@ -36,11 +46,6 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
     });
   });
 
-  const [formData, setFormData] = useState({
-    name: currentWorkspace?.name || '',
-    description: currentWorkspace?.description || '',
-    profilePicture: currentWorkspace?.profilePicture?.url || '',
-  });
   useEffect(() => {
     setFormData({
       name: currentWorkspace?.name || '',
@@ -49,7 +54,11 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
     });
   }, [currentWorkspace]);
 
-  const [selectedFile] = useState<File | undefined>();
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setSelectedFile(event?.target?.files?.[0]);
+    }
+  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -159,12 +168,11 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
             <div className="flex flex-col items-center">
               <label htmlFor="profile" className="relative cursor-pointer">
                 <input
-                  {...register('file')}
                   type="file"
                   id="profile"
                   name="file"
                   className="hidden"
-                  // onChange={handleFileChange}
+                  onChange={handleFileChange}
                 />
                 <div className="h-[185px] w-[185px] overflow-hidden rounded-full drop-shadow-[0px_2px_4px_rgba(0,0,0,0.25)]">
                   <LazyLoadImage
@@ -182,11 +190,6 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                 <span className="absolute bottom-[15px] left-[10px] block rounded-md border border-dark-navy-blue/25 bg-mostly-white px-[16px] py-[6px] text-[14px] font-normal text-dark-navy-blue">
                   Edit
                 </span>
-                {errors.file?.message && (
-                  <div className="text-sm text-red-500">
-                    {errors.file.message.toString()}
-                  </div>
-                )}
               </label>
             </div>
           </div>
