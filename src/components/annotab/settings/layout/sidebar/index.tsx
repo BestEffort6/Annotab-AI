@@ -20,15 +20,6 @@ const SettingsSidebar = ({ currentRoute }: any) => {
         link: '/settings/role-permission',
         horizontalLine: true,
       },
-      // {
-      //   value: 'Appearance',
-      //   link: '/settings/appearance',
-      // },
-      // {
-      //   value: 'Notification',
-      //   link: '/settings/notification',
-      //   horizontalLine: true,
-      // },
       {
         value: 'Dataset Management',
         link: '/settings/dataset-management',
