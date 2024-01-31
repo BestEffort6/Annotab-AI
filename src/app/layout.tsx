@@ -4,18 +4,9 @@ import '@/styles/global.css';
 
 import Provider from './providers';
 
-export default function RootLayout(props: {
-  children: React.ReactNode;
-  params: { locale: string };
-}) {
-  let { locale } = props.params;
-  // Using internationalization in Client Components
-  if (!props.params.locale) {
-    locale = 'en';
-  }
-
+export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html lang={locale}>
+    <html lang="en">
       <body>
         <Provider>{props.children}</Provider>
       </body>

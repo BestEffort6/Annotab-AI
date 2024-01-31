@@ -1,7 +1,12 @@
 'use client';
 
 import { NextUIProvider } from '@nextui-org/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { dehydrate } from '@tanstack/query-core';
+import {
+  HydrationBoundary,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SessionProvider } from 'next-auth/react';
 import { useEffect, useState } from 'react';
@@ -33,15 +38,17 @@ export default function Provider({ children }: Props) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionProvider>
-        <NextUIProvider>
-          <LayoutProvider>
-            {children}
-            <ToastContainer />
-            <ReactQueryDevtools initialIsOpen={false} />
-          </LayoutProvider>
-        </NextUIProvider>
-      </SessionProvider>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <SessionProvider>
+          <NextUIProvider>
+            <LayoutProvider>
+              {children}
+              <ToastContainer />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </LayoutProvider>
+          </NextUIProvider>
+        </SessionProvider>
+      </HydrationBoundary>
     </QueryClientProvider>
   );
 }
