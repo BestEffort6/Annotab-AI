@@ -59,7 +59,7 @@ export default function DefaultLayout({
           <div className="min-h-screen w-full bg-mostly-white ">
             <SettingsNavbar />
             <div className="flex flex-row justify-center">
-              <SettingsSidebar />
+              <SettingsSidebar currentRoute={path} />
               {children}
             </div>
           </div>
