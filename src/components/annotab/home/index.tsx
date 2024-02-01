@@ -4,7 +4,6 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
-import { useLayoutActions } from '@/components/providers/LayoutProvider';
 import { useInvitations } from '@/hooks/queries/useInvitations';
 import { DEFAULT_PAGINATION } from '@/libs/constants';
 
@@ -41,19 +40,10 @@ const defaultColumns = [
 
 export default function Home() {
   const { data: session } = useSession();
-  const { setLoading } = useLayoutActions();
   const [page, setPage] = useState(DEFAULT_PAGINATION.PAGE);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.LIMIT);
 
-  const { data, isLoading } = useInvitations(
-    session?.user.access.token,
-    page,
-    pageSize
-  );
-
-  if (isLoading) {
-    setLoading(true);
-  }
+  const { data } = useInvitations(session?.user.access.token, page, pageSize);
 
   return (
     <div className="m-4">
