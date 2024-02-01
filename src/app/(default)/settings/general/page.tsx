@@ -25,6 +25,7 @@ export default async function GeneralSettingsPage() {
   if (!session) {
     redirect('/sign-in');
   }
+
   const accessToken = session.user.access.token;
 
   const { data } = await fetchCurrentWorkspace(accessToken);

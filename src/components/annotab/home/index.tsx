@@ -40,7 +40,7 @@ const defaultColumns = [
 ];
 
 type HomeProps = {
-  invitations: ApiResponse<Invitation[]>;
+  invitations: ApiResponse<Invitation[]> | undefined;
 };
 
 export default function Home({ invitations }: HomeProps) {
