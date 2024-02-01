@@ -19,6 +19,8 @@ import {
 } from '@tanstack/react-table';
 import { useEffect } from 'react';
 
+import { PAGE_SIZES } from '@/libs/constants';
+
 type CoreTableProps = {
   data: any[];
   columns: ColumnDef<any>[];
@@ -30,13 +32,6 @@ type CoreTableProps = {
   setPage: (page: number) => void;
   setPageSize: (pageSize: number) => void;
 };
-
-const pageSizes = [
-  { label: '10', value: 10 },
-  { label: '25', value: 25 },
-  { label: '50', value: 50 },
-  { label: '100', value: 100 },
-];
 
 export default function CoreTable({
   data,
@@ -107,7 +102,7 @@ export default function CoreTable({
             defaultSelectedKeys={[pageSize.toString()]}
             onChange={(value) => setPageSize(Number(value.target.value))}
           >
-            {pageSizes.map((size) => (
+            {PAGE_SIZES.map((size) => (
               <SelectItem key={size.value} value={size.value}>
                 {size.label}
               </SelectItem>
