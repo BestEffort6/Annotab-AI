@@ -7,9 +7,20 @@ export interface Pagination {
   hasNextPage: boolean;
 }
 
-export interface ApiResponse<T> {
-  data: T;
+export interface ApiResponseList<T> {
+  data: T[];
+  meta: Pagination;
   statusCode: number;
   message: string;
-  meta: Pagination | {};
 }
+
+export interface ApiResponseSingle<T> {
+  data: T;
+  meta: {};
+  statusCode: number;
+  message: string;
+}
+
+export type ApiResponse<T> = T extends Array<infer U>
+  ? ApiResponseList<U>
+  : ApiResponseSingle<T>;

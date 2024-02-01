@@ -2,20 +2,29 @@
 
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import type { z } from 'zod';
 
 import { useLayoutActions } from '@/components/providers/LayoutProvider';
-import type { IGeneralSettings } from '@/interfaces/setting';
+import { useUpdateCurrentWorkspace } from '@/hooks/mutations/useUpdateCurrentWorkspace';
+import { useCurrentWorkspace } from '@/hooks/queries/useCurrentWorkspace';
 import { UpdateWorkspaceValidation } from '@/validations/WorkspaceValidation';
 
 import toast from '../../toast';
 
-const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
+const GeneralSettings = () => {
+  const { data: session } = useSession();
   const { setLoading } = useLayoutActions();
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
+
+  const { data: currentWorkspace } = useCurrentWorkspace(
+    session?.user.access.token
+  );
+
+  const { mutate } = useUpdateCurrentWorkspace();
 
   const {
     handleSubmit,
@@ -24,8 +33,12 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
   } = useForm<z.infer<typeof UpdateWorkspaceValidation>>({
     resolver: zodResolver(UpdateWorkspaceValidation),
     defaultValues: {
-      name: currentWorkspace?.name || '',
-      description: currentWorkspace?.description || '',
+      name: currentWorkspace?.data.name || '',
+      description: currentWorkspace?.data.description || '',
+    },
+    values: {
+      name: currentWorkspace?.data.name || '',
+      description: currentWorkspace?.data.description || '',
     },
   });
 
@@ -41,25 +54,20 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
       formDataObject.append('file', selectedFile);
     }
 
-    fetch('/api/workspace/current', {
-      method: 'PATCH',
-      body: formDataObject,
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.status !== 200) {
-          toast({
-            type: 'error',
-            content: res.body.message,
-          });
-        } else {
+    mutate(
+      { accessToken: session?.user.access.token, payload: formDataObject },
+      {
+        onSuccess: () => {
           toast({
             type: 'success',
             content: 'Workspace updated successfully',
           });
-        }
-      })
-      .finally(() => setLoading(false));
+        },
+        onSettled: () => {
+          setLoading(false);
+        },
+      }
+    );
   });
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -176,7 +184,7 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                     src={
                       selectedFile
                         ? URL.createObjectURL(selectedFile)
-                        : currentWorkspace?.profilePicture?.url ||
+                        : currentWorkspace?.data.profilePicture?.url ||
                           '/images/no-image.png'
                     }
                     alt="Profile"
