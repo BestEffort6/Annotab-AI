@@ -130,14 +130,22 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: AWS Secrets Manager GitHub Action
+        id: get-secrets
+        uses: aws-actions/aws-secretsmanager-get-secrets@v1.0.4
+        with:
+          secret-id: arn:aws:secretsmanager:ap-southeast-1:059030294907:secret:annotab/development/next-aio-app-qDRcRq
+
       - name: Build, tag, and push docker image to Amazon ECR
         id: build-image
         env:
+          ENV: ${{ steps.get-secrets.outputs }}
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
           IMAGE_TAG: ${{ needs.versioning.outputs.release_tag }}
         run: |
-          docker build -f docker/Dockerfile -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          echo "Secret value: $ENV"
+          docker build -f docker/Dockerfile -t $REGISTRY/$REPOSITORY:$IMAGE_TAG . --build-arg $ENV.NEXT_PUBLIC_BACKEND_URL 
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           echo "image=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
