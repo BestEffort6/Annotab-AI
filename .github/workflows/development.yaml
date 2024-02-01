@@ -10,7 +10,6 @@ on:
 
 env:
   SKIP_ENV_VALIDATION: true
-  ACTIONS_RUNNER_DEBUG: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -135,17 +134,19 @@ jobs:
         id: get-secrets
         uses: aws-actions/aws-secretsmanager-get-secrets@v1.0.4
         with:
-          secret-id: arn:aws:secretsmanager:ap-southeast-1:059030294907:secret:annotab/development/next-aio-app-qDRcRq
+          secret-ids: |
+            annotab/development/next-aio-app
+          parse-json-secrets: true
 
       - name: Build, tag, and push docker image to Amazon ECR
         id: build-image
         env:
-          NEXT_PUBLIC_BACKEND_URL: ${{ steps.get-secrets.outputs.secretValue }}
+          SECRETS: ${{ env.ANNOTAB_DEVELOPMENT_NEXT }}
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
           IMAGE_TAG: ${{ needs.versioning.outputs.release_tag }}
         run: |
-          echo "$NEXT_PUBLIC_BACKEND_URL"
+          echo $SECRETS
           docker build -f docker/Dockerfile -t $REGISTRY/$REPOSITORY:$IMAGE_TAG . --build-arg $NEXT_PUBLIC_BACKEND_URL 
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           echo "image=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
