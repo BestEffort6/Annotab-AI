@@ -1,5 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { Env } from '@/libs/Env.mjs';
+
 export interface RegistrationData {
   email: string;
   password: string;
@@ -16,7 +18,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const response = await fetch(
-      `${process.env.BACKEND_URL}/api/v1/auth/register`,
+      `${Env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`,
       {
         method: 'POST',
         headers: {

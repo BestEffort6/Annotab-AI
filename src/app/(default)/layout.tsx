@@ -42,7 +42,7 @@ export default function DefaultLayout({
           </div>
         );
     }
-  }, [path]);
+  }, [path, children]);
 
   const renderLayout = useMemo(() => {
     switch (true) {
@@ -75,7 +75,7 @@ export default function DefaultLayout({
           </div>
         );
     }
-  }, [path]);
+  }, [path, children, renderSidebar]);
 
   return (
     <>

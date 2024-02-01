@@ -2,6 +2,8 @@ import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 
+import { Env } from './Env.mjs';
+
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
@@ -15,7 +17,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         const res = await fetch(
-          `${process.env.BACKEND_URL}/api/v1/auth/verify-sso`,
+          `${Env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/verify-sso`,
           {
             method: 'POST',
             headers: {
@@ -44,7 +46,7 @@ export const authOptions: NextAuthOptions = {
       }
 
       const userResponse = await fetch(
-        `${process.env.BACKEND_URL}/api/v1/auth/me`,
+        `${Env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/me`,
         {
           method: 'GET',
           headers: {
@@ -81,8 +83,8 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: Env.GOOGLE_CLIENT_ID as string,
+      clientSecret: Env.GOOGLE_CLIENT_SECRET as string,
       authorization: {
         params: {
           prompt: 'select_account',
@@ -101,7 +103,7 @@ export const authOptions: NextAuthOptions = {
 
         try {
           const res = await fetch(
-            `${process.env.BACKEND_URL}/api/v1/auth/login`,
+            `${Env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login`,
             {
               method: 'POST',
               headers: {

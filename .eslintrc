@@ -29,7 +29,8 @@
         "airbnb",
         "airbnb-typescript",
         "next/core-web-vitals",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "plugin:@tanstack/eslint-plugin-query/recommended"
       ],
       "parserOptions": {
         "project": "./tsconfig.json"

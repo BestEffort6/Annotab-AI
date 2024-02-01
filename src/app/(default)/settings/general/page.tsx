@@ -3,10 +3,11 @@ import { getServerSession } from 'next-auth';
 
 import GeneralSettings from '@/components/annotab/settings/general';
 import { authOptions } from '@/libs/auth';
+import { Env } from '@/libs/Env.mjs';
 
 const fetchCurrentWorkspace = async (accessToken: string) => {
   const response = await fetch(
-    `${process.env.BACKEND_URL}/api/v1/workspace/current`,
+    `${Env.NEXT_PUBLIC_BACKEND_URL}/api/v1/workspace/current`,
     {
       method: 'GET',
       headers: {
@@ -25,6 +26,7 @@ export default async function GeneralSettingsPage() {
   if (!session) {
     redirect('/sign-in');
   }
+
   const accessToken = session.user.access.token;
 
   const { data } = await fetchCurrentWorkspace(accessToken);
