@@ -139,7 +139,7 @@ jobs:
       - name: Build, tag, and push docker image to Amazon ECR
         id: build-image
         env:
-          NEXT_PUBLIC_BACKEND_URL: ${{ steps.get-secrets.outputs.NEXT_PUBLIC_BACKEND_URL }}
+          NEXT_PUBLIC_BACKEND_URL: ${{ steps.get-secrets.outputs.secretValue }}
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
           IMAGE_TAG: ${{ needs.versioning.outputs.release_tag }}
