@@ -10,6 +10,7 @@ on:
 
 env:
   SKIP_ENV_VALIDATION: true
+  ACTIONS_RUNNER_DEBUG: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
