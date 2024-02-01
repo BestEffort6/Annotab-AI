@@ -32,7 +32,6 @@ type CoreTableProps = {
 };
 
 const pageSizes = [
-  { label: '1', value: 1 },
   { label: '10', value: 10 },
   { label: '25', value: 25 },
   { label: '50', value: 50 },
@@ -97,8 +96,8 @@ export default function CoreTable({
           showControls
           onChange={(page) => setPage(page)}
         />
-        <div>
-          <span className="mr-2">Total: {total}</span>
+        <div className="flex w-1/2 flex-row justify-end gap-x-4">
+          <span className="my-auto">Total: {total}</span>
           <Select
             disabled={loading}
             size="sm"
@@ -106,7 +105,7 @@ export default function CoreTable({
             placeholder=""
             className="max-w-[100px]"
             defaultSelectedKeys={[pageSize.toString()]}
-            onChange={(value) => setPageSize(Number(value))}
+            onChange={(value) => setPageSize(Number(value.target.value))}
           >
             {pageSizes.map((size) => (
               <SelectItem key={size.value} value={size.value}>

@@ -12,10 +12,10 @@ export const Env = createEnv({
     STRIPE_SECRET_KEY: z.string().optional(),
     CMS_API_URL: z.string().optional(),
     CMS_API_KEY: z.string().optional(),
-    BACKEND_URL: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_STRIPE_PUBLIC_KEY: z.string().optional(),
+    NEXT_PUBLIC_BACKEND_URL: z.string().min(1),
   },
   // You need to destructure all the keys manually
   runtimeEnv: {
@@ -27,7 +27,7 @@ export const Env = createEnv({
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     CMS_API_URL: process.env.CMS_API_URL,
     CMS_API_KEY: process.env.CMS_API_KEY,
-    BACKEND_URL: process.env.BACKEND_URL,
+    NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,

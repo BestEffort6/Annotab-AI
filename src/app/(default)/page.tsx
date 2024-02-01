@@ -1,20 +1,37 @@
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
 import { getServerSession } from 'next-auth';
 
 import Home from '@/components/annotab/home';
 import { fetchInvitations } from '@/hooks/queries/useInvitations';
-import type { ApiResponse } from '@/interfaces/api-response';
-import type { Invitation } from '@/interfaces/invitation';
 import { authOptions } from '@/libs/auth';
+import { DEFAULT_PAGINATION } from '@/libs/constants';
 
 export default async function Homepage() {
   const session = await getServerSession(authOptions);
+  const queryClient = new QueryClient();
 
-  let invitations: ApiResponse<Invitation[]> | undefined;
-  try {
-    invitations = await fetchInvitations(session?.user.access.token, 1, 10);
-  } catch (error) {
-    invitations = undefined;
-  }
+  await queryClient.prefetchQuery({
+    queryKey: [
+      'invitations',
+      session?.user.access.token,
+      DEFAULT_PAGINATION.PAGE,
+      DEFAULT_PAGINATION.LIMIT,
+    ],
+    queryFn: () =>
+      fetchInvitations(
+        session?.user.access.token,
+        DEFAULT_PAGINATION.PAGE,
+        DEFAULT_PAGINATION.LIMIT
+      ),
+  });
 
-  return <Home invitations={invitations} />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Home />
+    </HydrationBoundary>
+  );
 }

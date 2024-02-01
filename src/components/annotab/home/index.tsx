@@ -4,9 +4,9 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
+import { useLayoutActions } from '@/components/providers/LayoutProvider';
 import { useInvitations } from '@/hooks/queries/useInvitations';
-import type { ApiResponse } from '@/interfaces/api-response';
-import type { Invitation } from '@/interfaces/invitation';
+import { DEFAULT_PAGINATION } from '@/libs/constants';
 
 import CoreTable from '../table';
 
@@ -39,21 +39,21 @@ const defaultColumns = [
   }),
 ];
 
-type HomeProps = {
-  invitations: ApiResponse<Invitation[]> | undefined;
-};
-
-export default function Home({ invitations }: HomeProps) {
+export default function Home() {
   const { data: session } = useSession();
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(1);
+  const { setLoading } = useLayoutActions();
+  const [page, setPage] = useState(DEFAULT_PAGINATION.PAGE);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.LIMIT);
 
-  const { data } = useInvitations(
+  const { data, isLoading } = useInvitations(
     session?.user.access.token,
     page,
-    pageSize,
-    invitations
+    pageSize
   );
+
+  if (isLoading) {
+    setLoading(true);
+  }
 
   return (
     <div className="m-4">

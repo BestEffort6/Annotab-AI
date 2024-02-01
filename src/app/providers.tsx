@@ -1,12 +1,7 @@
 'use client';
 
 import { NextUIProvider } from '@nextui-org/react';
-import { dehydrate } from '@tanstack/query-core';
-import {
-  HydrationBoundary,
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SessionProvider } from 'next-auth/react';
 import { useEffect, useState } from 'react';
@@ -20,35 +15,23 @@ type Props = {
 };
 
 export default function Provider({ children }: Props) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            // With SSR, we usually want to set some default staleTime
-            // above 0 to avoid refetching immediately on the client
-            staleTime: 60 * 1000,
-          },
-        },
-      })
-  );
+  const [queryClient] = useState(new QueryClient());
+
   useEffect(() => {
     pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
   }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <SessionProvider>
-          <NextUIProvider>
-            <LayoutProvider>
-              {children}
-              <ToastContainer />
-              <ReactQueryDevtools initialIsOpen={false} />
-            </LayoutProvider>
-          </NextUIProvider>
-        </SessionProvider>
-      </HydrationBoundary>
+      <SessionProvider>
+        <NextUIProvider>
+          <LayoutProvider>
+            {children}
+            <ToastContainer />
+            <ReactQueryDevtools initialIsOpen={false} />
+          </LayoutProvider>
+        </NextUIProvider>
+      </SessionProvider>
     </QueryClientProvider>
   );
 }

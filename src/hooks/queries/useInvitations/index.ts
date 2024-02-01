@@ -11,7 +11,7 @@ const fetchInvitations = async (
   take: number
 ): Promise<ApiResponse<Invitation[]>> => {
   const response = (await ky
-    .get(`${Env.BACKEND_URL}/api/v1/invitation`, {
+    .get(`${Env.NEXT_PUBLIC_BACKEND_URL}/api/v1/invitation`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -37,6 +37,7 @@ const useInvitations = (
     initialData,
     placeholderData: keepPreviousData,
     enabled: !!accessToken,
+    staleTime: 1000 * 10,
   });
 };
 
