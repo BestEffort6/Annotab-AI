@@ -1,7 +1,12 @@
 'use client';
 
 import { createColumnHelper } from '@tanstack/react-table';
+import { useSession } from 'next-auth/react';
 import { useState } from 'react';
+
+import { useInvitations } from '@/hooks/queries/useInvitations';
+import type { ApiResponse } from '@/interfaces/api-response';
+import type { Invitation } from '@/interfaces/invitation';
 
 import CoreTable from '../table';
 
@@ -34,19 +39,32 @@ const defaultColumns = [
   }),
 ];
 
-export default function Home() {
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+type HomeProps = {
+  invitations: ApiResponse<Invitation[]>;
+};
+
+export default function Home({ invitations }: HomeProps) {
+  const { data: session } = useSession();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(1);
+
+  const { data } = useInvitations(
+    session?.user.access.token,
+    page,
+    pageSize,
+    invitations
+  );
 
   return (
     <div className="m-4">
       <CoreTable
-        data={[]}
+        data={data?.data || []}
         columns={defaultColumns}
         loading={false}
         page={page}
         pageSize={pageSize}
-        total={0}
+        total={data?.meta.itemCount || 0}
+        totalPage={data?.meta.pageCount || 0}
         setPage={setPage}
         setPageSize={setPageSize}
       />

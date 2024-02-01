@@ -25,12 +25,14 @@ type CoreTableProps = {
   loading: boolean;
   page: number;
   pageSize: number;
+  totalPage: number;
   total: number;
   setPage: (page: number) => void;
   setPageSize: (pageSize: number) => void;
 };
 
 const pageSizes = [
+  { label: '1', value: 1 },
   { label: '10', value: 10 },
   { label: '25', value: 25 },
   { label: '50', value: 50 },
@@ -43,6 +45,7 @@ export default function CoreTable({
   loading,
   page,
   pageSize,
+  totalPage,
   total,
   setPage,
   setPageSize,
@@ -89,26 +92,29 @@ export default function CoreTable({
       <div className="flex flex-row justify-between">
         <Pagination
           size="lg"
-          total={total}
+          total={totalPage}
           initialPage={page}
           showControls
           onChange={(page) => setPage(page)}
         />
-        <Select
-          disabled={loading}
-          size="sm"
-          label="Page size"
-          placeholder=""
-          className="max-w-[100px]"
-          defaultSelectedKeys={[pageSize.toString()]}
-          onChange={(value) => setPageSize(Number(value))}
-        >
-          {pageSizes.map((size) => (
-            <SelectItem key={size.value} value={size.value}>
-              {size.label}
-            </SelectItem>
-          ))}
-        </Select>
+        <div>
+          <span className="mr-2">Total: {total}</span>
+          <Select
+            disabled={loading}
+            size="sm"
+            label="Page size"
+            placeholder=""
+            className="max-w-[100px]"
+            defaultSelectedKeys={[pageSize.toString()]}
+            onChange={(value) => setPageSize(Number(value))}
+          >
+            {pageSizes.map((size) => (
+              <SelectItem key={size.value} value={size.value}>
+                {size.label}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
       </div>
     </>
   );
