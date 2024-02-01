@@ -28,13 +28,11 @@ const fetchInvitations = async (
 const useInvitations = (
   accessToken: string | undefined,
   page: number,
-  pageSize: number,
-  initialData?: any
+  pageSize: number
 ) => {
   return useQuery({
     queryKey: ['invitations', accessToken, page, pageSize],
     queryFn: () => fetchInvitations(accessToken, page, pageSize),
-    initialData,
     placeholderData: keepPreviousData,
     enabled: !!accessToken,
     staleTime: 1000 * 10,
