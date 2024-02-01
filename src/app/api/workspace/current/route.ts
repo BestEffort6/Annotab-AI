@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 
 import { authOptions } from '@/libs/auth';
+import { Env } from '@/libs/Env.mjs';
 
 export async function PATCH(request: NextRequest) {
   const form = await request.formData();
@@ -15,7 +16,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const response = await fetch(
-      `${process.env.BACKEND_URL}/api/v1/workspace/current`,
+      `${Env.NEXT_PUBLIC_BACKEND_URL}/api/v1/workspace/current`,
       {
         method: 'PATCH',
         headers: {
