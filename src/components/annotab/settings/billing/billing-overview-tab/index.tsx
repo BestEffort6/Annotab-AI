@@ -1,15 +1,21 @@
-import Link from 'next/link';
+import { useState } from 'react';
+
+import Popup from '@/components/annotab/popup';
+
+import PlanBoxs from '../plan-boxs';
 
 const BillingOverviewTab = () => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <>
       <div className="my-[25px] text-end">
-        <Link
-          href="/"
-          className="rounded-[8px] bg-neon-purple px-[20px] py-[6px] text-[14px] font-normal text-grey-purple-white text-white transition-all hover:bg-pastel-purple"
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="rounded-[8px] bg-neon-purple px-[20px] py-[6px] text-[14px] font-normal text-grey-purple-white transition-all hover:bg-pastel-purple"
         >
           Change plan
-        </Link>
+        </button>
       </div>
       <div />
       <h5 className="mb-[10px] text-[14px] font-[600] text-dark-navy-blue">
@@ -85,6 +91,15 @@ const BillingOverviewTab = () => {
           </tbody>
         </table>
       </div>
+      <Popup
+        bgColor="bg-white"
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        size="6xl"
+        forceClose
+      >
+        <PlanBoxs setIsOpen={setIsOpen} />
+      </Popup>
     </>
   );
 };
