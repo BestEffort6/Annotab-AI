@@ -5,14 +5,12 @@ import {
 } from '@tanstack/react-query';
 import { getServerSession } from 'next-auth';
 
+import Overview from '@/components/annotab/overview/indext';
 import { fetchInvitations } from '@/hooks/queries/useInvitations';
-import { fetchSubscriptions } from '@/hooks/queries/useSubscriptions';
 import { authOptions } from '@/libs/auth';
 import { DEFAULT_PAGINATION } from '@/libs/constants';
 
-import OverviewPage from './oveview/page';
-
-export default async function Homepage() {
+export default async function OverviewPage() {
   const session = await getServerSession(authOptions);
   const queryClient = new QueryClient();
 
@@ -22,24 +20,18 @@ export default async function Homepage() {
       session?.user.access.token,
       DEFAULT_PAGINATION.PAGE,
       DEFAULT_PAGINATION.LIMIT,
-      '',
     ],
     queryFn: () =>
       fetchInvitations(
         session?.user.access.token,
         DEFAULT_PAGINATION.PAGE,
-        DEFAULT_PAGINATION.LIMIT,
-        ''
+        DEFAULT_PAGINATION.LIMIT
       ),
-  });
-  await queryClient.prefetchQuery({
-    queryKey: ['subscriptions', session?.user.access.token],
-    queryFn: () => fetchSubscriptions(session?.user.access.token),
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <OverviewPage />
+      <Overview />
     </HydrationBoundary>
   );
 }

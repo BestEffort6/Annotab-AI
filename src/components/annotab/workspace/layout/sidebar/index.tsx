@@ -18,8 +18,15 @@ const WorkspaceSidebar = () => {
 
   const menuItemsTop = [
     {
-      value: 'Dataset',
+      value: 'Overview',
       link: '/',
+      src: '/images/svg/icon/menu-bar/icon-overview-darknavyblue-light.svg',
+      srcActive:
+        '/images/svg/icon/menu-bar/icon-overview-darknavyblue-light.svg',
+    },
+    {
+      value: 'Dataset',
+      link: '/dataset',
       src: '/images/svg/icon/menu-bar/icon-dataset-darknavyblue-light.svg',
       srcActive:
         '/images/svg/icon/menu-bar/icon-dataset-darknavyblue-light.svg',

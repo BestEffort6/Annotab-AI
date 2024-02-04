@@ -1,0 +1,77 @@
+'use client';
+
+import { createColumnHelper } from '@tanstack/react-table';
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+
+import { useInvitations } from '@/hooks/queries/useInvitations';
+import { DEFAULT_PAGINATION } from '@/libs/constants';
+
+import CoreTable from '../../table';
+
+const columnHelper = createColumnHelper<any>();
+
+const defaultColumns = [
+  columnHelper.accessor((row) => row.user.firstName, {
+    id: 'name',
+    cell: (info) => info.getValue(),
+    header: () => <span>Name</span>,
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor((row) => row.user.email, {
+    id: 'email',
+    cell: (info) => info.getValue(),
+    header: () => <span>Email</span>,
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor((row) => row.role, {
+    id: 'role',
+    cell: (info) => info.getValue(),
+    header: () => <span>Role</span>,
+    footer: (props) => props.column.id,
+  }),
+];
+
+interface MembersProps {
+  setIsAddPeople: (isAddPeople: boolean) => void;
+}
+
+const Members = ({ setIsAddPeople }: MembersProps) => {
+  const { data: session } = useSession();
+  const [page, setPage] = useState(DEFAULT_PAGINATION.PAGE);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.LIMIT);
+
+  const { data } = useInvitations(session?.user.access.token, page, pageSize);
+  return (
+    <div className="flex h-[45%] w-full flex-col gap-y-4 rounded-lg bg-mostly-white">
+      <div className="flex flex-row items-center justify-between px-5 py-3">
+        <p className="text-sm font-bold capitalize text-dark-navy-blue">
+          Members
+        </p>
+        <button
+          type="button"
+          onClick={() => setIsAddPeople(true)}
+          className="rounded-lg border border-dark-navy-blue/10 px-4 py-1 text-sm font-normal capitalize text-dark-navy-blue"
+        >
+          add People
+        </button>
+      </div>
+      <div className="h-full w-full">
+        <CoreTable
+          data={data?.data || []}
+          columns={defaultColumns}
+          loading={false}
+          page={page}
+          pageSize={pageSize}
+          total={data?.meta.itemCount || 0}
+          totalPage={data?.meta.pageCount || 0}
+          setPage={setPage}
+          setPageSize={setPageSize}
+          isType
+          content
+        />
+      </div>
+    </div>
+  );
+};
+export default Members;

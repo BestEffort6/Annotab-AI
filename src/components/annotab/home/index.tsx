@@ -63,6 +63,8 @@ export default function Home() {
         totalPage={data?.meta.pageCount || 0}
         setPage={setPage}
         setPageSize={setPageSize}
+        isType
+        content
       />
     </div>
   );
