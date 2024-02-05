@@ -21,9 +21,9 @@ import { useEffect } from 'react';
 
 import { PAGE_SIZES } from '@/libs/constants';
 
-type CoreTableProps = {
-  data: any[];
-  columns: ColumnDef<any>[];
+type CoreTableProps<T> = {
+  data: T[];
+  columns: ColumnDef<T, string>[];
   loading: boolean;
   page: number;
   pageSize: number;
@@ -33,7 +33,7 @@ type CoreTableProps = {
   setPageSize: (pageSize: number) => void;
 };
 
-export default function CoreTable({
+export default function CoreTable<T>({
   data,
   columns,
   loading,
@@ -43,7 +43,7 @@ export default function CoreTable({
   total,
   setPage,
   setPageSize,
-}: CoreTableProps) {
+}: CoreTableProps<T>) {
   const {
     getFlatHeaders,
     getRowModel,

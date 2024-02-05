@@ -20,12 +20,14 @@ export default async function Homepage() {
       session?.user.access.token,
       DEFAULT_PAGINATION.PAGE,
       DEFAULT_PAGINATION.LIMIT,
+      '',
     ],
     queryFn: () =>
       fetchInvitations(
         session?.user.access.token,
         DEFAULT_PAGINATION.PAGE,
-        DEFAULT_PAGINATION.LIMIT
+        DEFAULT_PAGINATION.LIMIT,
+        ''
       ),
   });
 
