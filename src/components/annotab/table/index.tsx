@@ -31,8 +31,8 @@ type CoreTableProps<T> = {
   total: number;
   setPage: (page: number) => void;
   setPageSize: (pageSize: number) => void;
-  isType: boolean;
-  content?: React.ReactNode;
+  type: 'list' | 'grid';
+  itemGrid?: (rowData: T) => React.ReactNode;
 };
 
 export default function CoreTable<T>({
@@ -45,16 +45,16 @@ export default function CoreTable<T>({
   total,
   setPage,
   setPageSize,
-  isType,
-  content,
+  type,
+  itemGrid,
 }: CoreTableProps<T>) {
   const {
     getFlatHeaders,
     getRowModel,
     setPageSize: setTablePageSize,
   } = useReactTable({
-    data: data || [],
-    columns: columns || [],
+    data,
+    columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -66,8 +66,8 @@ export default function CoreTable<T>({
   }, [pageSize, setTablePageSize]);
 
   return (
-    <div className="h-full w-full">
-      {isType ? (
+    <div className="flex h-full w-full flex-col gap-y-3">
+      {type === 'list' ? (
         <Table aria-label="Example empty table" className="mb-2 h-[95%]">
           <TableHeader className="bg-black">
             {getFlatHeaders().map((header) => (
@@ -92,7 +92,15 @@ export default function CoreTable<T>({
           </TableBody>
         </Table>
       ) : (
-        <div className="h-[95%] w-full overflow-y-auto">{content}</div>
+        <div className="flex h-[85%] w-full">
+          <div className="h-full w-full overflow-y-auto">
+            <div className="flex flex-wrap gap-6 pb-3">
+              {getRowModel().rows.map((row) => (
+                <div key={row.id}>{itemGrid && itemGrid(row.original)}</div>
+              ))}
+            </div>
+          </div>
+        </div>
       )}
       <div className="flex h-[5%] flex-row items-center justify-between">
         <Pagination

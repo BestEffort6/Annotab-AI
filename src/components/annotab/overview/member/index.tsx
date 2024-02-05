@@ -38,10 +38,16 @@ interface MembersProps {
 
 const Members = ({ setIsAddPeople }: MembersProps) => {
   const { data: session } = useSession();
+  const [keyword] = useState('');
   const [page, setPage] = useState(DEFAULT_PAGINATION.PAGE);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.LIMIT);
 
-  const { data } = useInvitations(session?.user.access.token, page, pageSize);
+  const { data } = useInvitations(
+    session?.user.access.token,
+    page,
+    pageSize,
+    keyword
+  );
   return (
     <div className="flex h-[45%] w-full flex-col  gap-y-4 rounded-lg bg-mostly-white px-5 py-3">
       <div className="flex flex-row items-center justify-between">
@@ -67,8 +73,7 @@ const Members = ({ setIsAddPeople }: MembersProps) => {
           totalPage={data?.meta.pageCount || 0}
           setPage={setPage}
           setPageSize={setPageSize}
-          isType
-          content
+          type="list"
         />
       </div>
     </div>

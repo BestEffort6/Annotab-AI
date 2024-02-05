@@ -4,13 +4,13 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 import { useDatasets } from '@/hooks/queries/useDatasets';
 import type { DatasetProps } from '@/interfaces/dataset';
 import { DEFAULT_PAGINATION } from '@/libs/constants';
 
 import CoreTable from '../table';
+import DatasetItem from './item';
 
 const Dataset = () => {
   const { data: session } = useSession();
@@ -24,6 +24,7 @@ const Dataset = () => {
   const handleDatasetItemClick = (id: string) => {
     router.push(`/dataset/${id}`);
   };
+
   return (
     <div className="flex h-full w-full flex-col gap-y-9 px-6 py-7">
       <div className="flex h-10 w-full flex-row items-center justify-between">
@@ -46,38 +47,11 @@ const Dataset = () => {
         totalPage={data?.meta.pageCount || 0}
         setPage={setPage}
         setPageSize={setPageSize}
-        isType={false}
-        content={
-          <div className="flex flex-wrap gap-6">
-            {data &&
-              data.data.map((item: DatasetProps) => (
-                <div
-                  onClick={() => handleDatasetItemClick(item.id)}
-                  key={item.id}
-                  className="flex w-60 cursor-pointer flex-col gap-y-1 rounded-lg bg-grey-purple-white px-4 py-4 shadow-md"
-                  aria-hidden="true"
-                >
-                  <div className="flex h-40 w-full flex-row">
-                    <LazyLoadImage
-                      src={item.firstData?.file?.url ?? '/images/no-image.png'}
-                      className="full h-full w-full rounded-lg object-cover shadow-md"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-y-2">
-                    <p className="truncate text-sm font-semibold text-dark-navy-blue">
-                      {item.name}
-                    </p>
-                    <p className="text-xs font-normal text-dark-navy-blue">
-                      {/* {item.dataList.length} Items */}
-                    </p>
-                    <p className="text-xs font-normal text-dark-navy-blue">
-                      0% Annotated
-                    </p>
-                  </div>
-                </div>
-              ))}
-          </div>
-        }
+        type="grid"
+        // eslint-disable-next-line react/no-unstable-nested-components
+        itemGrid={(rowData: DatasetProps) => (
+          <DatasetItem rowData={rowData} onItemClick={handleDatasetItemClick} />
+        )}
       />
     </div>
   );

@@ -13,6 +13,7 @@ const fetchDatasets = async (
   const response = (await ky
     .get(`${Env.NEXT_PUBLIC_BACKEND_URL}/api/v1/dataset`, {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
       searchParams: {
