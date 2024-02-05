@@ -10,7 +10,6 @@ export const inviteMembers = async (
   accessToken: string | undefined,
   payload: InviteMember
 ) => {
-  console.log({ accessToken, payload });
   const response = (await ky
     .post(`${Env.NEXT_PUBLIC_BACKEND_URL}/api/v1/invitation`, {
       headers: {

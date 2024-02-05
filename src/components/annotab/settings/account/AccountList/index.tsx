@@ -1,5 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { ColumnDef } from '@tanstack/react-table';
 import { createColumnHelper } from '@tanstack/react-table';
+import { useDebounce } from '@uidotdev/usehooks';
+import dayjs from 'dayjs';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -11,23 +14,17 @@ import toast from '@/components/annotab/toast';
 import { useLayoutActions } from '@/components/providers/LayoutProvider';
 import { useInviteMembers } from '@/hooks/mutations/useInviteMembers';
 import { useInvitations } from '@/hooks/queries/useInvitations';
+import type { Invitation } from '@/interfaces/invitation';
 import { DEFAULT_PAGINATION } from '@/libs/constants';
 import { InvitePeople } from '@/validations/WorkspaceValidation';
-// import { Checkbox } from '@nextui-org/react';
 
-const columnHelper = createColumnHelper<any>();
+const columnHelper = createColumnHelper<Invitation>();
 
-const defaultColumns = [
-  columnHelper.accessor((row) => row.id, {
-    id: 'id',
+const defaultColumns: ColumnDef<Invitation, string>[] = [
+  columnHelper.accessor((row) => `${row.user.firstName} ${row.user.lastName}`, {
+    id: 'name',
     cell: (info) => info.getValue(),
-    header: () => <span>ID</span>,
-    footer: (props) => props.column.id,
-  }),
-  columnHelper.accessor((row) => row.role, {
-    id: 'role',
-    cell: (info) => info.getValue(),
-    header: () => <span>Role</span>,
+    header: () => <span>Name</span>,
     footer: (props) => props.column.id,
   }),
   columnHelper.accessor((row) => row.user.email, {
@@ -36,10 +33,30 @@ const defaultColumns = [
     header: () => <span>Email</span>,
     footer: (props) => props.column.id,
   }),
+  columnHelper.accessor((row) => row.role, {
+    id: 'role',
+    cell: (info) => info.getValue(),
+    header: () => <span>Role</span>,
+    footer: (props) => props.column.id,
+  }),
   columnHelper.accessor((row) => row.status, {
     id: 'status',
     cell: (info) => info.getValue(),
     header: () => <span>Status</span>,
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor((row) => row.invitationAcceptedAt, {
+    id: 'joined',
+    cell: (info) =>
+      info.getValue() ? dayjs(info.getValue()).format('DD MMM YYYY') : '',
+    header: () => <span>Joined</span>,
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor((row) => row.user.lastLoginAt, {
+    id: 'lastActive',
+    cell: (info) =>
+      info.getValue() ? dayjs(info.getValue()).format('DD MMM YYYY') : '',
+    header: () => <span>Last Active</span>,
     footer: (props) => props.column.id,
   }),
 ];
@@ -55,9 +72,15 @@ const AccountList = () => {
   const { data: session } = useSession();
   const [page, setPage] = useState(DEFAULT_PAGINATION.PAGE);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.LIMIT);
-  // const [keyword, setKeyword] = useState('');
+  const [search, setSearch] = useState('');
+  const debounceSearchValue = useDebounce(search, 500);
 
-  const { data } = useInvitations(session?.user.access.token, page, pageSize);
+  const { data } = useInvitations(
+    session?.user.access.token,
+    page,
+    pageSize,
+    debounceSearchValue
+  );
 
   const { mutate } = useInviteMembers();
 
@@ -101,7 +124,7 @@ const AccountList = () => {
                 id="AccountSearch"
                 name="AccountSearch"
                 placeholder="search"
-                // onChange={e => setKeyword(e.target.value)}
+                onChange={(e) => setSearch(e.target.value)}
                 className="mt-[6px] block w-full rounded-[8px] border border-dark-navy-blue/10 bg-mostly-white p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
               />
             </label>
@@ -131,7 +154,7 @@ const AccountList = () => {
         <h6 className="text-[14px] font-normal text-dark-navy-blue">
           Showing: 4 results
         </h6>
-        <CoreTable
+        <CoreTable<Invitation>
           data={data?.data || []}
           columns={defaultColumns}
           loading={false}
@@ -142,127 +165,6 @@ const AccountList = () => {
           setPage={setPage}
           setPageSize={setPageSize}
         />
-        {/* <table className="w-full table-auto">
-          <thead>
-            <tr className="border-b border-dark-navy-blue/25">
-              <th className="px-[10px] py-[15px] text-start">
-                <Checkbox>{` `}</Checkbox>
-              </th>
-              <th className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                Name
-              </th>
-              <th className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                Email
-              </th>
-              <th className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                User role
-              </th>
-              <th className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                Status
-              </th>
-              <th className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                Joined
-              </th>
-              <th className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                Last active
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-dark-navy-blue/25">
-              <td className="px-[10px] py-[15px] text-start">
-                <Checkbox>{` `}</Checkbox>
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                John Doe
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                JohnDoe@gmail.com
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                Admin
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                Pending
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                DD MM,YYYY
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                DD MM,YYYY
-              </td>
-            </tr>
-            <tr className="border-b border-dark-navy-blue/25">
-              <td className="px-[10px] py-[15px] text-start">
-                <Checkbox>{` `}</Checkbox>
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                John Doe
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                JohnDoe@gmail.com
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                Admin
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                Pending
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                DD MM,YYYY
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                DD MM,YYYY
-              </td>
-            </tr>
-            <tr className="border-b border-dark-navy-blue/25">
-              <td className="px-[10px] py-[15px] text-start">
-                <Checkbox>{` `}</Checkbox>
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                John Doe
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                JohnDoe@gmail.com
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                Admin
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                Pending
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                DD MM,YYYY
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                DD MM,YYYY
-              </td>
-            </tr>
-            <tr className="border-b border-dark-navy-blue/25">
-              <td className="px-[10px] py-[15px] text-start">
-                <Checkbox>{` `}</Checkbox>
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                John Doe
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                JohnDoe@gmail.com
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                Admin
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                Pending
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                DD MM,YYYY
-              </td>
-              <td className="px-[10px] py-[15px] text-start text-[14px] font-normal text-dark-navy-blue">
-                DD MM,YYYY
-              </td>
-            </tr>
-          </tbody>
-        </table> */}
       </div>
       <Popup
         bgColor="bg-white"

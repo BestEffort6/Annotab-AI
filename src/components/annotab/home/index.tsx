@@ -40,10 +40,16 @@ const defaultColumns = [
 
 export default function Home() {
   const { data: session } = useSession();
+  const [keyword] = useState('');
   const [page, setPage] = useState(DEFAULT_PAGINATION.PAGE);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.LIMIT);
 
-  const { data } = useInvitations(session?.user.access.token, page, pageSize);
+  const { data } = useInvitations(
+    session?.user.access.token,
+    page,
+    pageSize,
+    keyword
+  );
 
   return (
     <div className="m-4">
