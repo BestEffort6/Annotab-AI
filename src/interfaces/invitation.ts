@@ -8,3 +8,8 @@ export interface Invitation {
   role: string;
   invitationAcceptedAt: string;
 }
+
+export interface InviteMember {
+  email: string;
+  role: string;
+}

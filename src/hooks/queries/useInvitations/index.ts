@@ -9,6 +9,7 @@ const fetchInvitations = async (
   accessToken: string | undefined,
   page: number,
   take: number
+  // keyword: string,
 ): Promise<ApiResponse<Invitation[]>> => {
   const response = (await ky
     .get(`${Env.NEXT_PUBLIC_BACKEND_URL}/api/v1/invitation`, {
@@ -18,6 +19,7 @@ const fetchInvitations = async (
       searchParams: {
         page,
         take,
+        // keyword
       },
     })
     .json()) as ApiResponse<Invitation[]>;
@@ -29,6 +31,7 @@ const useInvitations = (
   accessToken: string | undefined,
   page: number,
   pageSize: number
+  // keyword: string,
 ) => {
   return useQuery({
     queryKey: ['invitations', accessToken, page, pageSize],

@@ -13,7 +13,7 @@ const SettingsSidebar = ({ currentRoute }: any) => {
       {
         parentLabel: 'Access',
         value: 'Account',
-        link: '/settings/access/account',
+        link: '/settings/account',
       },
       {
         value: 'Role and Permission',
