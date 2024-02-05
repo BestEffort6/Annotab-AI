@@ -22,7 +22,6 @@ export default function Overview() {
   const [page] = useState(DEFAULT_PAGINATION.PAGE);
   const [pageSize] = useState(DEFAULT_PAGINATION.LIMIT);
   const { data } = useDatasets(session?.user.access.token, page, pageSize);
-  console.log(data);
 
   return (
     <>
