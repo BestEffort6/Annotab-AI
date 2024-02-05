@@ -3,7 +3,5 @@ export default async function DatasetDetailPage({
 }: {
   params: { datasetId: string };
 }) {
-  console.log('params', params);
-
-  return <div>1</div>;
+  return <div>{params.datasetId}</div>;
 }
