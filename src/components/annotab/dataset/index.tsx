@@ -29,11 +29,6 @@ const Dataset = () => {
       <div className="flex h-10 w-full flex-row items-center justify-between">
         <p className="text-base font-semibold text-dark-navy-blue">Dataset</p>
         <button
-          onClick={
-            data?.meta.itemCount > 9
-              ? () => {}
-              : () => router.push('/dataset/create')
-          }
           type="button"
           className="flex flex-row items-center justify-center gap-x-2 rounded-lg border  border-dark-navy-blue/10 bg-mostly-white px-5 py-2 text-base font-semibold text-dark-navy-blue transition duration-700 ease-in-out hover:drop-shadow-lg"
         >
