@@ -22,13 +22,14 @@ export default function Overview() {
   const [page] = useState(DEFAULT_PAGINATION.PAGE);
   const [pageSize] = useState(DEFAULT_PAGINATION.LIMIT);
   const { data } = useDatasets(session?.user.access.token, page, pageSize);
+  console.log(data);
 
   return (
     <>
       <div className="flex h-full w-full flex-col gap-y-5 overflow-y-auto px-7 py-11">
         <div className="flex h-[12%] w-full flex-wrap">
-          <div className="bg-light-blue flex h-full w-1/5 flex-col justify-center gap-y-4 rounded-lg px-5">
-            <p className="text-light-red text-sm font-semibold">
+          <div className="flex h-full w-1/5 flex-col justify-center gap-y-4 rounded-lg bg-light-blue px-5">
+            <p className="text-sm font-semibold text-light-red">
               {data && data.meta.itemCount}
             </p>
             <p className="text-base font-semibold text-dark-navy-blue">Total</p>

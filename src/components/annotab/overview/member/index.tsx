@@ -43,8 +43,8 @@ const Members = ({ setIsAddPeople }: MembersProps) => {
 
   const { data } = useInvitations(session?.user.access.token, page, pageSize);
   return (
-    <div className="flex h-[45%] w-full flex-col gap-y-4 rounded-lg bg-mostly-white">
-      <div className="flex flex-row items-center justify-between px-5 py-3">
+    <div className="flex h-[45%] w-full flex-col  gap-y-4 rounded-lg bg-mostly-white px-5 py-3">
+      <div className="flex flex-row items-center justify-between">
         <p className="text-sm font-bold capitalize text-dark-navy-blue">
           Members
         </p>
@@ -56,7 +56,7 @@ const Members = ({ setIsAddPeople }: MembersProps) => {
           add People
         </button>
       </div>
-      <div className="h-full w-full">
+      <div className="w-full">
         <CoreTable
           data={data?.data || []}
           columns={defaultColumns}
