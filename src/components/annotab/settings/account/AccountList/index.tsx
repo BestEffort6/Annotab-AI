@@ -3,6 +3,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useDebounce } from '@uidotdev/usehooks';
 import dayjs from 'dayjs';
+import type { HTTPError } from 'ky';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -103,7 +104,7 @@ const AccountList = () => {
         },
         onError: async (error) => {
           if (error.name === 'HTTPError') {
-            const errJson = await (error as any).response.json();
+            const errJson = await (error as HTTPError).response.json();
 
             toast({
               type: 'error',
