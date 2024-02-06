@@ -32,11 +32,7 @@ const defaultColumns = [
   }),
 ];
 
-interface MembersProps {
-  setIsAddPeople: (isAddPeople: boolean) => void;
-}
-
-const Members = ({ setIsAddPeople }: MembersProps) => {
+const Members = () => {
   const { data: session } = useSession();
   const [keyword] = useState('');
   const [page, setPage] = useState(DEFAULT_PAGINATION.PAGE);
@@ -49,17 +45,16 @@ const Members = ({ setIsAddPeople }: MembersProps) => {
     keyword
   );
   return (
-    <div className="flex h-[45%] w-full flex-col  gap-y-4 rounded-lg bg-mostly-white px-5 py-3">
+    <div className="flex w-full flex-col  gap-y-4 rounded-lg bg-mostly-white px-5 py-3">
       <div className="flex flex-row items-center justify-between">
         <p className="text-sm font-bold capitalize text-dark-navy-blue">
           Members
         </p>
         <button
           type="button"
-          onClick={() => setIsAddPeople(true)}
           className="rounded-lg border border-dark-navy-blue/10 px-4 py-1 text-sm font-normal capitalize text-dark-navy-blue"
         >
-          add People
+          Add People
         </button>
       </div>
       <div className="w-full">

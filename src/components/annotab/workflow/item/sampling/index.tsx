@@ -3,14 +3,11 @@
 import React from 'react';
 import { Handle, Position } from 'reactflow';
 
-import { useLayout } from '@/app/providers';
-
 interface ItemSamplingProps {
   isConnectable: boolean;
 }
 
 const ItemSampling = ({ isConnectable }: ItemSamplingProps) => {
-  const { valuesSampling } = useLayout();
   return (
     <div className="block w-52 flex-initial rounded-lg bg-grey-purple-white shadow-sm">
       <div className="relative block rounded-lg bg-light-slate-grey">
@@ -43,7 +40,7 @@ const ItemSampling = ({ isConnectable }: ItemSamplingProps) => {
           </div>
           <div className="w-1/2 text-end">
             <p className="text-base font-bold capitalize text-dark-navy-blue">
-              {valuesSampling[0]}%
+              10%
             </p>
           </div>
           <Handle
@@ -66,7 +63,7 @@ const ItemSampling = ({ isConnectable }: ItemSamplingProps) => {
           </div>
           <div className="w-1/2 text-end">
             <p className="text-base font-bold capitalize text-dark-navy-blue">
-              {100 - valuesSampling[0]}%
+              90%
             </p>
           </div>
           <Handle

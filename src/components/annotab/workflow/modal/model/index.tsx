@@ -3,8 +3,6 @@
 import { Switch } from '@headlessui/react';
 import React, { useState } from 'react';
 
-import { useLayout, useLayoutActions } from '@/app/providers';
-
 interface ModelProps {
   dataModel: {
     id: string;
@@ -19,8 +17,7 @@ interface ModelProps {
 }
 
 const ModelModal = ({ dataModel }: ModelProps) => {
-  const { showModelWorkflow } = useLayout();
-  const { setShowModelWorkflow } = useLayoutActions();
+  const [showModelWorkflow, setShowModelWorkflow] = useState<string | null>();
   const [enabled, setEnabled] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 

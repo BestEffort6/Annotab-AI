@@ -68,7 +68,7 @@ export default function CoreTable<T>({
   return (
     <div className="flex h-full w-full flex-col gap-y-3">
       {type === 'list' ? (
-        <Table aria-label="Example empty table" className="mb-2 h-[95%]">
+        <Table aria-label="Example empty table" className="mb-2">
           <TableHeader className="bg-black">
             {getFlatHeaders().map((header) => (
               <TableColumn key={header.id} className="bg-light-blue">
@@ -92,7 +92,7 @@ export default function CoreTable<T>({
           </TableBody>
         </Table>
       ) : (
-        <div className="flex h-[85%] w-full">
+        <div className="flex w-full">
           <div className="h-full w-full overflow-y-auto">
             <div className="flex flex-wrap gap-6 pb-3">
               {getRowModel().rows.map((row) => (
@@ -102,7 +102,7 @@ export default function CoreTable<T>({
           </div>
         </div>
       )}
-      <div className="flex h-[5%] flex-row items-center justify-between">
+      <div className="flex flex-row items-center justify-between">
         <Pagination
           size="lg"
           total={totalPage}

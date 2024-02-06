@@ -26,8 +26,8 @@ const ListChart = () => {
   const [selected, setSelected] = useState(people[0] || undefined);
 
   return (
-    <div className="flex h-[45%] w-full flex-row gap-x-5">
-      <div className="flex h-full w-1/4 flex-col gap-y-4  rounded-lg bg-mostly-white p-5">
+    <div className="flex w-full flex-row gap-x-5">
+      <div className="flex h-full w-1/4 flex-col gap-y-4 rounded-lg bg-mostly-white p-5">
         <div className="w-full">
           <Listbox value={selected} onChange={setSelected}>
             <div className="relative">
@@ -95,7 +95,7 @@ const ListChart = () => {
           ))}
         </div>
       </div>
-      <div className="h-full w-3/4" />
+      <div className="h-full w-3/4 rounded-lg bg-mostly-white" />
     </div>
   );
 };
