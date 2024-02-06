@@ -2,7 +2,7 @@ interface DataProps {
   id: string;
 }
 
-export interface DatasetProps {
+export interface Dataset {
   id: string;
   image: string;
   name: string;

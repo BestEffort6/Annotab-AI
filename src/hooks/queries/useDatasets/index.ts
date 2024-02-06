@@ -2,14 +2,14 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import ky from 'ky';
 
 import type { ApiResponse } from '@/interfaces/api-response';
-import type { DatasetProps } from '@/interfaces/dataset';
+import type { Dataset } from '@/interfaces/dataset';
 import { Env } from '@/libs/Env.mjs';
 
 const fetchDatasets = async (
   accessToken: string | undefined,
   page: number,
   take: number
-): Promise<ApiResponse<DatasetProps[]>> => {
+): Promise<ApiResponse<Dataset[]>> => {
   const response = (await ky
     .get(`${Env.NEXT_PUBLIC_BACKEND_URL}/api/v1/dataset`, {
       headers: {
@@ -21,7 +21,7 @@ const fetchDatasets = async (
         take,
       },
     })
-    .json()) as ApiResponse<DatasetProps[]>;
+    .json()) as ApiResponse<Dataset[]>;
 
   return response;
 };

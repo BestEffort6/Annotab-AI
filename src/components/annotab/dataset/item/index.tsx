@@ -2,10 +2,10 @@
 
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 
-import type { DatasetProps } from '@/interfaces/dataset';
+import type { Dataset } from '@/interfaces/dataset';
 
 interface DatasetItemProps {
-  rowData: DatasetProps;
+  rowData: Dataset;
   onItemClick: (id: string) => void;
 }
 

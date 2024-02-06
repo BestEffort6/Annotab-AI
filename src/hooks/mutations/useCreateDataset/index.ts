@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import ky from 'ky';
 
 import type { ApiResponse } from '@/interfaces/api-response';
-import type { CreateDatasetFromData, DatasetProps } from '@/interfaces/dataset';
+import type { CreateDatasetFromData, Dataset } from '@/interfaces/dataset';
 import { Env } from '@/libs/Env.mjs';
 
 export const createDataset = async (
@@ -16,7 +16,7 @@ export const createDataset = async (
       },
       body: payload,
     })
-    .json()) as ApiResponse<DatasetProps>;
+    .json()) as ApiResponse<Dataset>;
 
   return response;
 };

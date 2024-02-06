@@ -1,12 +1,10 @@
 'use client';
 
 import { PlusIcon } from '@heroicons/react/24/outline';
-import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
 import { useDatasets } from '@/hooks/queries/useDatasets';
-import type { DatasetProps } from '@/interfaces/dataset';
 import { DEFAULT_PAGINATION } from '@/libs/constants';
 
 import CoreTable from '../table';
@@ -14,16 +12,11 @@ import DatasetItem from './item';
 
 const Dataset = () => {
   const { data: session } = useSession();
-  const router = useRouter();
 
   const [page, setPage] = useState(DEFAULT_PAGINATION.PAGE);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.LIMIT);
 
   const { data } = useDatasets(session?.user.access.token, page, pageSize);
-
-  const handleDatasetItemClick = (id: string) => {
-    router.push(`/dataset/${id}`);
-  };
 
   return (
     <div className="flex h-full w-full flex-col gap-y-9 px-6 py-7">
@@ -48,10 +41,7 @@ const Dataset = () => {
         setPage={setPage}
         setPageSize={setPageSize}
         type="grid"
-        // eslint-disable-next-line react/no-unstable-nested-components
-        itemGrid={(rowData: DatasetProps) => (
-          <DatasetItem rowData={rowData} onItemClick={handleDatasetItemClick} />
-        )}
+        itemGrid={DatasetItem}
       />
     </div>
   );
