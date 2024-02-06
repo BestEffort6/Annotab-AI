@@ -5,6 +5,7 @@ import {
   ChevronDoubleRightIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
+import Link from 'next/link';
 import React, { useState } from 'react';
 
 import SidebarItem from '../sidebar-item';
@@ -31,11 +32,42 @@ const WorkspaceSidebar = () => {
       className={clsx(
         'relative flex h-full flex-col justify-between rounded-r-lg bg-mostly-white',
         !isOpen
-          ? 'right-0 w-16 justify-start transition-all duration-300 ease-in'
-          : 'left-0 w-64 justify-start transition-all duration-300 ease-out'
+          ? 'right-0 w-full max-w-16 justify-start transition-all duration-1000 ease-in'
+          : 'left-0 w-full max-w-64 justify-start transition-all duration-1000 ease-out'
       )}
     >
-      <div className="flex flex-col gap-y-5 py-12" />
+      <div className="flex flex-col gap-y-6 py-12">
+        {/* --------------------------------------------- */}
+        <div className="ml-3 flex cursor-pointer items-center py-2 pl-3">
+          <img src="/images/svg/icon-overview-darknavyblue-light.svg" />
+          <h1 className="ml-4 max-w-[64px] text-sm  font-semibold text-[#31374A] transition-all">
+            {isOpen && 'Overview'}
+          </h1>
+        </div>
+
+        <div className="ml-3 flex cursor-pointer items-center py-2 pl-3">
+          <img src="/images/svg/icon-dataset-darknavyblue-light.svg" />
+          <h1 className="ml-4 max-w-[53px] text-sm  font-semibold text-[#31374A] transition-all">
+            {isOpen && 'Dataset'}
+          </h1>
+        </div>
+
+        <div className="ml-3 flex cursor-pointer items-center py-2 pl-3">
+          <img src="/images/svg/icon-workflow-darknavyblue-light.svg" />
+          <h1 className="ml-4 max-w-[65px]  text-sm font-semibold text-[#31374A] transition-all">
+            {isOpen && 'Workflow'}
+          </h1>
+        </div>
+        <Link href="/classes">
+          <div className="ml-3 flex cursor-pointer items-center rounded-s-full border bg-[#F8F8FB] py-2 pl-3">
+            <img src="/images/svg/icon-classmanagement-darknavyblue-light.svg" />
+            <h1 className=" ml-4 text-sm font-semibold text-[#6821FF]">
+              {isOpen && 'Class Management'}
+            </h1>
+          </div>
+        </Link>
+        {/* --------------------------------------------- */}
+      </div>
       <div className="flex flex-col justify-end gap-y-5 py-12">
         {menuItemsBottom.map((item) => (
           <SidebarItem key={item.value} item={item} isOpen={isOpen} />
