@@ -24,3 +24,9 @@ export interface ApiResponseSingle<T> {
 export type ApiResponse<T> = T extends Array<infer U>
   ? ApiResponseList<U>
   : ApiResponseSingle<T>;
+
+export type ApiResponseError = {
+  statusCode: number;
+  message: string;
+  error: string;
+};
