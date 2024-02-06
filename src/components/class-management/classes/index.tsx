@@ -17,59 +17,59 @@ const ClassesName = () => {
       </div>
 
       <div className="flex w-full flex-wrap gap-11">
-        <div className="border-dark_navy_blue h-[238px]  w-full max-w-[230px] rounded-lg border border-opacity-10 bg-white">
-          <Link href="/class/class01">
+        <Link href="/class/class01" className="w-full max-w-[230px]">
+          <div className="border-dark_navy_blue h-[238px] w-full max-w-[230px] rounded-lg border border-opacity-10 bg-white">
             <div className="mb-1 ml-3 mr-3 mt-3 h-[156px] max-w-[210px] rounded-lg border bg-[#686299]" />
             <h1 className="text-dark_navy_blue ml-3 w-full text-sm font-semibold">
               Class 01
             </h1>
-          </Link>
-        </div>
+          </div>
+        </Link>
 
-        <div className="border-dark_navy_blue h-[238px] w-full  max-w-[230px] cursor-pointer rounded-lg border border-opacity-10 bg-white">
-          <Link href="/class/class02">
+        <Link href="/class/class02" className="w-full max-w-[230px]">
+          <div className="border-dark_navy_blue h-[238px] w-full  max-w-[230px] rounded-lg border border-opacity-10 bg-white">
             <div className="mb-1 ml-3 mr-3 mt-3 h-[156px] max-w-[210px] rounded-lg border bg-[#F25656]" />
             <h1 className="text-dark_navy_blue ml-3 w-full text-sm font-semibold">
               Class 02
             </h1>
-          </Link>
-        </div>
+          </div>
+        </Link>
 
-        <div className="border-dark_navy_blue h-[238px] w-full  max-w-[230px] cursor-pointer rounded-lg border border-opacity-10 bg-white">
-          <Link href="/class/class03">
+        <Link href="/class/class03" className="w-full max-w-[230px]">
+          <div className="border-dark_navy_blue h-[238px] w-full  max-w-[230px] rounded-lg border border-opacity-10 bg-white">
             <div className="mb-1 ml-3 mr-3 mt-3 h-[156px] max-w-[210px] rounded-lg border bg-[#0CA1CF]" />
             <h1 className="text-dark_navy_blue ml-3 text-sm font-semibold">
               Class 03
             </h1>
-          </Link>
-        </div>
+          </div>
+        </Link>
 
-        <div className="border-dark_navy_blue h-[238px] w-full  max-w-[230px] cursor-pointer rounded-lg border border-opacity-10 bg-white">
-          <Link href="/class/class04">
+        <Link href="/class/class04" className="w-full max-w-[230px]">
+          <div className="border-dark_navy_blue h-[238px] w-full  max-w-[230px] rounded-lg border border-opacity-10 bg-white">
             <div className="mb-1 ml-3 mr-3 mt-3 h-[156px] max-w-[210px] rounded-lg border bg-[#FFA06B]" />
             <h1 className="text-dark_navy_blue ml-3 text-sm font-semibold">
               Class 04
             </h1>
-          </Link>
-        </div>
+          </div>
+        </Link>
 
-        <div className="border-dark_navy_blue h-[238px] w-full  max-w-[230px] cursor-pointer rounded-lg border border-opacity-10 bg-white">
-          <Link href="/class/class05">
+        <Link href="/class/class05" className="w-full max-w-[230px]">
+          <div className="border-dark_navy_blue h-[238px] w-full  max-w-[230px] rounded-lg border border-opacity-10 bg-white">
             <div className="mb-1 ml-3 mr-3 mt-3 h-[156px] max-w-[210px] rounded-lg border bg-[#017860]" />
             <h1 className="text-dark_navy_blue ml-3 text-sm font-semibold">
               Class 05
             </h1>
-          </Link>
-        </div>
+          </div>
+        </Link>
 
-        <div className="border-dark_navy_blue h-[238px] w-full  max-w-[230px] cursor-pointer rounded-lg border border-opacity-10 bg-white">
-          <Link href="/class/class06">
+        <Link href="/class/class06" className="w-full max-w-[230px]">
+          <div className="border-dark_navy_blue h-[238px] w-full  max-w-[230px] rounded-lg border border-opacity-10 bg-white">
             <div className="mb-1 ml-3 mr-3 mt-3 h-[156px] max-w-[210px] rounded-lg border bg-[#BAA147]" />
             <h1 className="text-dark_navy_blue ml-3 text-sm font-semibold">
               Class 06
             </h1>
-          </Link>
-        </div>
+          </div>
+        </Link>
       </div>
     </>
   );
