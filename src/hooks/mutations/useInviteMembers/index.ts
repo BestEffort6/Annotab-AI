@@ -2,8 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import ky from 'ky';
 
 import type { ApiResponse } from '@/interfaces/api-response';
-import type { InviteMember } from '@/interfaces/invitation';
-import type { Workspace } from '@/interfaces/workspace';
+import type { Invitation, InviteMember } from '@/interfaces/invitation';
 import { Env } from '@/libs/Env.mjs';
 
 export const inviteMembers = async (
@@ -15,9 +14,9 @@ export const inviteMembers = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify(payload),
+      json: payload,
     })
-    .json()) as ApiResponse<Workspace>;
+    .json()) as ApiResponse<Invitation>;
 
   return response;
 };

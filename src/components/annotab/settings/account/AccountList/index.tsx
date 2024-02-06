@@ -99,8 +99,17 @@ const AccountList = () => {
             type: 'success',
             content: 'Workspace updated successfully',
           });
-          setLoading(false);
           setIsOpen(false);
+        },
+        onError: async (error) => {
+          if (error.name === 'HTTPError') {
+            const errJson = await (error as any).response.json();
+
+            toast({
+              type: 'error',
+              content: errJson.message,
+            });
+          }
         },
         onSettled: () => {
           setLoading(false);
@@ -166,13 +175,7 @@ const AccountList = () => {
           setPageSize={setPageSize}
         />
       </div>
-      <Popup
-        bgColor="bg-white"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        size="md"
-        forceClose
-      >
+      <Popup bgColor="bg-white" isOpen={isOpen} setIsOpen={setIsOpen} size="md">
         <h6 className="mb-[20px] text-[16px] font-[600] text-dark-navy-blue">
           Invite people as Member
         </h6>
