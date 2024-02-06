@@ -22,7 +22,7 @@ const Sidebar = () => {
             <div className="flex h-[44px] w-[44px] items-center justify-center rounded-3xl border bg-[#31374A0D] text-center text-xl font-semibold text-[#31374A] transition-all hover:bg-[#76799B]">
               O
             </div>
-            <div className="flex h-[44px] w-[44px] items-center justify-center rounded-full border bg-[#76799B] text-center text-center text-xl font-semibold text-[#31374A]">
+            <div className="flex h-[44px] w-[44px] items-center justify-center rounded-full border bg-[#76799B] text-center text-xl font-semibold text-[#31374A]">
               A
             </div>
 

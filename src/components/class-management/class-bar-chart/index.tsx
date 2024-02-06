@@ -9,7 +9,7 @@ const ClassBarChart = () => {
     shade: 'dark',
     type: 'vertical',
     shadeIntensity: 1,
-    gradientToColors: ['#31374A', '#D7D8E3'], // Gradient colors from top to bottom
+    gradientToColors: ['#31374A', '#D7D8E3'],
     opacityFrom: 0.85,
     opacityTo: 0.5,
     stops: [10, 100],
@@ -31,7 +31,7 @@ const ClassBarChart = () => {
       bar: {
         borderRadius: 5,
         dataLabels: {
-          position: 'top', // top, center, bottom
+          position: 'top',
         },
       },
     },
@@ -71,12 +71,6 @@ const ClassBarChart = () => {
       axisTicks: {
         show: false,
       },
-      // crosshairs: {
-      //   fill: {
-      //     type: 'gradient',
-      //     gradient: gradientConfig,
-      //   },
-      // },
       tooltip: {
         enabled: true,
       },
@@ -108,13 +102,6 @@ const ClassBarChart = () => {
 
   const chart = new ApexCharts(document.querySelector('#chart')!, options);
   chart.render();
-  // useEffect(() => {
-
-  //   // Clean up the chart on component unmount
-  //   return () => {
-  //     chart.destroy();
-  //   };
-  // }, []); // Empty dependency array ensures the effect runs only once on mount
 
   return (
     <div className="flex w-full max-w-[1051px] flex-col items-center justify-center rounded-xl bg-white pl-4 pt-3">
