@@ -68,7 +68,6 @@ const Members = () => {
           totalPage={data?.meta.pageCount || 0}
           setPage={setPage}
           setPageSize={setPageSize}
-          type="list"
         />
       </div>
     </div>

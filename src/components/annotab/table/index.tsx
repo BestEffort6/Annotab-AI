@@ -31,7 +31,7 @@ type CoreTableProps<T> = {
   total: number;
   setPage: (page: number) => void;
   setPageSize: (pageSize: number) => void;
-  type: 'list' | 'grid';
+  type?: 'list' | 'grid';
   itemGrid?: (rowData: T) => React.ReactNode;
 };
 
@@ -45,7 +45,7 @@ export default function CoreTable<T>({
   total,
   setPage,
   setPageSize,
-  type,
+  type = 'list',
   itemGrid,
 }: CoreTableProps<T>) {
   const {

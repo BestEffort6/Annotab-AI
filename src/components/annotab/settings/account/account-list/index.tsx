@@ -173,7 +173,6 @@ const AccountList = () => {
           totalPage={data?.meta.pageCount || 0}
           setPage={setPage}
           setPageSize={setPageSize}
-          type="list"
         />
       </div>
       <Popup bgColor="bg-white" isOpen={isOpen} setIsOpen={setIsOpen} size="md">
