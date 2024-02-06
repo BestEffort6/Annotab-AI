@@ -64,12 +64,8 @@ const defaultColumns: ColumnDef<Invitation, string>[] = [
 
 const AccountList = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLabelOpen, setIsLabelOpen] = useState(false);
   const { setLoading } = useLayoutActions();
 
-  const handleLinkClick = () => {
-    setIsLabelOpen(true);
-  };
   const { data: session } = useSession();
   const [page, setPage] = useState(DEFAULT_PAGINATION.PAGE);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.LIMIT);
@@ -85,7 +81,9 @@ const AccountList = () => {
 
   const { mutate } = useInviteMembers();
 
-  const { handleSubmit, register } = useForm<z.infer<typeof InvitePeople>>({
+  const { handleSubmit, register, reset } = useForm<
+    z.infer<typeof InvitePeople>
+  >({
     resolver: zodResolver(InvitePeople),
   });
 
@@ -100,6 +98,7 @@ const AccountList = () => {
             type: 'success',
             content: 'Workspace updated successfully',
           });
+          reset();
           setIsOpen(false);
         },
         onError: async (error) => {
@@ -194,33 +193,23 @@ const AccountList = () => {
               className="bg-gray-purple-white mt-[5px] block w-full rounded-[8px] border border-dark-navy-blue/10 p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
             />
           </label>
-          {!isLabelOpen && (
-            <button
-              type="button"
-              onClick={handleLinkClick}
-              className="text-[12px] font-normal text-dark-navy-blue/50 underline transition-all hover:text-dark-navy-blue"
+
+          <label
+            htmlFor="Role"
+            className="mb-[20px] mt-[10px] block text-[14px] font-normal text-dark-navy-blue"
+          >
+            Role
+            <select
+              {...register('role')}
+              id="Role"
+              name="Role"
+              className="bg-gray-purple-white mt-[5px] block h-[34px] w-full rounded-[8px] border border-dark-navy-blue/10 p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
             >
-              or Invite people as Guest
-            </button>
-          )}
-          {isLabelOpen && (
-            <label
-              htmlFor="Role"
-              className="mb-[20px] mt-[10px] block text-[14px] font-normal text-dark-navy-blue"
-            >
-              Role
-              <select
-                {...register('role')}
-                id="Role"
-                name="Role"
-                className="bg-gray-purple-white mt-[5px] block h-[34px] w-full rounded-[8px] border border-dark-navy-blue/10 p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
-              >
-                <option value="member">Member</option>
-                <option value="admin">Admin</option>
-                <option value="guest">Guest</option>
-              </select>
-            </label>
-          )}
+              <option value="member">Member</option>
+              <option value="admin">Admin</option>
+              <option value="guest">Guest</option>
+            </select>
+          </label>
           <div className="text-end">
             <button
               type="submit"
