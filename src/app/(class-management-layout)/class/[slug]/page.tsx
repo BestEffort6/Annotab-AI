@@ -2,7 +2,7 @@ import { ChevronDoubleRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import React from 'react';
 
-import ClassBarChart from '@/components/class-management/class-bar-chart';
+import { ClassBarChart } from '@/components/class-management/class-bar-chart';
 import ClassTable from '@/components/class-management/class-table';
 
 const Class = () => {

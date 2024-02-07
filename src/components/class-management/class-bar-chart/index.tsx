@@ -1,121 +1,112 @@
 'use client';
 
-import type { ApexOptions } from 'apexcharts';
-import React from 'react';
-import ApexCharts from 'react-apexcharts';
+import type { ScaleBand, ScaleLinear } from 'd3';
+import { axisBottom, axisLeft, scaleBand, scaleLinear, select } from 'd3';
+import { useEffect, useRef } from 'react';
 
-const ClassBarChart = () => {
-  const gradientConfig = {
-    shade: 'dark',
-    type: 'vertical',
-    shadeIntensity: 1,
-    gradientToColors: ['#31374A', '#D7D8E3'],
-    opacityFrom: 0.85,
-    opacityTo: 0.5,
-    stops: [10, 100],
-    colorStops: [],
-  };
+import type { IData } from '@/types/bar-chart';
 
-  const options: ApexOptions = {
-    series: [
-      {
-        name: 'Dataset Distribution',
-        data: [12, 14, 8, 17, 21, 16, 13, 19, 15],
-      },
-    ],
-    chart: {
-      height: 653,
-      type: 'bar',
-    },
-    plotOptions: {
-      bar: {
-        borderRadius: 5,
-        dataLabels: {
-          position: 'top',
-        },
-      },
-    },
-    dataLabels: {
-      enabled: true,
-      formatter(val: any) {
-        return `${val}`;
-      },
-      offsetY: -20,
-      style: {
-        fontSize: '12px',
-        colors: ['#304758'],
-      },
-    },
-    fill: {
-      colors: ['#31374A'],
-      type: 'gradient',
-      gradient: gradientConfig,
-    },
-    xaxis: {
-      categories: [
-        'Dataset 01',
-        'Dataset 02',
-        'Dataset 03',
-        'Dataset 04',
-        'Dataset 05',
-        'Dataset 06',
-        'Dataset 07',
-        'Dataset 08',
-        'Dataset 09',
-      ],
+interface BarChartProps {
+  data: IData[];
+}
 
-      position: 'bottom',
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-      tooltip: {
-        enabled: true,
-      },
-    },
-    yaxis: {
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-      labels: {
-        show: false,
-        formatter(val: any) {
-          return `${val}%`;
-        },
-      },
-    },
-    title: {
-      text: '',
-      floating: true,
-      offsetY: 330,
-      align: 'center',
-      style: {
-        color: '#444',
-      },
-    },
-  };
+interface AxisBottomProps {
+  scale: ScaleBand<string>;
+  transform: string;
+}
 
-  const chart = new ApexCharts(document.querySelector('#chart')!, options);
-  chart.render();
+interface AxisLeftProps {
+  scale: ScaleLinear<number, number, never>;
+}
 
+interface BarsProps {
+  data: BarChartProps['data'];
+  height: number;
+  scaleX: AxisBottomProps['scale'];
+  scaleY: AxisLeftProps['scale'];
+}
+
+const chartData: IData[] = [
+  { label: 'Dataset 01', value: 12 },
+  { label: 'Dataset 02', value: 14 },
+  { label: 'Dataset 03', value: 8 },
+  { label: 'Dataset 04', value: 17 },
+  { label: 'Dataset 05', value: 21 },
+  { label: 'Dataset 06', value: 16 },
+  { label: 'Dataset 07', value: 13 },
+  { label: 'Dataset 08', value: 19 },
+  { label: 'Dataset 09', value: 15 },
+];
+
+const AxisBottom = ({ scale, transform }: AxisBottomProps) => {
+  const ref = useRef<SVGGElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      select(ref.current).call(axisBottom(scale));
+    }
+  }, [scale]);
+
+  return <g ref={ref} transform={transform} />;
+};
+
+const AxisLeft = ({ scale }: AxisLeftProps) => {
+  const ref = useRef<SVGGElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      select(ref.current).call(axisLeft(scale));
+    }
+  }, [scale]);
+
+  return <g ref={ref} />;
+};
+
+const Bars = ({ data, height, scaleX, scaleY }: BarsProps) => {
   return (
-    <div className="flex w-full max-w-[1051px] flex-col items-center justify-center rounded-xl bg-white pl-4 pt-3">
-      <h1 className=" w-full text-left">Dataset Distribution</h1>
-      <div id="chart" className="w-full max-w-[653px]">
-        <ApexCharts
-          options={options}
-          type="bar"
-          series={options.series}
-          height={350}
+    <>
+      {data.map(({ value, label }) => (
+        <rect
+          key={`bar-${label}`}
+          x={scaleX(label)}
+          y={scaleY(value)}
+          width={scaleX.bandwidth()}
+          height={height - scaleY(value)}
+          fill="#31374A"
         />
-      </div>
-    </div>
+      ))}
+    </>
   );
 };
 
-export default ClassBarChart;
+export const ClassBarChart = () => {
+  const margin = { top: 10, right: 0, bottom: 20, left: 30 };
+  const width = 500 - margin.left - margin.right;
+  const height = 300 - margin.top - margin.bottom;
+
+  const scaleX = scaleBand()
+    .domain(chartData.map(({ label }) => label))
+    .range([0, width])
+    .padding(0.5);
+  const scaleY = scaleLinear()
+    .domain([0, Math.max(...chartData.map(({ value }) => value))])
+    .range([height, 0]);
+
+  return (
+    <svg
+      width={width + margin.left + margin.right}
+      height={height + margin.top + margin.bottom}
+    >
+      <g transform={`translate(${margin.left}, ${margin.top})`}>
+        <AxisBottom scale={scaleX} transform={`translate(0, ${height})`} />
+        <AxisLeft scale={scaleY} />
+        <Bars
+          data={chartData}
+          height={height}
+          scaleX={scaleX}
+          scaleY={scaleY}
+        />
+      </g>
+    </svg>
+  );
+};
