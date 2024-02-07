@@ -5,7 +5,7 @@ import type { ApiResponse } from '@/interfaces/api-response';
 import type { Subscription } from '@/interfaces/subscription';
 import { Env } from '@/libs/Env.mjs';
 
-const fetchSubscription = async (
+const fetchSubscriptions = async (
   accessToken: string | undefined
 ): Promise<ApiResponse<Subscription[]>> => {
   const response = (await ky
@@ -21,11 +21,11 @@ const fetchSubscription = async (
 
 const useSubscription = (accessToken: string | undefined) => {
   return useQuery({
-    queryKey: ['subscription', accessToken],
-    queryFn: () => fetchSubscription(accessToken),
+    queryKey: ['subscriptions', accessToken],
+    queryFn: () => fetchSubscriptions(accessToken),
     enabled: !!accessToken,
     staleTime: 1000 * 10,
   });
 };
 
-export { fetchSubscription, useSubscription };
+export { fetchSubscriptions, useSubscription };

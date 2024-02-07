@@ -4,21 +4,23 @@ import React from 'react';
 import Markdown from 'react-markdown';
 
 import { useSubscription } from '@/hooks/queries/useSubscription';
+import type { Subscription } from '@/interfaces/subscription';
 
 const SubscriptionCard = () => {
   const { data: session } = useSession();
   const { data } = useSubscription(session?.user.access.token);
+  console.log({ data });
 
-  const formatSubscriptionPrice = (plan: any) => {
+  const formatSubscriptionPrice = (plan: Subscription) => {
     const unitAmountDecimal =
-      plan?.stripeSubscription?.default_price?.unit_amount_decimal;
+      plan?.stripeSubscription?.default_price?.unit_amount;
     const price = unitAmountDecimal ? unitAmountDecimal / 100 : 0;
     return `${plan?.currency?.toUpperCase()} ${
       plan?.stripeSubscription ? price : 0
     }`;
   };
 
-  return data?.data?.map((plan: any, index: number) => (
+  return data?.data?.map((plan: Subscription, index: number) => (
     <div className="w-[calc(33.33%-20px)]" key={plan?.id}>
       <label htmlFor={`radio-${index}`} className="custom-radio relative">
         <input
