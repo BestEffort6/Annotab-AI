@@ -1,5 +1,6 @@
 'use client';
 
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 
 const Navbar = () => {
@@ -9,11 +10,7 @@ const Navbar = () => {
       <div className="flex w-1/3 flex-row items-center justify-center">
         <div className="flex w-full items-center">
           <div className="absolute rounded-xl border border-[#9EF3FF] bg-gradient-to-r from-[#9EF3FF] to-[#B6BEFF] px-3 py-2">
-            <img
-              src="/images/svg/magnifying-glass.png"
-              alt=""
-              className="h-6 w-6"
-            />
+            <MagnifyingGlassIcon width={20} height={24} color="#fff" />
           </div>
           <input
             type="text"

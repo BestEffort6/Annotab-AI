@@ -30,7 +30,7 @@ export default function DefaultLayout({
   const renderSidebar = useMemo(() => {
     switch (true) {
       case path.includes('dataset/create'):
-        return <div className="h-full w-full overflow-hidden ">{children}</div>;
+        return <div className="h-full w-full overflow-hidden">{children}</div>;
       default:
         return (
           <div className="flex h-full w-full flex-row overflow-hidden">
@@ -53,7 +53,7 @@ export default function DefaultLayout({
       case path.includes('settings/dataset-management'):
       case path.includes('settings/account'):
         return (
-          <div className="min-h-screen w-full bg-mostly-white  ">
+          <div className="min-h-screen w-full bg-mostly-white ">
             <SettingsNavbar />
             <div className="flex flex-row justify-center">
               <SettingsSidebar />

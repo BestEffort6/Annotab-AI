@@ -7,6 +7,7 @@ import {
 import clsx from 'clsx';
 import Link from 'next/link';
 import React, { useState } from 'react';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 import SidebarItem from '../sidebar-item';
 
@@ -37,36 +38,34 @@ const WorkspaceSidebar = () => {
       )}
     >
       <div className="flex flex-col gap-y-6 py-12">
-        {/* --------------------------------------------- */}
         <div className="ml-3 flex cursor-pointer items-center py-2 pl-3">
-          <img src="/images/svg/icon-overview-darknavyblue-light.svg" />
+          <LazyLoadImage src="/images/svg/icon-overview-darknavyblue-light.svg" />
           <h1 className="ml-4 max-w-[64px] text-sm  font-semibold text-[#31374A] transition-all">
             {isOpen && 'Overview'}
           </h1>
         </div>
 
         <div className="ml-3 flex cursor-pointer items-center py-2 pl-3">
-          <img src="/images/svg/icon-dataset-darknavyblue-light.svg" />
+          <LazyLoadImage src="/images/svg/icon-dataset-darknavyblue-light.svg" />
           <h1 className="ml-4 max-w-[53px] text-sm  font-semibold text-[#31374A] transition-all">
             {isOpen && 'Dataset'}
           </h1>
         </div>
 
         <div className="ml-3 flex cursor-pointer items-center py-2 pl-3">
-          <img src="/images/svg/icon-workflow-darknavyblue-light.svg" />
+          <LazyLoadImage src="/images/svg/icon-workflow-darknavyblue-light.svg" />
           <h1 className="ml-4 max-w-[65px]  text-sm font-semibold text-[#31374A] transition-all">
             {isOpen && 'Workflow'}
           </h1>
         </div>
         <Link href="/classes">
           <div className="ml-3 flex cursor-pointer items-center rounded-s-full border bg-[#F8F8FB] py-2 pl-3">
-            <img src="/images/svg/icon-classmanagement-darknavyblue-light.svg" />
+            <LazyLoadImage src="/images/svg/icon-classmanagement-darknavyblue-light.svg" />
             <h1 className=" ml-4 text-sm font-semibold text-[#6821FF]">
               {isOpen && 'Class Management'}
             </h1>
           </div>
         </Link>
-        {/* --------------------------------------------- */}
       </div>
       <div className="flex flex-col justify-end gap-y-5 py-12">
         {menuItemsBottom.map((item) => (
