@@ -1,18 +1,19 @@
 'use client';
 
+import { Snippet } from '@nextui-org/react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
 import { useInvitations } from '@/hooks/queries/useInvitations';
-import { DEFAULT_PAGINATION } from '@/libs/constants';
+import { DEFAULT_PAGINATION, ROLE_COLORS } from '@/libs/constants';
 
 import CoreTable from '../../table';
 
 const columnHelper = createColumnHelper<any>();
 
 const defaultColumns = [
-  columnHelper.accessor((row) => row.user.firstName, {
+  columnHelper.accessor((row) => `${row.user.firstName} ${row.user.lastName}`, {
     id: 'name',
     cell: (info) => info.getValue(),
     header: () => <span>Name</span>,
@@ -26,7 +27,15 @@ const defaultColumns = [
   }),
   columnHelper.accessor((row) => row.role, {
     id: 'role',
-    cell: (info) => info.getValue(),
+    cell: (info) => (
+      <Snippet
+        symbol=""
+        hideCopyButton
+        color={ROLE_COLORS[info.getValue().toUpperCase()]}
+      >
+        {info.getValue().toUpperCase()}
+      </Snippet>
+    ),
     header: () => <span>Role</span>,
     footer: (props) => props.column.id,
   }),

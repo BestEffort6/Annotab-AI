@@ -27,7 +27,6 @@ const CreateDataset = () => {
   const router = useRouter();
 
   const [step, setStep] = useState(0);
-  // const [values, setValues] = useState([20, 80]);
   const [newDataset] = useState<Dataset>();
   const [datasetFiles] = useState<File[]>([]);
   const [isOpenCreateWorkflow, setIsOpenCreateWorkflow] = useState(false);

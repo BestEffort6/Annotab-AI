@@ -1,6 +1,7 @@
 'use client';
 
 import { PlusIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
@@ -22,13 +23,13 @@ const Dataset = () => {
     <div className="flex h-full w-full flex-col gap-y-9 px-6 py-7">
       <div className="flex h-10 w-full flex-row items-center justify-between">
         <p className="text-base font-semibold text-dark-navy-blue">Dataset</p>
-        <button
-          type="button"
+        <Link
+          href="/dataset/create"
           className="flex flex-row items-center justify-center gap-x-2 rounded-lg border  border-dark-navy-blue/10 bg-mostly-white px-5 py-2 text-base font-semibold text-dark-navy-blue transition duration-700 ease-in-out hover:drop-shadow-lg"
         >
           <PlusIcon width={15} height={15} className="text-dark-navy-blue" />
           Create Dataset
-        </button>
+        </Link>
       </div>
       <CoreTable
         data={data?.data || []}
