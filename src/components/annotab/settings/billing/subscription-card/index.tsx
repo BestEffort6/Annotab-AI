@@ -9,6 +9,15 @@ const SubscriptionCard = () => {
   const { data: session } = useSession();
   const { data } = useSubscription(session?.user.access.token);
 
+  const formatSubscriptionPrice = (plan: any) => {
+    const unitAmountDecimal =
+      plan?.stripeSubscription?.default_price?.unit_amount_decimal;
+    const price = unitAmountDecimal ? unitAmountDecimal / 100 : 0;
+    return `${plan?.currency?.toUpperCase()} ${
+      plan?.stripeSubscription ? price : 0
+    }`;
+  };
+
   return data?.data?.map((plan: any, index: number) => (
     <div className="w-[calc(33.33%-20px)]" key={plan?.id}>
       <label htmlFor={`radio-${index}`} className="custom-radio relative">
@@ -42,7 +51,7 @@ const SubscriptionCard = () => {
                     : 'text-[#8315F9]'
               )}
             >
-              $ 0
+              {formatSubscriptionPrice(plan)}
             </h2>
             <Markdown>{plan?.description}</Markdown>
           </div>

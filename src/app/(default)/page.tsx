@@ -7,6 +7,7 @@ import { getServerSession } from 'next-auth';
 
 import Home from '@/components/annotab/home';
 import { fetchInvitations } from '@/hooks/queries/useInvitations';
+import { fetchSubscription } from '@/hooks/queries/useSubscription';
 import { authOptions } from '@/libs/auth';
 import { DEFAULT_PAGINATION } from '@/libs/constants';
 
@@ -29,6 +30,10 @@ export default async function Homepage() {
         DEFAULT_PAGINATION.LIMIT,
         ''
       ),
+  });
+  await queryClient.prefetchQuery({
+    queryKey: ['subscription', session?.user.access.token],
+    queryFn: () => fetchSubscription(session?.user.access.token),
   });
 
   return (
