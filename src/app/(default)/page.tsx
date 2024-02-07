@@ -7,7 +7,7 @@ import { getServerSession } from 'next-auth';
 
 import Home from '@/components/annotab/home';
 import { fetchInvitations } from '@/hooks/queries/useInvitations';
-import { fetchSubscriptions } from '@/hooks/queries/useSubscription';
+import { fetchSubscriptions } from '@/hooks/queries/useSubscriptions';
 import { authOptions } from '@/libs/auth';
 import { DEFAULT_PAGINATION } from '@/libs/constants';
 

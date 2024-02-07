@@ -19,7 +19,7 @@ const fetchSubscriptions = async (
   return response;
 };
 
-const useSubscription = (accessToken: string | undefined) => {
+const useSubscriptions = (accessToken: string | undefined) => {
   return useQuery({
     queryKey: ['subscriptions', accessToken],
     queryFn: () => fetchSubscriptions(accessToken),
@@ -28,4 +28,4 @@ const useSubscription = (accessToken: string | undefined) => {
   });
 };
 
-export { fetchSubscriptions, useSubscription };
+export { fetchSubscriptions, useSubscriptions };

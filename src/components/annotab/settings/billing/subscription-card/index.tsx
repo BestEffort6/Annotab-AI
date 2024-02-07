@@ -3,12 +3,12 @@ import { useSession } from 'next-auth/react';
 import React from 'react';
 import Markdown from 'react-markdown';
 
-import { useSubscription } from '@/hooks/queries/useSubscription';
+import { useSubscriptions } from '@/hooks/queries/useSubscriptions';
 import type { Subscription } from '@/interfaces/subscription';
 
 const SubscriptionCard = () => {
   const { data: session } = useSession();
-  const { data } = useSubscription(session?.user.access.token);
+  const { data } = useSubscriptions(session?.user.access.token);
   console.log({ data });
 
   const formatSubscriptionPrice = (plan: Subscription) => {
