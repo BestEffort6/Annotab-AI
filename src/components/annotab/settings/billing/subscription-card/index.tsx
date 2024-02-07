@@ -9,7 +9,6 @@ import type { Subscription } from '@/interfaces/subscription';
 const SubscriptionCard = () => {
   const { data: session } = useSession();
   const { data } = useSubscriptions(session?.user.access.token);
-  console.log({ data });
 
   const formatSubscriptionPrice = (plan: Subscription) => {
     const unitAmountDecimal =
