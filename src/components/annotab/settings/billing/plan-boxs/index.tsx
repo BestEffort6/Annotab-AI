@@ -12,6 +12,8 @@ import {
 
 import Popup from '@/components/annotab/popup';
 
+import SubscriptionCard from '../subscription-card';
+
 const PlanBoxs = ({ setIsOpen }: any) => {
   const [isTableVisible, setTableVisible] = useState(false);
   const [isPlanOpen, setIsPlanOpen] = useState(false);
@@ -51,106 +53,7 @@ const PlanBoxs = ({ setIsOpen }: any) => {
         </button>
       </div>
       <div className="mb-[20px] flex gap-[30px]">
-        <div className="w-[calc(33.33%-20px)]">
-          <h6 className="mb-[8px] text-center text-[14px] font-normal text-dark-navy-blue">
-            Current plan
-          </h6>
-          <div className="rounded-[8px] border border-silver-sand/25 bg-grey-purple-white">
-            <span className="block h-[14px] w-full rounded-[8px_8px_0_0] bg-chili-red">{` `}</span>
-            <div className="px-[29px] pb-[30px] pt-[19px]">
-              <h6 className="mb-[20px] text-[18px] font-[600]">Free</h6>
-              <h2 className="mb-[25px] text-[50px] font-[600] text-chili-red">
-                $ 0
-              </h2>
-              <p className="text-[14px] font-normal text-dark-navy-blue">
-                Free Forever
-              </p>
-              <hr className="mb-[18px] mt-[98px]" />
-              <p className="text-[14px] font-normal text-dark-navy-blue">
-                Free plan includes
-              </p>
-              <p className="my-[26px] text-[14px] font-normal text-dark-navy-blue">
-                1000 images
-              </p>
-              <p className="text-[14px] font-normal text-dark-navy-blue">
-                Public workspace{' '}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="w-[calc(33.33%-20px)] ">
-          <label htmlFor="radio-1" className="custom-radio relative">
-            <input
-              type="radio"
-              name="plan-radio"
-              id="radio-1"
-              className="absolute top-0 opacity-0"
-            />
-            <span className="mx-auto mb-[10px] block h-[20px] w-[20px] rounded-full border bg-grey-purple-white" />
-            <div className="rounded-[8px] border border-silver-sand/25 bg-grey-purple-white">
-              <span className="block h-[14px] w-full rounded-[8px_8px_0_0] bg-blue-pastel">{` `}</span>
-              <div className="px-[29px] pb-[30px] pt-[19px]">
-                <h6 className="mb-[20px] text-[18px] font-[600]">Personal</h6>
-                <h2 className="mb-[25px] text-[50px] font-[600] text-blue-pastel">
-                  $ 0
-                </h2>
-                <p className="text-[14px] font-normal text-dark-navy-blue">
-                  Pay as you go
-                </p>
-                <hr className="mb-[18px] mt-[98px]" />
-                <p className="text-[14px] font-normal text-dark-navy-blue">
-                  Personal plan includes{' '}
-                </p>
-                <p className="my-[26px] text-[14px] font-normal text-dark-navy-blue">
-                  Unlimited dataset
-                </p>
-                <p className="text-[14px] font-normal text-dark-navy-blue">
-                  Private workspace{' '}
-                </p>
-              </div>
-            </div>
-          </label>
-        </div>
-        <div className="w-[calc(33.33%-20px)] ">
-          <label htmlFor="radio-2" className="custom-radio-purple relative">
-            <input
-              type="radio"
-              name="plan-radio"
-              id="radio-2"
-              className="absolute top-0 opacity-0"
-            />
-            <span className="mx-auto mb-[10px] block h-[20px] w-[20px] rounded-full border bg-grey-purple-white" />
-            <div className="rounded-[8px] border border-silver-sand/25 bg-grey-purple-white">
-              <span className="block h-[14px] w-full rounded-[8px_8px_0_0] bg-[#8315F9]">{` `}</span>
-              <div className="px-[29px] pb-[30px] pt-[19px]">
-                <h6 className="mb-[20px] text-[18px] font-[600]">Team</h6>
-                <h2 className="mb-[25px] flex items-center gap-[30px] text-[50px] font-[600] text-[#8315F9]">
-                  $ 200{' '}
-                  <span className="text-[14px] font-[600] text-dark-navy-blue">
-                    3 seat / <br />
-                    month
-                  </span>
-                </h2>
-                <p className="mb-[8px] text-[14px] font-normal text-dark-navy-blue">
-                  Extra seat $50 / month
-                </p>
-                <p className="text-[14px] font-normal text-dark-navy-blue">
-                  Billed monthly
-                </p>
-                <hr className="mb-[18px] mt-[70px]" />
-                <p className="text-[14px] font-normal text-dark-navy-blue">
-                  Team plan includes{' '}
-                </p>
-                <p className="my-[26px] text-[14px] font-normal text-dark-navy-blue">
-                  Customized workflow
-                </p>
-                <p className="text-[14px] font-normal text-dark-navy-blue">
-                  Collaboration{' '}
-                </p>
-              </div>
-            </div>
-          </label>
-        </div>
+        <SubscriptionCard />
       </div>
       <button
         onClick={toggleTableVisibility}
@@ -297,12 +200,12 @@ const PlanBoxs = ({ setIsOpen }: any) => {
               </p>
             </div>
             <div className="mb-[15px] flex justify-between rounded-[8px] bg-light-greyish px-[15px] py-[6px]">
-              <p className="flex items-center gap-[5px] text-[14px] font-normal text-dark-navy-blue">
+              <span className="flex items-center gap-[5px] text-[14px] font-normal text-dark-navy-blue">
                 <Switch defaultSelected size="sm" color="secondary">
                   <span className="text-[#8315F9]">Save $0</span>{' '}
                 </Switch>
                 with annual billing
-              </p>
+              </span>
               <p className="text-end text-[14px] font-normal text-dark-navy-blue">
                 $0/ year
               </p>
