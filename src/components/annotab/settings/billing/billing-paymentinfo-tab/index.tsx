@@ -381,7 +381,7 @@ const BillingPaymentinfoTab = () => {
             <button
               type="submit"
               onClick={() => setIsOpen(false)}
-              className="rounded-[8px] bg-neon-purple px-[20px] py-[6px] text-[14px] font-normal text-grey-purple-white text-white transition-all hover:bg-pastel-purple"
+              className="rounded-[8px] bg-neon-purple px-[20px] py-[6px] text-[14px] font-normal text-grey-purple-white transition-all hover:bg-pastel-purple"
             >
               Submit
             </button>
@@ -478,7 +478,7 @@ const BillingPaymentinfoTab = () => {
             <button
               type="submit"
               onClick={() => setIsPaymentOpen(false)}
-              className="rounded-[8px] bg-neon-purple px-[20px] py-[6px] text-[14px] font-normal text-grey-purple-white text-white transition-all hover:bg-pastel-purple"
+              className="rounded-[8px] bg-neon-purple px-[20px] py-[6px] text-[14px] font-normal text-white transition-all hover:bg-pastel-purple"
             >
               Submit
             </button>
