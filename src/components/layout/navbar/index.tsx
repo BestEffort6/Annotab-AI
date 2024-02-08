@@ -21,9 +21,11 @@ const Navbar = () => {
       <div className="flex w-1/3 flex-row items-center justify-end gap-x-8 px-5">
         <button
           type="button"
-          className="mr-3 rounded-xl border border-[#6821FF] px-7 py-1 text-[#6821FF]"
+          className="mr-3 rounded-xl bg-gradient-to-r from-ocean-green to-neon-purple p-[1px]"
         >
-          Team
+          <span className="flex w-full rounded-xl bg-white p-1 px-7 text-neon-purple">
+            Team
+          </span>
         </button>
       </div>
     </div>

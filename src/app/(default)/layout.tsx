@@ -38,7 +38,7 @@ export default function DefaultLayout({
         return (
           <div className="flex h-full w-full flex-row overflow-hidden">
             <WorkspaceSidebar />
-            <div className="h-full w-full overflow-hidden">{children}</div>
+            <div className="h-full w-full overflow-auto">{children}</div>
           </div>
         );
     }

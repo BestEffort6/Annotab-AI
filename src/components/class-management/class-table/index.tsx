@@ -1,41 +1,54 @@
 import React from 'react';
 
-const ClassTable = () => {
+import type { ClassById } from '@/interfaces/classes';
+
+const ClassTable = ({ classData }: { classData: ClassById }) => {
+  const date = new Date(classData?.createdAt);
+
   return (
     <div>
-      <h1 className="pb-5 text-base font-semibold text-[#535572]">Class 01</h1>
-      <div className="max-w-[342px] rounded-lg border bg-[#FCFCFF]">
-        <div className="m-4 h-[20px] max-w-[312px] rounded-lg bg-[#686299]" />
+      <h1 className="pb-5 text-base font-semibold text-purple-grey">
+        {classData?.name ?? ''}
+      </h1>
+      <div className="max-w-[342px] rounded-lg border bg-mostly-white">
+        <div
+          className="m-4 h-5 max-w-[312px] rounded-lg"
+          style={{ backgroundColor: classData?.color ?? '#686299' }}
+        />
         <table className="m-4">
           <tbody>
             <tr>
-              <td className=" max-w-[160px] text-sm font-semibold text-[#31374A]">
+              <td className="max-w-40 text-sm font-semibold text-dark-navy-blue">
                 Type of class:
               </td>
-              <td className=" pl-14 text-sm font-normal text-[#31374A]">
-                Bounding Box
+              <td className="pl-14 text-sm font-normal text-dark-navy-blue">
+                {classData?.annotationClass ?? ''}
               </td>
             </tr>
             <tr>
-              <td className=" max-w-[160px] text-sm font-semibold text-[#31374A]">
+              <td className="max-w-40 text-sm font-semibold text-dark-navy-blue">
                 Date created:
               </td>
-              <td className="  pl-14 text-sm font-normal text-[#31374A]">
-                11/03/2023
+              <td className="pl-14 text-sm font-normal text-dark-navy-blue">
+                {`${date.getUTCDate()}/${
+                  date.getUTCMonth() + 1
+                }/${date.getUTCFullYear()}` ?? ''}
               </td>
             </tr>
             <tr>
-              <td className=" max-w-[160px] text-sm font-semibold text-[#31374A]">
+              <td className="max-w-40 text-sm font-semibold text-dark-navy-blue">
                 Number of class:
               </td>
-              <td className="  pl-14 text-sm font-normal text-[#31374A]">12</td>
+              <td className="pl-14 text-sm font-normal text-dark-navy-blue">
+                12
+              </td>
             </tr>
             <tr>
-              <td className=" max-w-[160px] text-sm font-semibold text-[#31374A]">
+              <td className="max-w-40 text-sm font-semibold text-dark-navy-blue">
                 Sub-annotation class:
               </td>
-              <td className=" W-full  pl-14 text-sm font-normal text-[#31374A]">
-                XXX
+              <td className="W-full pl-14 text-sm font-normal text-dark-navy-blue">
+                {classData?.subAnnotationClass ?? ''}
               </td>
             </tr>
           </tbody>
