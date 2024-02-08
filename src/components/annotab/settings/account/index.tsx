@@ -1,8 +1,8 @@
 'use client';
 
-import AccountList from './AccountList';
-import AccountRoles from './AccountRoles';
-import AccountSeats from './AccountSeats';
+import AccountList from './account-list';
+import AccountRoles from './account-roles';
+import AccountSeats from './account-seats';
 
 const SettingsAccount = () => {
   return (

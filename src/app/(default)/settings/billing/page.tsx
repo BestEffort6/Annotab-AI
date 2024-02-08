@@ -1,17 +1,26 @@
-import Link from 'next/link';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
+import { getServerSession } from 'next-auth';
 
 import SettingsBilling from '@/components/annotab/settings/billing';
+import { fetchSubscriptions } from '@/hooks/queries/useSubscriptions';
+import { authOptions } from '@/libs/auth';
 
 export default async function BillingSetting() {
+  const session = await getServerSession(authOptions);
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ['subscriptions', session?.user.access.token],
+    queryFn: () => fetchSubscriptions(session?.user.access.token),
+  });
+
   return (
-    <div className="w-2/4 pt-6 2xl:w-3/4">
-      <Link
-        href="/"
-        className="mb-[120px] ml-auto block w-[260px] rounded-lg border border-gray-100 bg-gray-100 px-8 py-1 text-dark-navy-blue hover:bg-gray-100/80 hover:text-black/80"
-      >
-        Go to your personal setting
-      </Link>
+    <HydrationBoundary state={dehydrate(queryClient)}>
       <SettingsBilling />
-    </div>
+    </HydrationBoundary>
   );
 }

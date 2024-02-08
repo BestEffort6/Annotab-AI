@@ -5,13 +5,13 @@ import {
 } from '@tanstack/react-query';
 import { getServerSession } from 'next-auth';
 
-import Home from '@/components/annotab/home';
+import Overview from '@/components/annotab/overview';
+import { fetchCurrentWorkspace } from '@/hooks/queries/useCurrentWorkspace';
 import { fetchInvitations } from '@/hooks/queries/useInvitations';
-import { fetchSubscriptions } from '@/hooks/queries/useSubscriptions';
 import { authOptions } from '@/libs/auth';
 import { DEFAULT_PAGINATION } from '@/libs/constants';
 
-export default async function Homepage() {
+export default async function OverviewPage() {
   const session = await getServerSession(authOptions);
   const queryClient = new QueryClient();
 
@@ -31,14 +31,15 @@ export default async function Homepage() {
         ''
       ),
   });
+
   await queryClient.prefetchQuery({
-    queryKey: ['subscriptions', session?.user.access.token],
-    queryFn: () => fetchSubscriptions(session?.user.access.token),
+    queryKey: ['currentWorkspace', session?.user.access.token],
+    queryFn: () => fetchCurrentWorkspace(session?.user.access.token),
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Home />
+      <Overview />
     </HydrationBoundary>
   );
 }

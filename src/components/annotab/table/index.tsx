@@ -31,6 +31,8 @@ type CoreTableProps<T> = {
   total: number;
   setPage: (page: number) => void;
   setPageSize: (pageSize: number) => void;
+  type?: 'list' | 'grid';
+  itemGrid?: (rowData: T) => React.ReactNode;
 };
 
 export default function CoreTable<T>({
@@ -43,6 +45,8 @@ export default function CoreTable<T>({
   total,
   setPage,
   setPageSize,
+  type = 'list',
+  itemGrid,
 }: CoreTableProps<T>) {
   const {
     getFlatHeaders,
@@ -59,31 +63,46 @@ export default function CoreTable<T>({
 
   useEffect(() => {
     setTablePageSize(pageSize);
-  }, [pageSize]);
+  }, [pageSize, setTablePageSize]);
 
   return (
-    <>
-      <Table aria-label="Example empty table" className="mb-2">
-        <TableHeader>
-          {getFlatHeaders().map((header) => (
-            <TableColumn key={header.id}>
-              {flexRender(header.column.columnDef.header, header.getContext())}
-            </TableColumn>
-          ))}
-        </TableHeader>
-        <TableBody emptyContent="No rows to display.">
-          {getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
+    <div className="flex h-full w-full flex-col gap-y-3">
+      {type === 'list' ? (
+        <Table aria-label="Example empty table" className="mb-2">
+          <TableHeader className="bg-black">
+            {getFlatHeaders().map((header) => (
+              <TableColumn key={header.id} className="bg-light-blue">
+                {flexRender(
+                  header.column.columnDef.header,
+                  header.getContext()
+                )}
+              </TableColumn>
+            ))}
+          </TableHeader>
+          <TableBody emptyContent="No rows to display.">
+            {getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        <div className="flex w-full">
+          <div className="h-full w-full overflow-y-auto">
+            <div className="flex flex-wrap gap-6 pb-3">
+              {getRowModel().rows.map((row) => (
+                <div key={row.id}>{itemGrid && itemGrid(row.original)}</div>
               ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <div className="flex flex-row justify-between">
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="flex flex-row items-center justify-between">
         <Pagination
           size="lg"
           total={totalPage}
@@ -91,14 +110,14 @@ export default function CoreTable<T>({
           showControls
           onChange={(page) => setPage(page)}
         />
-        <div className="flex w-1/2 flex-row justify-end gap-x-4">
+        <div className="flex w-1/2 flex-row items-center justify-end gap-x-4">
           <span className="my-auto">Total: {total}</span>
           <Select
             disabled={loading}
             size="sm"
             label="Page size"
             placeholder=""
-            className="max-w-[100px]"
+            className="flex max-w-[150px] flex-row"
             defaultSelectedKeys={[pageSize.toString()]}
             onChange={(value) => setPageSize(Number(value.target.value))}
           >
@@ -110,6 +129,6 @@ export default function CoreTable<T>({
           </Select>
         </div>
       </div>
-    </>
+    </div>
   );
 }

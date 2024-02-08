@@ -48,7 +48,7 @@ const SidebarItem = ({ item, isOpen }: { item: Item; isOpen: boolean }) => {
             <LazyLoadImage src={src} effect="blur" />
           )}
         </div>
-        {isOpen && <p className="text-base font-bold">{value}</p>}
+        {isOpen && <p className="text-base font-normal">{value}</p>}
       </Link>
       {router === link && (
         <>
