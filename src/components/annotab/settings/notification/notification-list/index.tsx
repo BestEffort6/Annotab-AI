@@ -16,7 +16,7 @@ const NotificationList = () => {
           </p>
         </li>
         <hr />
-        <li className="flex flex items-center items-center px-[20px] py-[15px] ">
+        <li className="flex items-center px-[20px] py-[15px] ">
           <p className="text-[14px] font-normal text-dark-navy-blue">
             JohnDoe@gmail.com
           </p>
