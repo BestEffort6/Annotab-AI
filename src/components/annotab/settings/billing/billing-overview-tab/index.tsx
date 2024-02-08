@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import Popup from '@/components/annotab/popup';
-
 import PlanBoxs from '../plan-boxs';
 
 const BillingOverviewTab = () => {
@@ -91,15 +89,8 @@ const BillingOverviewTab = () => {
           </tbody>
         </table>
       </div>
-      <Popup
-        bgColor="bg-white"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        size="6xl"
-        forceClose
-      >
-        <PlanBoxs setIsOpen={setIsOpen} />
-      </Popup>
+
+      <PlanBoxs setIsOpen={setIsOpen} isOpen={isOpen} />
     </>
   );
 };

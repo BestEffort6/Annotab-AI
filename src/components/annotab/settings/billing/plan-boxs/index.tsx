@@ -1,5 +1,8 @@
+import { Disclosure } from '@headlessui/react';
 import { CreditCardIcon } from '@heroicons/react/24/outline';
-import { Switch } from '@nextui-org/react';
+import { Spinner, Switch } from '@nextui-org/react';
+import clsx from 'clsx';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { FaCcMastercard } from 'react-icons/fa';
 import {
@@ -11,151 +14,171 @@ import {
 } from 'react-icons/ri';
 
 import Popup from '@/components/annotab/popup';
+import { useSubscriptions } from '@/hooks/queries/useSubscriptions';
+import type { Subscription } from '@/interfaces/subscription';
 
 import SubscriptionCard from '../subscription-card';
 
-const PlanBoxs = ({ setIsOpen }: any) => {
-  const [isTableVisible, setTableVisible] = useState(false);
+type PlanBoxsProps = {
+  setIsOpen: (value: boolean) => void;
+  isOpen: boolean;
+};
+
+const PlanBoxs = ({ setIsOpen, isOpen }: PlanBoxsProps) => {
+  const { data: session } = useSession();
+  const { data, isLoading } = useSubscriptions(session?.user.access.token);
   const [isPlanOpen, setIsPlanOpen] = useState(false);
 
-  const toggleTableVisibility = () => {
-    setTableVisible(!isTableVisible);
-  };
   return (
     <>
-      <h4 className="mb-[24px] text-center text-[30px] font-[600] text-dark-navy-blue">
-        Make changes to your plan
-      </h4>
-      <div className="mb-[30px] flex items-center justify-between">
-        <label
-          htmlFor="team"
-          className="flex w-[50%] items-center gap-[30px] whitespace-nowrap text-[14px] font-normal text-dark-navy-blue"
-        >
-          Choose team size:
-          <select
-            id="team"
-            name="team"
-            className="bg-gray-purple-white block h-[34px] w-[150px] rounded-[8px] border border-dark-navy-blue/10 p-1.5 text-sm text-gray-900 drop-shadow-[0px_0px_2px_rgba(0,0,0,0.09)] focus:border-dark-navy-blue/30 focus:outline-none"
+      <Popup
+        bgColor="bg-white"
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        size="6xl"
+      >
+        <h4 className="mb-[24px] text-center text-[30px] font-[600] text-dark-navy-blue">
+          Make changes to your plan
+        </h4>
+        <div className="mb-[30px] flex items-center justify-between">
+          <label
+            htmlFor="team"
+            className="flex w-[50%] items-center gap-[30px] whitespace-nowrap text-[14px] font-normal text-dark-navy-blue"
           >
-            <option value="">1 seat</option>
-            <option value="">2 seat</option>
-            <option value="">3 seat</option>
-            <option value="">4 seat</option>
-            <option value="">5 seat</option>
-          </select>
-        </label>
-        <button
-          onClick={() => setIsPlanOpen(true)}
-          type="button"
-          className="rounded-[8px] bg-pastel-green px-[18px] py-[6px] text-[14px] font-normal text-grey-purple-white drop-shadow-[0px_0px_2px_rgba(0,0,0,0.25)] transition-all hover:bg-pastel-green/70"
-        >
-          Proceed
-        </button>
-      </div>
-      <div className="mb-[20px] flex gap-[30px]">
-        <SubscriptionCard />
-      </div>
-      <button
-        onClick={toggleTableVisibility}
-        type="button"
-        className={`mx-auto flex items-center justify-center gap-[10px] text-[18px] text-dark-navy-blue ${
-          isTableVisible ? 'mb-[30px]' : ''
-        }`}
-      >
-        Compare plans and features{' '}
-        {isTableVisible ? (
-          <RiArrowUpSLine className="h-[30px] w-[30px]" />
+            Choose team size:
+            <select
+              id="team"
+              name="team"
+              className="bg-gray-purple-white block h-[34px] w-[150px] rounded-[8px] border border-dark-navy-blue/10 p-1.5 text-sm text-gray-900 drop-shadow-[0px_0px_2px_rgba(0,0,0,0.09)] focus:border-dark-navy-blue/30 focus:outline-none"
+            >
+              <option value="">1 seat</option>
+              <option value="">2 seat</option>
+              <option value="">3 seat</option>
+              <option value="">4 seat</option>
+              <option value="">5 seat</option>
+            </select>
+          </label>
+          <button
+            onClick={() => setIsPlanOpen(true)}
+            type="button"
+            className="rounded-[8px] bg-pastel-green px-[18px] py-[6px] text-[14px] font-normal text-grey-purple-white drop-shadow-[0px_0px_2px_rgba(0,0,0,0.25)] transition-all hover:bg-pastel-green/70"
+          >
+            Proceed
+          </button>
+        </div>
+        {!isLoading ? (
+          <div className="mb-5 flex flex-row gap-x-8">
+            {data?.data.map((plan: Subscription) => (
+              <SubscriptionCard plan={plan} key={plan.id} />
+            ))}
+          </div>
         ) : (
-          <RiArrowDownSLine className="h-[30px] w-[30px]" />
+          <div className="flex h-20 w-full flex-row justify-center">
+            <Spinner size="lg" color="default" />
+          </div>
         )}
-      </button>
-      <div
-        className={`transition-all duration-1000 ease-in ${
-          isTableVisible
-            ? 'transition-max-h opacity-1 max-h-[1000px] transition-opacity delay-150'
-            : 'max-h-0 overflow-hidden opacity-0'
-        }`}
-      >
-        <table className="w-full table-auto">
-          <thead>
-            <tr className="border-b  border-dark-navy-blue/25">
-              <th className="px-[20px] pb-[15px] text-[14px] font-normal text-dark-navy-blue">
-                Essentials
-              </th>
-              <th className="px-[20px] pb-[15px] text-center text-[14px] font-normal text-chili-red">
-                Free
-              </th>
-              <th className="px-[20px] pb-[15px] text-center text-[14px] font-normal text-blue-pastel">
-                Personal
-              </th>
-              <th className="px-[20px] pb-[15px] text-center text-[14px] font-normal text-[#8315F9]">
-                Team
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="px-[20px] pt-[15px] text-[14px] font-normal text-dark-navy-blue">
-                Seats
-              </td>
-              <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
-                Unlimited
-              </td>
-              <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
-                Unlimited
-              </td>
-              <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
-                Unlimited
-              </td>
-            </tr>
-            <tr>
-              <td className="px-[20px] pt-[15px] text-[14px] font-normal text-dark-navy-blue">
-                Items
-              </td>
-              <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
-                Unlimited
-              </td>
-              <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
-                Unlimited
-              </td>
-              <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
-                Unlimited
-              </td>
-            </tr>
-            <tr>
-              <td className="px-[20px] pt-[15px] text-[14px] font-normal text-dark-navy-blue">
-                Unlimited boards
-              </td>
-              <td className="px-[20px] pt-[15px]">
-                <RiCheckboxCircleFill className="mx-auto h-[22px] w-[22px] text-chili-red" />
-                {` `}
-              </td>
-              <td className="px-[20px] pt-[15px]">
-                <RiCheckboxCircleFill className="mx-auto h-[22px] w-[22px] text-blue-pastel" />
-                {` `}
-              </td>
-              <td className="px-[20px] pt-[15px]">
-                <RiCheckboxCircleFill className="mx-auto h-[22px] w-[22px] text-[#8315F9]" />
-                {` `}
-              </td>
-            </tr>
-            <tr>
-              <td className="px-[20px] pt-[15px] text-[14px] font-normal text-dark-navy-blue">
-                File storage
-              </td>
-              <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
-                5 GB
-              </td>
-              <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
-                20 GB
-              </td>
-              <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
-                100 GB
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <Disclosure defaultOpen>
+          {({ open }) => (
+            <>
+              <Disclosure.Button
+                type="button"
+                className={clsx(
+                  'mx-auto flex items-center justify-center gap-[10px] text-[18px] text-dark-navy-blue',
+                  open && 'mb-[30px]'
+                )}
+              >
+                Compare plans and features{' '}
+                {open ? (
+                  <RiArrowUpSLine className="h-[30px] w-[30px]" />
+                ) : (
+                  <RiArrowDownSLine className="h-[30px] w-[30px]" />
+                )}
+              </Disclosure.Button>
+              <Disclosure.Panel>
+                <table className="w-full table-auto">
+                  <thead>
+                    <tr className="border-b  border-dark-navy-blue/25">
+                      <th className="px-[20px] pb-[15px] text-[14px] font-normal text-dark-navy-blue">
+                        Essentials
+                      </th>
+                      <th className="px-[20px] pb-[15px] text-center text-[14px] font-normal text-chili-red">
+                        Free
+                      </th>
+                      <th className="px-[20px] pb-[15px] text-center text-[14px] font-normal text-blue-pastel">
+                        Personal
+                      </th>
+                      <th className="px-[20px] pb-[15px] text-center text-[14px] font-normal text-[#8315F9]">
+                        Team
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-[20px] pt-[15px] text-[14px] font-normal text-dark-navy-blue">
+                        Seats
+                      </td>
+                      <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
+                        Unlimited
+                      </td>
+                      <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
+                        Unlimited
+                      </td>
+                      <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
+                        Unlimited
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-[20px] pt-[15px] text-[14px] font-normal text-dark-navy-blue">
+                        Items
+                      </td>
+                      <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
+                        Unlimited
+                      </td>
+                      <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
+                        Unlimited
+                      </td>
+                      <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
+                        Unlimited
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-[20px] pt-[15px] text-[14px] font-normal text-dark-navy-blue">
+                        Unlimited boards
+                      </td>
+                      <td className="px-[20px] pt-[15px]">
+                        <RiCheckboxCircleFill className="mx-auto h-[22px] w-[22px] text-chili-red" />
+                        {` `}
+                      </td>
+                      <td className="px-[20px] pt-[15px]">
+                        <RiCheckboxCircleFill className="mx-auto h-[22px] w-[22px] text-blue-pastel" />
+                        {` `}
+                      </td>
+                      <td className="px-[20px] pt-[15px]">
+                        <RiCheckboxCircleFill className="mx-auto h-[22px] w-[22px] text-[#8315F9]" />
+                        {` `}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-[20px] pt-[15px] text-[14px] font-normal text-dark-navy-blue">
+                        File storage
+                      </td>
+                      <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
+                        5 GB
+                      </td>
+                      <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
+                        20 GB
+                      </td>
+                      <td className="px-[20px] pt-[15px] text-center text-[14px] font-normal text-dark-navy-blue">
+                        100 GB
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </Disclosure.Panel>
+            </>
+          )}
+        </Disclosure>
+      </Popup>
 
       <Popup
         bgColor="bg-white"
