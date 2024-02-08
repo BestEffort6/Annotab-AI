@@ -4,7 +4,6 @@
 
 body {
   touch-action: none;
-  font-family: 'Plus Jakarta Sans', sans-serif;
   color: rgb(var(--foreground-rgb));
 }
 
@@ -75,4 +74,13 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type='number'] {
   -moz-appearance: textfield;
+}
+
+/* radio button */
+.custom-radio input:checked + span{
+  background-color: #6BAFFF;
+}
+
+.custom-radio-purple input:checked + span{
+  background-color: #8315F9;
 }

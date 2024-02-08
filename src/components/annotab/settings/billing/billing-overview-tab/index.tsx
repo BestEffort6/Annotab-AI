@@ -1,15 +1,50 @@
-import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
-const BillingOverviewTab = () => {
+import CheckoutModal from '@/components/annotab/payment/checkout-modal';
+import { useSubscriptions } from '@/hooks/queries/useSubscriptions';
+import type { Subscription } from '@/interfaces/subscription';
+import type { Workspace } from '@/interfaces/workspace';
+
+import PlanBoxs from '../plan-boxs';
+
+type BillingOverviewTabProps = {
+  currentWorkspace: Workspace;
+};
+
+const BillingOverviewTab = ({ currentWorkspace }: BillingOverviewTabProps) => {
+  const { data: session } = useSession();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [selectedSubscription, setSelectedSubscription] = useState<
+    Subscription | undefined
+  >();
+
+  const { data } = useSubscriptions(session?.user.access.token);
+
+  useEffect(() => {
+    if (data && currentWorkspace.subscriptionId) {
+      setSelectedSubscription(
+        data.data.find((item) => item.id === currentWorkspace.subscriptionId)
+      );
+    }
+  }, [data, currentWorkspace]);
+
+  const handlePayment = () => {
+    setIsOpen(false);
+    setIsPaymentOpen(true);
+  };
+
   return (
     <>
       <div className="my-[25px] text-end">
-        <Link
-          href="/"
-          className="rounded-[8px] bg-neon-purple px-[20px] py-[6px] text-[14px] font-normal text-grey-purple-white text-white transition-all hover:bg-pastel-purple"
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="rounded-[8px] bg-neon-purple px-[20px] py-[6px] text-[14px] font-normal text-grey-purple-white transition-all hover:bg-pastel-purple"
         >
           Change plan
-        </Link>
+        </button>
       </div>
       <div />
       <h5 className="mb-[10px] text-[14px] font-[600] text-dark-navy-blue">
@@ -85,6 +120,25 @@ const BillingOverviewTab = () => {
           </tbody>
         </table>
       </div>
+
+      {data && (
+        <PlanBoxs
+          setIsOpen={setIsOpen}
+          isOpen={isOpen}
+          selectedSubscription={selectedSubscription}
+          setSelectedSubscription={setSelectedSubscription}
+          subscriptions={data.data}
+          handlePayment={handlePayment}
+        />
+      )}
+
+      {selectedSubscription && (
+        <CheckoutModal
+          isOpen={isPaymentOpen}
+          setIsOpen={setIsPaymentOpen}
+          selectedSubscription={selectedSubscription}
+        />
+      )}
     </>
   );
 };

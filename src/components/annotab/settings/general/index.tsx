@@ -1,26 +1,88 @@
 'use client';
 
 import { CheckIcon } from '@heroicons/react/24/outline';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useSession } from 'next-auth/react';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import type { z } from 'zod';
 
-import type { IGeneralSettings } from '@/interfaces/setting';
+import { useLayoutActions } from '@/components/providers/LayoutProvider';
+import { useUpdateCurrentWorkspace } from '@/hooks/mutations/useUpdateCurrentWorkspace';
+import { useCurrentWorkspace } from '@/hooks/queries/useCurrentWorkspace';
+import { UpdateWorkspaceValidation } from '@/validations/WorkspaceValidation';
 
-const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
+import toast from '../../toast';
+
+const GeneralSettings = () => {
+  const { data: session } = useSession();
+  const { setLoading } = useLayoutActions();
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
+
+  const { data: currentWorkspace } = useCurrentWorkspace(
+    session?.user.access.token
+  );
+
+  const { mutate } = useUpdateCurrentWorkspace();
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<z.infer<typeof UpdateWorkspaceValidation>>({
+    resolver: zodResolver(UpdateWorkspaceValidation),
+    defaultValues: {
+      name: currentWorkspace?.data.name || '',
+      description: currentWorkspace?.data.description || '',
+    },
+    values: {
+      name: currentWorkspace?.data.name || '',
+      description: currentWorkspace?.data.description || '',
+    },
+  });
+
+  const handleUpdateWorkspace = handleSubmit(async (data) => {
+    setLoading(true);
+
+    const formDataObject = new FormData();
+    Object.entries(data).map(([key, value]) =>
+      formDataObject.append(key, value)
+    );
+
+    if (selectedFile) {
+      formDataObject.append('file', selectedFile);
+    }
+
+    mutate(
+      { accessToken: session?.user.access.token, payload: formDataObject },
+      {
+        onSuccess: () => {
+          toast({
+            type: 'success',
+            content: 'Workspace updated successfully',
+          });
+        },
+        onSettled: () => {
+          setLoading(false);
+        },
+      }
+    );
+  });
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setSelectedFile(event?.target?.files?.[0]);
     }
   };
+
   return (
     <div className="w-2/4 pt-6 2xl:w-3/4">
       <h4 className="mb-[6px] text-[18px] font-normal text-dark-navy-blue">
         General
       </h4>
       <hr className="" />
-      <form className="mb-[18px] mt-[23px]" id="general-setting">
+      <form className="mb-[18px] mt-[23px]" onSubmit={handleUpdateWorkspace}>
         <div className="grid gap-6 md:grid-cols-2">
           <div>
             <div className="mb-[18px]">
@@ -30,13 +92,18 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
               >
                 Workspace
                 <input
-                  value={currentWorkspace?.name}
+                  {...register('name')}
                   type="text"
                   id="Workspace"
-                  name="Workspace"
+                  name="name"
                   className="block w-full rounded-[8px] border border-dark-navy-blue/10 bg-[#F2F2F8] p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
                 />
               </label>
+              {errors.name?.message && (
+                <div className="text-sm text-red-500">
+                  {errors.name.message.toString()}
+                </div>
+              )}
             </div>
             <div className="mb-[18px]">
               <label
@@ -45,12 +112,18 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
               >
                 Description
                 <input
+                  {...register('description')}
                   type="text"
                   id="Description"
-                  name="Description"
+                  name="description"
                   className="block w-full rounded-[8px] border border-dark-navy-blue/10 bg-[#F2F2F8] p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
                 />
               </label>
+              {errors.description?.message && (
+                <div className="text-sm text-red-500">
+                  {errors.description.message.toString()}
+                </div>
+              )}
             </div>
             <div className="mb-[18px] max-w-[220px]">
               <label
@@ -62,6 +135,7 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                   id="Location"
                   name="Location"
                   className="block w-full rounded-[8px] border border-dark-navy-blue/10 bg-[#F2F2F8] p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
+                  disabled
                 >
                   <option value="">1</option>
                   <option value="">1</option>
@@ -80,6 +154,7 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                   id="BillingEmail"
                   name="BillingEmail"
                   className="block w-full rounded-[8px] border border-dark-navy-blue/10 bg-[#F2F2F8] p-1.5 text-sm text-gray-900 focus:border-dark-navy-blue/30 focus:outline-none"
+                  disabled
                 />
               </label>
             </div>
@@ -99,7 +174,7 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                 <input
                   type="file"
                   id="profile"
-                  name="profile"
+                  name="file"
                   className="hidden"
                   onChange={handleFileChange}
                 />
@@ -109,7 +184,8 @@ const GeneralSettings = ({ currentWorkspace }: IGeneralSettings) => {
                     src={
                       selectedFile
                         ? URL.createObjectURL(selectedFile)
-                        : currentWorkspace?.profilePicture.url
+                        : currentWorkspace?.data.profilePicture?.url ||
+                          '/images/no-image.png'
                     }
                     alt="Profile"
                     className="h-[185px] w-[185px] rounded-full object-cover"

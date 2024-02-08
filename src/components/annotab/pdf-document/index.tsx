@@ -2,8 +2,6 @@
 
 import { Document, Page } from 'react-pdf';
 
-import Loading from '../loading';
-
 interface Props {
   url: string;
   onDocumentLoadSuccess: ({ numPages }: { numPages: number }) => void;
@@ -20,7 +18,6 @@ const PdfDocument = ({
   const pageNumbers = [...Array(numPages).keys()].map((page) => page + 1);
   return (
     <Document
-      loading={<Loading />}
       file={url}
       onLoadSuccess={onDocumentLoadSuccess}
       className="flex flex-col gap-y-1 md:gap-y-2"

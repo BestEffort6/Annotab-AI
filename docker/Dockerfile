@@ -12,7 +12,10 @@ RUN apk add --no-cache git \
 # Build DEV
 FROM node:18-alpine as build
 
+ARG NEXT_PUBLIC_BACKEND_URL
+
 ENV SKIP_ENV_VALIDATION true
+ENV NEXT_PUBLIC_BACKEND_URL $NEXT_PUBLIC_BACKEND_URL
 
 WORKDIR /app
 

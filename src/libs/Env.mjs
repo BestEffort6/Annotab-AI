@@ -9,12 +9,13 @@ export const Env = createEnv({
     NEXTAUTH_URL: z.string().min(1),
     GOOGLE_CLIENT_ID: z.string().min(1),
     GOOGLE_CLIENT_SECRET: z.string().min(1),
-    STRIPE_SECRET_KEY: z.string().optional(),
+    STRIPE_SECRET_KEY: z.string().min(1),
     CMS_API_URL: z.string().optional(),
     CMS_API_KEY: z.string().optional(),
   },
   client: {
-    NEXT_PUBLIC_STRIPE_PUBLIC_KEY: z.string().optional(),
+    NEXT_PUBLIC_STRIPE_PUBLIC_KEY: z.string().min(1),
+    NEXT_PUBLIC_BACKEND_URL: z.string().min(1),
   },
   // You need to destructure all the keys manually
   runtimeEnv: {
@@ -26,6 +27,7 @@ export const Env = createEnv({
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     CMS_API_URL: process.env.CMS_API_URL,
     CMS_API_KEY: process.env.CMS_API_KEY,
+    NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,

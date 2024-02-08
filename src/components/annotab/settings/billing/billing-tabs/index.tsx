@@ -1,11 +1,17 @@
 import { Tab } from '@headlessui/react';
 import clsx from 'clsx';
 
+import type { Workspace } from '@/interfaces/workspace';
+
 import BillingEmailsTab from '../billing-emails-tab';
 import BillingOverviewTab from '../billing-overview-tab';
 import BillingPaymentinfoTab from '../billing-paymentinfo-tab';
 
-const BillingTabs = () => {
+type BillingTabsProps = {
+  currentWorkspace: Workspace;
+};
+
+const BillingTabs = (props: BillingTabsProps) => {
   return (
     <Tab.Group>
       <Tab.List className="flex gap-[30px] px-[10px]">
@@ -43,7 +49,7 @@ const BillingTabs = () => {
       <hr />
       <Tab.Panels>
         <Tab.Panel>
-          <BillingOverviewTab />
+          <BillingOverviewTab {...props} />
         </Tab.Panel>
         <Tab.Panel>
           <BillingEmailsTab />
