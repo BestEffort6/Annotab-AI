@@ -34,7 +34,6 @@
     "@tanstack/react-query-devtools": "^5.18.0",
     "@tanstack/react-ranger": "0.0.4",
     "@tanstack/react-table": "^8.11.7",
-    "@tanstack/react-ranger": "0.0.4",
     "@uidotdev/usehooks": "^2.4.1",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
