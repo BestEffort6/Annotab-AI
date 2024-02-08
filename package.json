@@ -26,6 +26,8 @@
     "@heroicons/react": "^2.1.1",
     "@hookform/resolvers": "^3.3.3",
     "@nextui-org/react": "^2.2.9",
+    "@stripe/react-stripe-js": "^2.4.0",
+    "@stripe/stripe-js": "^2.4.0",
     "@t3-oss/env-nextjs": "^0.7.1",
     "@tanstack/query-core": "^5.18.0",
     "@tanstack/react-query": "^5.17.19",

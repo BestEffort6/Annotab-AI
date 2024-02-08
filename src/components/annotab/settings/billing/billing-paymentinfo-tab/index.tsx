@@ -301,13 +301,7 @@ const BillingPaymentinfoTab = () => {
           </Link>
         </div>
       </div>
-      <Popup
-        bgColor="bg-white"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        size="md"
-        forceClose
-      >
+      <Popup bgColor="bg-white" isOpen={isOpen} setIsOpen={setIsOpen} size="md">
         <div>
           <h6 className="mb-[23px] text-[14px] font-normal text-dark-navy-blue">
             Billing infomation
@@ -399,7 +393,6 @@ const BillingPaymentinfoTab = () => {
         isOpen={isPaymentOpen}
         setIsOpen={setIsPaymentOpen}
         size="md"
-        forceClose
       >
         <div>
           <h6 className="mb-[23px] text-[14px] font-normal text-dark-navy-blue">
