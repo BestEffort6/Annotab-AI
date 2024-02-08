@@ -33,7 +33,7 @@ const WorkspaceSidebar = () => {
     },
     {
       value: 'Workflow',
-      link: '/',
+      link: '/workflow',
       src: '/images/svg/icon-dataset-darknavyblue-light.svg',
       srcActive: '/images/svg/icon-dataset-darknavyblue-light.svg',
     },
