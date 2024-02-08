@@ -106,11 +106,13 @@ const PlanBoxs = ({
             </button>
           </div>
 
-          <div className="mb-5 flex flex-row gap-x-8">
+          <div className="mb-5 flex flex-row justify-between gap-x-8">
             {subscriptions
               .filter(
                 (item: Subscription) =>
-                  item.isDisplay && item.seatCount >= teamSize
+                  item.isDisplay &&
+                  ((teamSize === 1 && item.seatCount >= 1) ||
+                    (teamSize > 1 && item.seatCount > 1))
               )
               .map((plan: Subscription) => (
                 <SubscriptionCard
