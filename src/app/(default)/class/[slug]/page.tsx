@@ -14,7 +14,10 @@ const Class = () => {
         Class 01
       </div>
       <ClassTable />
-      <ClassBarChart />
+      <div className="flex h-[396px] w-full max-w-[1051px] flex-col items-center justify-start gap-2 rounded-lg border bg-[#FCFCFF] px-[15px] pt-3">
+        <p className="w-full text-sm font-semibold">Dataset Distribution</p>
+        <ClassBarChart />
+      </div>
     </div>
   );
 };

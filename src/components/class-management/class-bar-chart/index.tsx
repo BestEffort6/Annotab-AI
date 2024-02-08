@@ -43,7 +43,7 @@ const AxisBottom = ({ scale, transform }: AxisBottomProps) => {
 
   useEffect(() => {
     if (ref.current) {
-      select(ref.current).call(axisBottom(scale));
+      select(ref.current).call(axisBottom(scale).tickFormat(() => ''));
     }
   }, [scale]);
 
@@ -55,7 +55,7 @@ const AxisLeft = ({ scale }: AxisLeftProps) => {
 
   useEffect(() => {
     if (ref.current) {
-      select(ref.current).call(axisLeft(scale));
+      select(ref.current).call(axisLeft(scale).tickFormat(() => ''));
     }
   }, [scale]);
 
@@ -63,26 +63,60 @@ const AxisLeft = ({ scale }: AxisLeftProps) => {
 };
 
 const Bars = ({ data, height, scaleX, scaleY }: BarsProps) => {
+  const gradientId = 'barGradient';
+  const gradientColorStart = '#6D7387';
+  const gradientColorEnd = '#D7D8E3';
+
   return (
     <>
+      <defs>
+        <linearGradient id={gradientId} x1="0%" y1="10%" x2="0%" y2="100%">
+          <stop offset="10%" stopColor={gradientColorStart} />
+          <stop offset="100%" stopColor={gradientColorEnd} />
+        </linearGradient>
+      </defs>
+
       {data.map(({ value, label }) => (
-        <rect
-          key={`bar-${label}`}
-          x={scaleX(label)}
-          y={scaleY(value)}
-          width={scaleX.bandwidth()}
-          height={height - scaleY(value)}
-          fill="#31374A"
-        />
+        <g key={`bar-group-${label}`}>
+          <rect
+            x={scaleX(label)!}
+            y={scaleY(value)!}
+            width={scaleX.bandwidth()}
+            height={height - scaleY(value)!}
+            fill="url(#barGradient)"
+            rx={5}
+            ry={5}
+          />
+          <text
+            transform={`translate(${scaleX(label)! + scaleX.bandwidth() / 2}, ${
+              scaleY(value)! + (height - scaleY(value)!) / 2
+            }) rotate(-90)`}
+            dy="0.35em"
+            textAnchor="middle"
+            fill="#000000"
+            fontSize={12}
+          >
+            {label}
+          </text>
+          <text
+            x={scaleX(label)! + scaleX.bandwidth() / 2}
+            y={scaleY(value)! - 5}
+            textAnchor="middle"
+            fill="#000000"
+            fontSize={12}
+          >
+            {value}
+          </text>
+        </g>
       ))}
     </>
   );
 };
 
 export const ClassBarChart = () => {
-  const margin = { top: 10, right: 0, bottom: 20, left: 30 };
-  const width = 500 - margin.left - margin.right;
-  const height = 300 - margin.top - margin.bottom;
+  const margin = { top: 20, right: 0, bottom: 20, left: 30 };
+  const width = 653 - margin.left - margin.right;
+  const height = 297 - margin.top - margin.bottom;
 
   const scaleX = scaleBand()
     .domain(chartData.map(({ label }) => label))
