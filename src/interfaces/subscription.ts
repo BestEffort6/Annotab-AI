@@ -42,7 +42,9 @@ export interface StripeSubscription {
   updated: string;
   url: string;
 }
+
 export interface Subscription {
+  seatCount: number;
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -51,6 +53,7 @@ export interface Subscription {
   order: number;
   name: string;
   description: string;
+  isDisplay: boolean;
   isCustomPrice: boolean;
   isActive: boolean;
   isDefault: boolean;

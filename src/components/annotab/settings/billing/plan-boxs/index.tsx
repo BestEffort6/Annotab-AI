@@ -1,6 +1,6 @@
 import { Disclosure } from '@headlessui/react';
 import { CreditCardIcon } from '@heroicons/react/24/outline';
-import { Switch } from '@nextui-org/react';
+import { Select, SelectItem, Switch } from '@nextui-org/react';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
@@ -25,7 +25,32 @@ type PlanBoxsProps = {
   setSelectedSubscription: (subscription: Subscription | undefined) => void;
   subscriptions: Subscription[];
   handlePayment: () => void;
+  teamSize: number;
+  setTeamSize: (teamSize: number) => void;
 };
+
+const teamSizes = [
+  {
+    value: 1,
+    label: '1 seat',
+  },
+  {
+    value: 2,
+    label: '2 seat',
+  },
+  {
+    value: 3,
+    label: '3 seat',
+  },
+  {
+    value: 4,
+    label: '4 seat',
+  },
+  {
+    value: 5,
+    label: '5 seat',
+  },
+];
 
 const PlanBoxs = ({
   setIsOpen,
@@ -34,6 +59,8 @@ const PlanBoxs = ({
   setSelectedSubscription,
   subscriptions,
   handlePayment,
+  teamSize,
+  setTeamSize,
 }: PlanBoxsProps) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
 
@@ -58,23 +85,18 @@ const PlanBoxs = ({
             Make changes to your plan
           </h4>
           <div className="mb-[30px] flex items-center justify-between">
-            <label
-              htmlFor="team"
-              className="flex w-[50%] items-center gap-[30px] whitespace-nowrap text-[14px] font-normal text-dark-navy-blue"
+            <Select
+              label="Choose team size"
+              className="max-w-xs"
+              defaultSelectedKeys={[teamSize.toString()]}
+              onChange={(value) => setTeamSize(Number(value.target.value))}
             >
-              Choose team size:
-              <select
-                id="team"
-                name="team"
-                className="bg-gray-purple-white block h-[34px] w-[150px] rounded-[8px] border border-dark-navy-blue/10 p-1.5 text-sm text-gray-900 drop-shadow-[0px_0px_2px_rgba(0,0,0,0.09)] focus:border-dark-navy-blue/30 focus:outline-none"
-              >
-                <option value="">1 seat</option>
-                <option value="">2 seat</option>
-                <option value="">3 seat</option>
-                <option value="">4 seat</option>
-                <option value="">5 seat</option>
-              </select>
-            </label>
+              {teamSizes.map((size) => (
+                <SelectItem key={size.value} value={size.value}>
+                  {size.label}
+                </SelectItem>
+              ))}
+            </Select>
             <button
               onClick={handleProcess}
               type="button"
@@ -85,14 +107,19 @@ const PlanBoxs = ({
           </div>
 
           <div className="mb-5 flex flex-row gap-x-8">
-            {subscriptions.map((plan: Subscription) => (
-              <SubscriptionCard
-                plan={plan}
-                key={plan.id}
-                selectedSubscription={selectedSubscription}
-                setSelectedSubscription={setSelectedSubscription}
-              />
-            ))}
+            {subscriptions
+              .filter(
+                (item: Subscription) =>
+                  item.isDisplay && item.seatCount >= teamSize
+              )
+              .map((plan: Subscription) => (
+                <SubscriptionCard
+                  plan={plan}
+                  key={plan.id}
+                  selectedSubscription={selectedSubscription}
+                  setSelectedSubscription={setSelectedSubscription}
+                />
+              ))}
           </div>
 
           <Disclosure defaultOpen>

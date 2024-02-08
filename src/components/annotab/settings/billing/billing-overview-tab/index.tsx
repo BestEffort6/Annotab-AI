@@ -19,6 +19,7 @@ const BillingOverviewTab = ({ currentWorkspace }: BillingOverviewTabProps) => {
   const [selectedSubscription, setSelectedSubscription] = useState<
     Subscription | undefined
   >();
+  const [teamSize, setTeamSize] = useState<number>(1);
 
   const { data } = useSubscriptions(session?.user.access.token);
 
@@ -129,14 +130,18 @@ const BillingOverviewTab = ({ currentWorkspace }: BillingOverviewTabProps) => {
           setSelectedSubscription={setSelectedSubscription}
           subscriptions={data.data}
           handlePayment={handlePayment}
+          teamSize={teamSize}
+          setTeamSize={setTeamSize}
         />
       )}
 
-      {selectedSubscription && (
+      {selectedSubscription && data && (
         <CheckoutModal
           isOpen={isPaymentOpen}
           setIsOpen={setIsPaymentOpen}
           selectedSubscription={selectedSubscription}
+          seatSubscription={data.data.find((item) => !item.isDisplay)}
+          teamSize={teamSize}
         />
       )}
     </>
