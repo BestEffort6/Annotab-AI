@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 
 import { useCreateCheckoutSession } from '@/hooks/mutations/useCreateCheckoutSession';
 import { useExpireCheckoutSession } from '@/hooks/mutations/useExpireCheckoutSession';
+import type { Subscription } from '@/interfaces/subscription';
 import { Env } from '@/libs/Env.mjs';
 
 import Popup from '../../popup';
@@ -20,13 +21,13 @@ const stripePromise = loadStripe(Env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 type AttachCardModalProps = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  selectedSubscriptionId: string;
+  selectedSubscription: Subscription;
 };
 
 const CheckoutModal = ({
   isOpen,
   setIsOpen,
-  selectedSubscriptionId,
+  selectedSubscription,
 }: AttachCardModalProps) => {
   const { data: session } = useSession();
   const [clientSecret, setClientSecret] = useState('');
@@ -36,34 +37,33 @@ const CheckoutModal = ({
   const { mutate: createCheckoutSession } = useCreateCheckoutSession();
 
   useEffect(() => {
-    if (!isOpen) {
-      if (sessionId) {
-        expireCheckoutSession(
-          {
-            accessToken: session?.user.access.token,
-            payload: {
-              sessionId,
-            },
+    if (!isOpen && sessionId) {
+      expireCheckoutSession(
+        {
+          accessToken: session?.user.access.token,
+          payload: {
+            sessionId,
           },
-          {
-            onSuccess: () => {
-              setClientSecret('');
-              setSessionId('');
-            },
-          }
-        );
-      }
-    } else {
+        },
+        {
+          onSuccess: () => {
+            setClientSecret('');
+            setSessionId('');
+          },
+        }
+      );
+    }
+    if (isOpen && !sessionId) {
       createCheckoutSession(
         {
           accessToken: session?.user.access.token,
           payload: {
-            subscriptionId: selectedSubscriptionId,
+            subscriptionId: selectedSubscription.id,
           },
         },
         {
           onSuccess: ({ data }) => {
-            setClientSecret(data.clientSecret);
+            setClientSecret(data.client_secret);
             setSessionId(data.id);
           },
         }
@@ -71,11 +71,11 @@ const CheckoutModal = ({
     }
   }, [
     isOpen,
-    selectedSubscriptionId,
-    sessionId,
+    selectedSubscription,
     createCheckoutSession,
     expireCheckoutSession,
-    session?.user.access.token,
+    session,
+    sessionId,
   ]);
 
   return (

@@ -1,9 +1,8 @@
 import { Disclosure } from '@headlessui/react';
 import { CreditCardIcon } from '@heroicons/react/24/outline';
-import { Spinner, Switch } from '@nextui-org/react';
+import { Switch } from '@nextui-org/react';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
-import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { FaCcMastercard } from 'react-icons/fa';
 import {
@@ -15,29 +14,40 @@ import {
 } from 'react-icons/ri';
 
 import Popup from '@/components/annotab/popup';
-import { useSubscriptions } from '@/hooks/queries/useSubscriptions';
 import type { Subscription } from '@/interfaces/subscription';
-import type { Workspace } from '@/interfaces/workspace';
 
 import SubscriptionCard from '../subscription-card';
 
 type PlanBoxsProps = {
   setIsOpen: (value: boolean) => void;
   isOpen: boolean;
-  currentWorkspace: Workspace;
+  selectedSubscription: Subscription | undefined;
+  setSelectedSubscription: (subscription: Subscription | undefined) => void;
+  subscriptions: Subscription[];
+  handlePayment: () => void;
 };
 
-const PlanBoxs = ({ setIsOpen, isOpen, currentWorkspace }: PlanBoxsProps) => {
-  const { data: session } = useSession();
-  const { data, isLoading } = useSubscriptions(session?.user.access.token);
+const PlanBoxs = ({
+  setIsOpen,
+  isOpen,
+  selectedSubscription,
+  setSelectedSubscription,
+  subscriptions,
+  handlePayment,
+}: PlanBoxsProps) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const [selectedSubscription, setSelectedSubscription] = useState<
-    string | null
-  >(currentWorkspace.subscriptionId);
 
   const handleCloseModal = () => {
     setCurrentStep(1);
     setIsOpen(false);
+  };
+
+  const handleProcess = () => {
+    if (selectedSubscription?.stripeProductId) {
+      handlePayment();
+    } else {
+      setCurrentStep(2);
+    }
   };
 
   return (
@@ -66,29 +76,25 @@ const PlanBoxs = ({ setIsOpen, isOpen, currentWorkspace }: PlanBoxsProps) => {
               </select>
             </label>
             <button
-              onClick={() => setCurrentStep(2)}
+              onClick={handleProcess}
               type="button"
               className="rounded-[8px] bg-pastel-green px-[18px] py-[6px] text-[14px] font-normal text-grey-purple-white drop-shadow-[0px_0px_2px_rgba(0,0,0,0.25)] transition-all hover:bg-pastel-green/70"
             >
               Proceed
             </button>
           </div>
-          {!isLoading ? (
-            <div className="mb-5 flex flex-row gap-x-8">
-              {data?.data.map((plan: Subscription) => (
-                <SubscriptionCard
-                  plan={plan}
-                  key={plan.id}
-                  selectedSubscription={selectedSubscription}
-                  setSelectedSubscription={setSelectedSubscription}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="flex h-20 w-full flex-row justify-center">
-              <Spinner size="lg" color="default" />
-            </div>
-          )}
+
+          <div className="mb-5 flex flex-row gap-x-8">
+            {subscriptions.map((plan: Subscription) => (
+              <SubscriptionCard
+                plan={plan}
+                key={plan.id}
+                selectedSubscription={selectedSubscription}
+                setSelectedSubscription={setSelectedSubscription}
+              />
+            ))}
+          </div>
+
           <Disclosure defaultOpen>
             {({ open }) => (
               <>

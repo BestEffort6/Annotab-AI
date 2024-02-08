@@ -7,8 +7,8 @@ import type { Subscription } from '@/interfaces/subscription';
 
 type SubscriptionCardProps = {
   plan: Subscription;
-  selectedSubscription: string | null;
-  setSelectedSubscription: (subscription: string | null) => void;
+  selectedSubscription: Subscription | undefined;
+  setSelectedSubscription: (subscription: Subscription | undefined) => void;
 };
 
 const SubscriptionCard = ({
@@ -26,14 +26,14 @@ const SubscriptionCard = ({
   };
 
   return (
-    <div className="flex w-1/3 flex-col" key={plan.id}>
+    <div className="flex h-full w-1/3 flex-col" key={plan.id}>
       <Checkbox
         className="m-auto w-full"
         id="terms"
-        isSelected={selectedSubscription === plan.id}
+        isSelected={selectedSubscription?.id === plan.id}
         onClick={() =>
           setSelectedSubscription(
-            selectedSubscription === plan.id ? null : plan.id
+            selectedSubscription?.id === plan.id ? undefined : plan
           )
         }
       />

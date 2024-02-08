@@ -8,5 +8,5 @@ export interface ExpireCheckoutSessionPayload {
 
 export interface CreateCheckoutSessionResponse {
   id: string;
-  clientSecret: string;
+  client_secret: string;
 }

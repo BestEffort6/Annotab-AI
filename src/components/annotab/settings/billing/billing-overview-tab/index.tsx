@@ -1,5 +1,9 @@
-import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
+import CheckoutModal from '@/components/annotab/payment/checkout-modal';
+import { useSubscriptions } from '@/hooks/queries/useSubscriptions';
+import type { Subscription } from '@/interfaces/subscription';
 import type { Workspace } from '@/interfaces/workspace';
 
 import PlanBoxs from '../plan-boxs';
@@ -9,7 +13,28 @@ type BillingOverviewTabProps = {
 };
 
 const BillingOverviewTab = ({ currentWorkspace }: BillingOverviewTabProps) => {
+  const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [selectedSubscription, setSelectedSubscription] = useState<
+    Subscription | undefined
+  >();
+
+  const { data } = useSubscriptions(session?.user.access.token);
+
+  useEffect(() => {
+    if (data && currentWorkspace.subscriptionId) {
+      setSelectedSubscription(
+        data.data.find((item) => item.id === currentWorkspace.subscriptionId)
+      );
+    }
+  }, [data, currentWorkspace]);
+
+  const handlePayment = () => {
+    setIsOpen(false);
+    setIsPaymentOpen(true);
+  };
+
   return (
     <>
       <div className="my-[25px] text-end">
@@ -96,11 +121,24 @@ const BillingOverviewTab = ({ currentWorkspace }: BillingOverviewTabProps) => {
         </table>
       </div>
 
-      <PlanBoxs
-        setIsOpen={setIsOpen}
-        isOpen={isOpen}
-        currentWorkspace={currentWorkspace}
-      />
+      {data && (
+        <PlanBoxs
+          setIsOpen={setIsOpen}
+          isOpen={isOpen}
+          selectedSubscription={selectedSubscription}
+          setSelectedSubscription={setSelectedSubscription}
+          subscriptions={data.data}
+          handlePayment={handlePayment}
+        />
+      )}
+
+      {selectedSubscription && (
+        <CheckoutModal
+          isOpen={isPaymentOpen}
+          setIsOpen={setIsPaymentOpen}
+          selectedSubscription={selectedSubscription}
+        />
+      )}
     </>
   );
 };
