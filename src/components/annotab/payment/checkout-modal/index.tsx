@@ -22,12 +22,16 @@ type AttachCardModalProps = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   selectedSubscription: Subscription;
+  seatSubscription: Subscription | undefined;
+  teamSize: number;
 };
 
 const CheckoutModal = ({
   isOpen,
   setIsOpen,
   selectedSubscription,
+  seatSubscription,
+  teamSize,
 }: AttachCardModalProps) => {
   const { data: session } = useSession();
   const [clientSecret, setClientSecret] = useState('');
@@ -53,12 +57,14 @@ const CheckoutModal = ({
         }
       );
     }
-    if (isOpen && !sessionId) {
+    if (isOpen && !sessionId && seatSubscription) {
       createCheckoutSession(
         {
           accessToken: session?.user.access.token,
           payload: {
             subscriptionId: selectedSubscription.id,
+            seatSubscriptionId: seatSubscription.id,
+            seatCount: teamSize,
           },
         },
         {
@@ -72,6 +78,8 @@ const CheckoutModal = ({
   }, [
     isOpen,
     selectedSubscription,
+    seatSubscription,
+    teamSize,
     createCheckoutSession,
     expireCheckoutSession,
     session,

@@ -1,5 +1,7 @@
 export interface CreateCheckoutSessionPayload {
   subscriptionId: string;
+  seatSubscriptionId: string;
+  seatCount: number;
 }
 
 export interface ExpireCheckoutSessionPayload {
