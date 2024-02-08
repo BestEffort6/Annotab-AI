@@ -6,6 +6,7 @@ import {
 import { getServerSession } from 'next-auth';
 
 import Overview from '@/components/annotab/overview';
+import { fetchCurrentWorkspace } from '@/hooks/queries/useCurrentWorkspace';
 import { fetchInvitations } from '@/hooks/queries/useInvitations';
 import { authOptions } from '@/libs/auth';
 import { DEFAULT_PAGINATION } from '@/libs/constants';
@@ -29,6 +30,11 @@ export default async function OverviewPage() {
         DEFAULT_PAGINATION.LIMIT,
         ''
       ),
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ['currentWorkspace', session?.user.access.token],
+    queryFn: () => fetchCurrentWorkspace(session?.user.access.token),
   });
 
   return (

@@ -1,11 +1,18 @@
 'use client';
 
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+
+import { useCurrentWorkspace } from '@/hooks/queries/useCurrentWorkspace';
 
 import BillingCard from './billing-card';
 import BillingTabs from './billing-tabs';
 
 const SettingsBilling = () => {
+  const { data: session } = useSession();
+
+  const { data } = useCurrentWorkspace(session?.user.access.token);
+
   return (
     <div className="flex h-full w-full flex-col gap-y-5 overflow-y-auto px-7 py-11">
       <Link
@@ -19,7 +26,7 @@ const SettingsBilling = () => {
       </h4>
       <hr />
       <BillingCard />
-      <BillingTabs />
+      {data && <BillingTabs currentWorkspace={data.data} />}
     </div>
   );
 };

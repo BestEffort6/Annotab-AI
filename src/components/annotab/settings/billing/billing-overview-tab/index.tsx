@@ -1,8 +1,14 @@
 import { useState } from 'react';
 
+import type { Workspace } from '@/interfaces/workspace';
+
 import PlanBoxs from '../plan-boxs';
 
-const BillingOverviewTab = () => {
+type BillingOverviewTabProps = {
+  currentWorkspace: Workspace;
+};
+
+const BillingOverviewTab = ({ currentWorkspace }: BillingOverviewTabProps) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
@@ -90,7 +96,11 @@ const BillingOverviewTab = () => {
         </table>
       </div>
 
-      <PlanBoxs setIsOpen={setIsOpen} isOpen={isOpen} />
+      <PlanBoxs
+        setIsOpen={setIsOpen}
+        isOpen={isOpen}
+        currentWorkspace={currentWorkspace}
+      />
     </>
   );
 };
