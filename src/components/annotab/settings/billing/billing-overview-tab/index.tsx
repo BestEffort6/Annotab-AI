@@ -6,7 +6,7 @@ import { useSubscriptions } from '@/hooks/queries/useSubscriptions';
 import type { Subscription } from '@/interfaces/subscription';
 import type { Workspace } from '@/interfaces/workspace';
 
-import PlanBoxs from '../plan-boxs';
+import PlanBoxsModal from '../plan-boxs-modal';
 
 type BillingOverviewTabProps = {
   currentWorkspace: Workspace;
@@ -123,7 +123,7 @@ const BillingOverviewTab = ({ currentWorkspace }: BillingOverviewTabProps) => {
       </div>
 
       {data && (
-        <PlanBoxs
+        <PlanBoxsModal
           setIsOpen={setIsOpen}
           isOpen={isOpen}
           selectedSubscription={selectedSubscription}
@@ -132,6 +132,7 @@ const BillingOverviewTab = ({ currentWorkspace }: BillingOverviewTabProps) => {
           handlePayment={handlePayment}
           teamSize={teamSize}
           setTeamSize={setTeamSize}
+          currentWorkspace={currentWorkspace}
         />
       )}
 

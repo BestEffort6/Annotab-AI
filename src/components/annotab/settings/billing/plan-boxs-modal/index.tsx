@@ -15,6 +15,7 @@ import {
 
 import Popup from '@/components/annotab/popup';
 import type { Subscription } from '@/interfaces/subscription';
+import type { Workspace } from '@/interfaces/workspace';
 
 import SubscriptionCard from '../subscription-card';
 
@@ -27,6 +28,7 @@ type PlanBoxsProps = {
   handlePayment: () => void;
   teamSize: number;
   setTeamSize: (teamSize: number) => void;
+  currentWorkspace: Workspace;
 };
 
 const teamSizes = [
@@ -52,7 +54,7 @@ const teamSizes = [
   },
 ];
 
-const PlanBoxs = ({
+const PlanBoxsModal = ({
   setIsOpen,
   isOpen,
   selectedSubscription,
@@ -61,20 +63,13 @@ const PlanBoxs = ({
   handlePayment,
   teamSize,
   setTeamSize,
+  currentWorkspace,
 }: PlanBoxsProps) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   const handleCloseModal = () => {
     setCurrentStep(1);
     setIsOpen(false);
-  };
-
-  const handleProcess = () => {
-    if (selectedSubscription?.stripeProductId) {
-      handlePayment();
-    } else {
-      setCurrentStep(2);
-    }
   };
 
   return (
@@ -98,9 +93,13 @@ const PlanBoxs = ({
               ))}
             </Select>
             <button
-              onClick={handleProcess}
+              onClick={handlePayment}
               type="button"
-              className="rounded-[8px] bg-pastel-green px-[18px] py-[6px] text-[14px] font-normal text-grey-purple-white drop-shadow-[0px_0px_2px_rgba(0,0,0,0.25)] transition-all hover:bg-pastel-green/70"
+              className="rounded-[8px] bg-pastel-green px-[18px] py-[6px] text-[14px] font-normal text-grey-purple-white drop-shadow-[0px_0px_2px_rgba(0,0,0,0.25)] transition-all hover:bg-pastel-green/70 disabled:cursor-not-allowed disabled:bg-gray-300"
+              disabled={
+                selectedSubscription &&
+                selectedSubscription.id === currentWorkspace.subscriptionId
+              }
             >
               Proceed
             </button>
@@ -400,4 +399,4 @@ const PlanBoxs = ({
   );
 };
 
-export default PlanBoxs;
+export default PlanBoxsModal;

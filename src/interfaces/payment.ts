@@ -1,4 +1,5 @@
 export interface CreateCheckoutSessionPayload {
+  mode: 'subscription' | 'setup' | 'payment';
   subscriptionId: string;
   seatSubscriptionId: string;
   seatCount: number;
