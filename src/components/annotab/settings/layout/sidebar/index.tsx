@@ -1,8 +1,13 @@
+import clsx from 'clsx';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { Fragment, useMemo } from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 
+import { useCurrentWorkspace } from '@/hooks/queries/useCurrentWorkspace';
+
 const SettingsSidebar = ({ currentRoute }: any) => {
+  const { data: session } = useSession();
   const menuItems = useMemo(
     () => [
       {
@@ -34,6 +39,8 @@ const SettingsSidebar = ({ currentRoute }: any) => {
     []
   );
 
+  const { data } = useCurrentWorkspace(session?.user.access.token);
+
   return (
     <div className="w-1/4 px-4 pt-6 text-black 2xl:w-1/6">
       <Link
@@ -46,10 +53,12 @@ const SettingsSidebar = ({ currentRoute }: any) => {
         <LazyLoadImage
           alt="Owner logo"
           effect="blur"
-          src="/images/no-image.png"
+          src={data?.data.profilePicture?.url || '/images/no-image.png'}
           className="h-[43px] w-[43px] rounded-full object-cover"
         />
-        <p className="text-[14px] font-[600] text-dark-navy-blue">Owner</p>
+        <p className="text-[14px] font-[600] text-dark-navy-blue">
+          {data?.data.name}
+        </p>
       </div>
       <div className="flex flex-col justify-between gap-y-2">
         {menuItems.map((item) => (
@@ -61,11 +70,12 @@ const SettingsSidebar = ({ currentRoute }: any) => {
             )}
             <Link
               href={item.link}
-              className={`relative rounded-lg py-[6px] pl-[27px] pr-[10px] text-[14px] font-normal text-dark-navy-blue hover:bg-[#E0E0E8] ${
+              className={clsx(
+                'relative rounded-lg py-[6px] pl-[27px] pr-[10px] text-[14px] font-normal text-dark-navy-blue hover:bg-[#E0E0E8]',
                 currentRoute === item.link
                   ? "active bg-[#E0E0E8] after:absolute after:left-[2px] after:top-[50%] after:h-[70%] after:w-[6px] after:translate-y-[-50%] after:rounded-[4rem] after:bg-neon-purple after:content-['']"
                   : ''
-              }`}
+              )}
             >
               {item.value}
             </Link>

@@ -62,6 +62,9 @@ const CheckoutModal = ({
         {
           accessToken: session?.user.access.token,
           payload: {
+            mode: selectedSubscription.stripeProductId
+              ? 'subscription'
+              : 'setup',
             subscriptionId: selectedSubscription.id,
             seatSubscriptionId: seatSubscription.id,
             seatCount: teamSize,
