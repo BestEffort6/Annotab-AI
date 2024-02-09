@@ -1,11 +1,9 @@
-import React from 'react';
-
-import ClassesName from '@/components/class-management/classes';
+import ClassCards from '@/components/class-management/class-cards';
 
 const Classes = () => {
   return (
     <div className="p-8">
-      <ClassesName />
+      <ClassCards />
     </div>
   );
 };

@@ -4,19 +4,19 @@ import { ChevronDoubleRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import React from 'react';
 
-import { ClassBarChart } from '@/components/class-management/class-bar-chart';
-import ClassTable from '@/components/class-management/class-table';
-import { useFindClassById } from '@/hooks/queries/useFindClassById';
-import type { ClassById } from '@/interfaces/classes';
+import { useClass } from '@/hooks/queries/useClass';
+import type { IClass } from '@/interfaces/class';
 
-const Class = () => {
-  const { slug } = useParams();
+import ClassBarChart from '../class-bar-chart';
+import ClassTable from '../class-table';
+
+const ClassDetails = () => {
+  const { classId } = useParams();
   const { data: session } = useSession();
-  const { data: classData } = useFindClassById(
+  const { data: classData } = useClass(
     session?.user.access.token,
-    slug as string
+    classId as string
   );
 
   return (
@@ -26,7 +26,7 @@ const Class = () => {
         <ChevronDoubleRightIcon height={18} color="#9798AD" />
         {classData?.data?.name ?? ''}
       </div>
-      <ClassTable classData={classData?.data ?? ({} as ClassById)} />
+      <ClassTable classData={classData?.data ?? ({} as IClass)} />
       <div className="flex h-[396px] w-full max-w-[1051px] flex-col items-center justify-start gap-2 rounded-lg border bg-mostly-white px-[15px] pt-3">
         <p className="w-full text-sm font-semibold">Dataset Distribution</p>
         <ClassBarChart />
@@ -35,4 +35,4 @@ const Class = () => {
   );
 };
 
-export default Class;
+export default ClassDetails;

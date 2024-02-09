@@ -1,7 +1,10 @@
 'use client';
 
+import { Menu, Transition } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import React from 'react';
+import { signOut } from 'next-auth/react';
+import React, { Fragment } from 'react';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const Navbar = () => {
   return (
@@ -19,6 +22,43 @@ const Navbar = () => {
         </div>
       </div>
       <div className="flex w-1/3 flex-row items-center justify-end gap-x-8 px-5">
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-light-greyish text-grey-purple-white dark:bg-purple-grey">
+          <LazyLoadImage
+            alt="notification"
+            effect="blur"
+            src="/images/svg/icon/top-bar/icon-bell-greypuplewhite-light.svg"
+          />
+        </div>
+        <Menu as="div" className="relative inline-block text-left">
+          <div>
+            <Menu.Button className="flex h-11 w-11 flex-col items-center justify-center rounded-full bg-light-greyish text-grey-purple-white dark:bg-purple-grey">
+              <LazyLoadImage src="/images/svg/icon/top-bar/icon-person-greypuplewhite-light.svg" />
+            </Menu.Button>
+          </div>
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Menu.Items className="absolute right-0 z-30 mt-3 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <div className="px-1 py-1 ">
+                <Menu.Item>
+                  <button
+                    type="button"
+                    onClick={() => signOut()}
+                    className="w-full rounded-md px-4 py-2 text-base font-normal text-black hover:bg-purple-grey/80 hover:text-grey-purple-white"
+                  >
+                    Sign Out
+                  </button>
+                </Menu.Item>
+              </div>
+            </Menu.Items>
+          </Transition>
+        </Menu>
         <button
           type="button"
           className="mr-3 rounded-xl bg-gradient-to-r from-ocean-green to-neon-purple p-[1px]"

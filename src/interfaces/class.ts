@@ -1,4 +1,4 @@
-export interface Classes {
+export interface IClass {
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -8,8 +8,5 @@ export interface Classes {
   subAnnotationClass: string;
   color: string;
   description: string;
-}
-
-export interface ClassById extends Classes {
-  deletedAt: string;
+  deletedAt?: string;
 }

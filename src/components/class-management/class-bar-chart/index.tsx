@@ -113,7 +113,7 @@ const Bars = ({ data, height, scaleX, scaleY }: BarsProps) => {
   );
 };
 
-export const ClassBarChart = () => {
+const ClassBarChart = () => {
   const margin = { top: 20, right: 0, bottom: 20, left: 30 };
   const width = 653 - margin.left - margin.right;
   const height = 297 - margin.top - margin.bottom;
@@ -144,3 +144,5 @@ export const ClassBarChart = () => {
     </svg>
   );
 };
+
+export default ClassBarChart;

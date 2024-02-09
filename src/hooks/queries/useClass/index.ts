@@ -1,15 +1,14 @@
-import { keepPreviousData } from '@tanstack/query-core';
 import { useQuery } from '@tanstack/react-query';
 import ky from 'ky';
 
 import type { ApiResponse } from '@/interfaces/api-response';
-import type { ClassById } from '@/interfaces/classes';
+import type { IClass } from '@/interfaces/class';
 import { Env } from '@/libs/Env.mjs';
 
-const fetchClassById = async (
+const fetchClass = async (
   accessToken: string | undefined,
   id: string
-): Promise<ApiResponse<ClassById>> => {
+): Promise<ApiResponse<IClass>> => {
   const response = (await ky
     .get(`${Env.NEXT_PUBLIC_BACKEND_URL}/api/v1/class/${id}`, {
       headers: {
@@ -17,19 +16,18 @@ const fetchClassById = async (
         Authorization: `Bearer ${accessToken}`,
       },
     })
-    .json()) as ApiResponse<ClassById>;
+    .json()) as ApiResponse<IClass>;
 
   return response;
 };
 
-const useFindClassById = (accessToken: string | undefined, id: string) => {
+const useClass = (accessToken: string | undefined, id: string) => {
   return useQuery({
-    queryKey: ['findClassById', accessToken, id],
-    queryFn: () => fetchClassById(accessToken, id),
-    placeholderData: keepPreviousData,
+    queryKey: ['class', accessToken, id],
+    queryFn: () => fetchClass(accessToken, id),
     enabled: !!accessToken,
     staleTime: 1000 * 10,
   });
 };
 
-export { fetchClassById, useFindClassById };
+export { fetchClass, useClass };

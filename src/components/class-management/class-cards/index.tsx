@@ -2,12 +2,11 @@
 
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import React from 'react';
 
 import { useClasses } from '@/hooks/queries/useClasses';
-import type { Classes } from '@/interfaces/classes';
+import type { IClass } from '@/interfaces/class';
 
-const ClassesName = () => {
+const ClassCards = () => {
   const { data: session } = useSession();
   const { data: classesData } = useClasses(session?.user.access.token);
 
@@ -25,7 +24,7 @@ const ClassesName = () => {
         </button>
       </div>
       <div className="flex w-full flex-wrap gap-11">
-        {classesData?.data?.map((item: Classes) => (
+        {classesData?.data?.map((item: IClass) => (
           <Link
             href={`/class/${item.id}`}
             className="w-full max-w-card-width"
@@ -47,4 +46,4 @@ const ClassesName = () => {
   );
 };
 
-export default ClassesName;
+export default ClassCards;

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import type { ClassById } from '@/interfaces/classes';
+import type { IClass } from '@/interfaces/class';
 
-const ClassTable = ({ classData }: { classData: ClassById }) => {
+const ClassTable = ({ classData }: { classData: IClass }) => {
   const date = new Date(classData?.createdAt);
 
   return (
