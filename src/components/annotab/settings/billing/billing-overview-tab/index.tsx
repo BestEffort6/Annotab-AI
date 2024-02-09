@@ -6,7 +6,7 @@ import { useSubscriptions } from '@/hooks/queries/useSubscriptions';
 import type { Subscription } from '@/interfaces/subscription';
 import type { Workspace } from '@/interfaces/workspace';
 
-import PlanBoxs from '../plan-boxs';
+import PlanBoxsModal from '../plan-boxs-modal';
 
 type BillingOverviewTabProps = {
   currentWorkspace: Workspace;
@@ -19,6 +19,7 @@ const BillingOverviewTab = ({ currentWorkspace }: BillingOverviewTabProps) => {
   const [selectedSubscription, setSelectedSubscription] = useState<
     Subscription | undefined
   >();
+  const [teamSize, setTeamSize] = useState<number>(1);
 
   const { data } = useSubscriptions(session?.user.access.token);
 
@@ -38,13 +39,15 @@ const BillingOverviewTab = ({ currentWorkspace }: BillingOverviewTabProps) => {
   return (
     <>
       <div className="my-[25px] text-end">
-        <button
-          type="button"
-          onClick={() => setIsOpen(true)}
-          className="rounded-[8px] bg-neon-purple px-[20px] py-[6px] text-[14px] font-normal text-grey-purple-white transition-all hover:bg-pastel-purple"
-        >
-          Change plan
-        </button>
+        {!currentWorkspace.subscription.stripeProductId && (
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            className="rounded-[8px] bg-neon-purple px-[20px] py-[6px] text-[14px] font-normal text-grey-purple-white transition-all hover:bg-pastel-purple"
+          >
+            Change plan
+          </button>
+        )}
       </div>
       <div />
       <h5 className="mb-[10px] text-[14px] font-[600] text-dark-navy-blue">
@@ -70,8 +73,12 @@ const BillingOverviewTab = ({ currentWorkspace }: BillingOverviewTabProps) => {
           </thead>
           <tbody>
             <tr>
-              <td className="text-[14px] text-dark-navy-blue">Pro</td>
-              <td className="text-[14px] text-dark-navy-blue">Monthly</td>
+              <td className="text-[14px] text-dark-navy-blue">
+                {currentWorkspace.subscription.name}
+              </td>
+              <td className="text-[14px] text-dark-navy-blue">
+                {currentWorkspace.subscription.validityDays} days
+              </td>
               <td className="text-[14px] text-dark-navy-blue">DD MM,YYYY</td>
               <td className="text-end text-[14px] text-dark-navy-blue">
                 $0.00
@@ -122,21 +129,26 @@ const BillingOverviewTab = ({ currentWorkspace }: BillingOverviewTabProps) => {
       </div>
 
       {data && (
-        <PlanBoxs
+        <PlanBoxsModal
           setIsOpen={setIsOpen}
           isOpen={isOpen}
           selectedSubscription={selectedSubscription}
           setSelectedSubscription={setSelectedSubscription}
           subscriptions={data.data}
           handlePayment={handlePayment}
+          teamSize={teamSize}
+          setTeamSize={setTeamSize}
+          currentWorkspace={currentWorkspace}
         />
       )}
 
-      {selectedSubscription && (
+      {selectedSubscription && data && (
         <CheckoutModal
           isOpen={isPaymentOpen}
           setIsOpen={setIsPaymentOpen}
           selectedSubscription={selectedSubscription}
+          seatSubscription={data.data.find((item) => !item.isDisplay)}
+          teamSize={teamSize}
         />
       )}
     </>

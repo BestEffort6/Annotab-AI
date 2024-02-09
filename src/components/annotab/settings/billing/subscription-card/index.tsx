@@ -62,7 +62,10 @@ const SubscriptionCard = ({
           >
             {formatSubscriptionPrice(plan)}
           </h2>
-          <Markdown>{plan.description}</Markdown>
+          <p className="mb-4">{plan.seatCount} seats</p>
+          <Markdown className="whitespace-pre-wrap">
+            {plan.description}
+          </Markdown>
         </div>
       </div>
     </div>
