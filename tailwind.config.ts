@@ -9,6 +9,13 @@ export default {
   ],
   theme: {
     extend: {
+      height: {
+        'card-height': '238px',
+        'inner-card-height': '156px',
+      },
+      maxWidth: {
+        'card-width': '230px',
+      },
       colors: {
         'pastel-purple-grey': '#5D608F',
         'purple-navy-blue': '#3E3E82',
@@ -53,6 +60,7 @@ export default {
         'ghost-white': '#F8F8FB',
         'light-blue': '#F2F2F8',
         'light-red': '#F25E5E',
+        'ocean-green': '#00FFCE',
       },
     },
   },

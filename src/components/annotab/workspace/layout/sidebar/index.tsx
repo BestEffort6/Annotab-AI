@@ -31,6 +31,18 @@ const WorkspaceSidebar = () => {
       srcActive:
         '/images/svg/icon/menu-bar/icon-dataset-darknavyblue-light.svg',
     },
+    {
+      value: 'Workflow',
+      link: '/workflow',
+      src: '/images/svg/icon-dataset-darknavyblue-light.svg',
+      srcActive: '/images/svg/icon-dataset-darknavyblue-light.svg',
+    },
+    {
+      value: 'Class Management',
+      link: '/classes',
+      src: '/images/svg/icon-classmanagement-darknavyblue-light.svg',
+      srcActive: '/images/svg/icon-classmanagement-darknavyblue-light.svg',
+    },
   ];
 
   const menuItemsBottom = [
@@ -48,8 +60,8 @@ const WorkspaceSidebar = () => {
       className={clsx(
         'relative flex h-full flex-col justify-between rounded-r-lg bg-mostly-white',
         !isOpen
-          ? 'right-0 w-16 justify-start transition-all duration-300 ease-in'
-          : 'left-0 w-64 justify-start transition-all duration-300 ease-out'
+          ? 'right-0 w-full max-w-16 justify-start transition-all duration-1000 ease-in'
+          : 'left-0 w-full max-w-64 justify-start transition-all duration-1000 ease-out'
       )}
     >
       <div className="flex flex-col gap-y-5 py-12">
