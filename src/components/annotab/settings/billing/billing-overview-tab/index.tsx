@@ -39,13 +39,15 @@ const BillingOverviewTab = ({ currentWorkspace }: BillingOverviewTabProps) => {
   return (
     <>
       <div className="my-[25px] text-end">
-        <button
-          type="button"
-          onClick={() => setIsOpen(true)}
-          className="rounded-[8px] bg-neon-purple px-[20px] py-[6px] text-[14px] font-normal text-grey-purple-white transition-all hover:bg-pastel-purple"
-        >
-          Change plan
-        </button>
+        {!currentWorkspace.subscription.stripeProductId && (
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            className="rounded-[8px] bg-neon-purple px-[20px] py-[6px] text-[14px] font-normal text-grey-purple-white transition-all hover:bg-pastel-purple"
+          >
+            Change plan
+          </button>
+        )}
       </div>
       <div />
       <h5 className="mb-[10px] text-[14px] font-[600] text-dark-navy-blue">
@@ -71,8 +73,12 @@ const BillingOverviewTab = ({ currentWorkspace }: BillingOverviewTabProps) => {
           </thead>
           <tbody>
             <tr>
-              <td className="text-[14px] text-dark-navy-blue">Pro</td>
-              <td className="text-[14px] text-dark-navy-blue">Monthly</td>
+              <td className="text-[14px] text-dark-navy-blue">
+                {currentWorkspace.subscription.name}
+              </td>
+              <td className="text-[14px] text-dark-navy-blue">
+                {currentWorkspace.subscription.validityDays} days
+              </td>
               <td className="text-[14px] text-dark-navy-blue">DD MM,YYYY</td>
               <td className="text-end text-[14px] text-dark-navy-blue">
                 $0.00

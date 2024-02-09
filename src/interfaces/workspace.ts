@@ -1,4 +1,5 @@
 import type { File } from './file';
+import type { Subscription } from './subscription';
 
 export interface Workspace {
   id: string;
@@ -12,6 +13,7 @@ export interface Workspace {
   billingEmail: string | null;
   billingAddress: string | null;
   profilePicture: File | null;
+  subscription: Subscription;
 }
 
 export type UpdateCurrentWorkspacePayload = 'name' | 'description' | 'file';
