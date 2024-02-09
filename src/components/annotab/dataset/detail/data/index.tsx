@@ -34,15 +34,7 @@ const listInfo = [
   },
 ];
 
-// interface WorkflowSteps {
-//   status: string;
-//   workflowStep: {
-//     stepDefinition: { name: string };
-//   };
-// }
-
 interface DatasetProps {
-  // data: any;
   datasetId: string;
   userId: string;
 }
@@ -121,7 +113,6 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
 
       setLoading(true);
       setDataList(updatedDataList);
-      // setIsSelectAll(true);
       setIsArchive(false);
       setSelectedDatas([]);
 
