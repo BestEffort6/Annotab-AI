@@ -3,10 +3,13 @@ import {
   DocumentMagnifyingGlassIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import type { HTTPError } from 'ky';
+import { useSession } from 'next-auth/react';
 import { Fragment, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import toast from '@/components/annotab/toast';
+import { useUploadDatas } from '@/hooks/mutations/useUploadDatas';
 
 interface UploadDataModalProps {
   isOpen: boolean;
@@ -23,6 +26,9 @@ const UploadDataModal = ({
   setLoading,
   datasetId,
 }: UploadDataModalProps) => {
+  const { mutate } = useUploadDatas();
+  const { data: session } = useSession();
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       setLoading(true);
@@ -32,22 +38,31 @@ const UploadDataModal = ({
         formData.append('files', file as File);
       });
 
-      fetch(`/api/dataset/upload/${datasetId}`, {
-        method: 'POST',
-        body: formData,
-      })
-        .then((res) => res.json())
-        .then(() => {
-          toast({ type: 'success', content: 'Files uploaded' });
-          setDatasetFiles((prev: any) => [...prev, ...acceptedFiles]);
-          setIsOpen(false);
-        })
-        .catch(() => {
-          toast({ type: 'error', content: 'Something went wrong' });
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      mutate(
+        { accessToken: session?.user.access.token, formData, id: datasetId },
+        {
+          onSuccess: () => {
+            toast({
+              type: 'success',
+              content: 'Add datas successfully',
+            });
+            setIsOpen(false);
+          },
+          onError: async (error) => {
+            if (error.name === 'HTTPError') {
+              const errJson = await (error as HTTPError).response.json();
+
+              toast({
+                type: 'error',
+                content: errJson.message,
+              });
+            }
+          },
+          onSettled: () => {
+            setLoading(false);
+          },
+        }
+      );
     },
     [datasetId, setDatasetFiles, setIsOpen, setLoading]
   );
@@ -58,6 +73,7 @@ const UploadDataModal = ({
       'image/png': ['.png', '.jpg', '.jpeg', '.webp'],
     },
   });
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog

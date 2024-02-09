@@ -14,7 +14,7 @@ import CoreTable from '@/components/annotab/table';
 import toast from '@/components/annotab/toast';
 import UploadDataModal from '@/components/annotab/upload-modal';
 import { useDatas } from '@/hooks/queries/useDatas';
-import type { DataProps } from '@/interfaces/data';
+import type { DataProps } from '@/interfaces/dataProps';
 import { DEFAULT_PAGINATION } from '@/libs/constants';
 
 const columnHelper = createColumnHelper<any>();
@@ -78,20 +78,16 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
   const [loading, setLoading] = useState(false);
   const [item] = useState<any>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [datasetFiles, setDatasetFiles] = useState<File[]>([]);
+  const [setDatasetFiles] = useState<File[]>([]);
   const [type] = useState<'annotate' | 'delete'>('annotate');
   const [isOpenConfirm, setIsOpenConfirm] = useState(false);
-  // const [search, setSearch] = useState('');
   const [dataList, setDataList] = useState<DataProps[]>([]);
   const [selectedDatas, setSelectedDatas] = useState<(string | number)[]>([]);
-  // const [isSelectAll, setIsSelectAll] = useState<boolean>(false);
   const [isArchive, setIsArchive] = useState(false);
 
   const { data: session } = useSession();
   const [page, setPage] = useState(DEFAULT_PAGINATION.PAGE);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.LIMIT);
-
-  console.log('datasetFiles', datasetFiles);
 
   const { data } = useDatas(
     session?.user.access.token,
@@ -179,33 +175,18 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
     }
   };
 
-  // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSearch(e.target.value);
-  // };
-
-  // const toggleSelectedData = (itemLabel: string | number) => {
-  //   if (selectedDatas.includes(itemLabel)) {
-  //     setSelectedDatas(selectedDatas.filter((item) => item !== itemLabel));
-  //   } else {
-  //     setSelectedDatas([...selectedDatas, itemLabel]);
-  //   }
-  // };
-
   const handlerSelect = async (e: any) => {
     switch (e.target.name) {
       case 'backToData':
         setIsArchive(true);
-        // setIsSelectAll(false);
         break;
 
       case 'selectAll':
         setSelectedDatas(dataList.map((item) => item.id));
-        // setIsSelectAll(false);
         break;
 
       case 'deSelectAll':
         setSelectedDatas([]);
-        // setIsSelectAll(false);
         break;
 
       case 'delete':
@@ -224,7 +205,6 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
           );
 
           setDataList(updatedDataList);
-          // setIsSelectAll(false);
           setSelectedDatas([]);
 
           toast({
@@ -262,7 +242,6 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
                     File name
                   </p>
                   <input
-                    // onChange={handleSearch}
                     type="text"
                     name="search"
                     id="search"

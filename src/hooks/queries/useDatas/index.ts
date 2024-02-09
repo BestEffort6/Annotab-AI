@@ -2,7 +2,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import ky from 'ky';
 
 import type { ApiResponse } from '@/interfaces/api-response';
-import type { DataProps } from '@/interfaces/data';
+import type { DataProps } from '@/interfaces/dataProps';
 import { Env } from '@/libs/Env.mjs';
 
 const fetchDatas = async (
