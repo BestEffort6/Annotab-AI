@@ -1,21 +1,23 @@
 'use client';
 
 import { ArrowUturnLeftIcon, PlusIcon } from '@heroicons/react/24/outline';
-import { Pagination } from '@nextui-org/react';
+import { createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
-// import { useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 import ConfirmModal from '@/components/annotab/confirm-modal';
 import Loading from '@/components/annotab/loading';
+import CoreTable from '@/components/annotab/table';
 import toast from '@/components/annotab/toast';
-// import { useDatas } from '@/hooks/queries/useDatas';
+import UploadDataModal from '@/components/annotab/upload-modal';
+import { useDatas } from '@/hooks/queries/useDatas';
 import type { DataProps } from '@/interfaces/data';
 import { DEFAULT_PAGINATION } from '@/libs/constants';
 
-// import UploadDataModal from './upload-modal';
+const columnHelper = createColumnHelper<any>();
 
 const listInfo = [
   {
@@ -44,63 +46,59 @@ interface DatasetProps {
   datasetId: string;
   userId: string;
 }
-interface MetaPagination {
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  itemCount: number;
-  page: number;
-  pageCount: number;
-  take: number;
-}
+
+const defaultColumns = [
+  columnHelper.accessor((row) => row.file?.url, {
+    id: 'image',
+    cell: (info) => (
+      <LazyLoadImage
+        src={info.getValue()}
+        className="aspect-square h-9 w-9 object-cover"
+      />
+    ),
+    header: () => <span>Image</span>,
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor((row) => row.id, {
+    id: 'id',
+    cell: (info) => info.getValue(),
+    header: () => <span>Id</span>,
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor((row) => row.status, {
+    id: 'role',
+    cell: (info) => info.getValue(),
+    header: () => <span>Status</span>,
+    footer: (props) => props.column.id,
+  }),
+];
 
 const Data = ({ datasetId, userId }: DatasetProps) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [item, setItem] = useState<any>();
-  // const [isOpen, setIsOpen] = useState<boolean>(false);
-  // const [datasetFiles, setDatasetFiles] = useState<File[]>([]);
-  const [type, setType] = useState<'annotate' | 'delete'>('annotate');
+  const [item] = useState<any>();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [datasetFiles, setDatasetFiles] = useState<File[]>([]);
+  const [type] = useState<'annotate' | 'delete'>('annotate');
   const [isOpenConfirm, setIsOpenConfirm] = useState(false);
-  const [search, setSearch] = useState('');
+  // const [search, setSearch] = useState('');
   const [dataList, setDataList] = useState<DataProps[]>([]);
-  const [controller] = useState<MetaPagination>();
-  const [pageNumber, setPageNumber] = useState<number>(1);
-  const { pageCount } = controller ?? { pageCount: 1 };
   const [selectedDatas, setSelectedDatas] = useState<(string | number)[]>([]);
   // const [isSelectAll, setIsSelectAll] = useState<boolean>(false);
   const [isArchive, setIsArchive] = useState(false);
 
-  // const { data: session } = useSession();
-  // const [page,setPage] = useState(DEFAULT_PAGINATION.PAGE);
+  const { data: session } = useSession();
+  const [page, setPage] = useState(DEFAULT_PAGINATION.PAGE);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.LIMIT);
 
-  // const { data } = useDatas(
-  //   session?.user.access.token,
-  //   page,
-  //   pageSize,
-  //   datasetId
-  // );
+  console.log('datasetFiles', datasetFiles);
 
-  const handleAnnotate = async (id: string, type: 'annotate' | 'delete') => {
-    setLoading(true);
-    const url = `/api/annotation/data/detail/${id}?dataset=${datasetId}`;
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then((res) => res.json());
-
-      setItem(response);
-      setType(type);
-      setIsOpenConfirm(true);
-    } catch {
-      toast({ type: 'error', content: 'Something went wrong' });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data } = useDatas(
+    session?.user.access.token,
+    page,
+    pageSize,
+    datasetId
+  );
 
   const handlerUpdateArchive = async (isStatus: boolean) => {
     const request = {
@@ -181,81 +179,66 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
     }
   };
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
+  // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearch(e.target.value);
+  // };
 
-  const handleChangePagePagination = (e: number) => {
-    setPageNumber(e);
-  };
-
-  const toggleSelectedData = (itemLabel: string | number) => {
-    if (selectedDatas.includes(itemLabel)) {
-      setSelectedDatas(selectedDatas.filter((item) => item !== itemLabel));
-    } else {
-      setSelectedDatas([...selectedDatas, itemLabel]);
-    }
-  };
-
-  // const handlerSelect = async (e: any) => {
-  //   switch (e.target.name) {
-  //     case 'backToData':
-  //       setIsArchive(true);
-  //       setIsSelectAll(false);
-  //       break;
-
-  //     case 'selectAll':
-  //       setSelectedDatas(dataList.map((item) => item.id));
-  //       setIsSelectAll(false);
-  //       break;
-
-  //     case 'deSelectAll':
-  //       setSelectedDatas([]);
-  //       setIsSelectAll(false);
-  //       break;
-
-  //     case 'delete':
-  //       try {
-  //         await selectedDatas.map(async (id) => {
-  //           await fetch(`/api/dataset/data/${id}/delete`, {
-  //             method: 'DELETE',
-  //             headers: {
-  //               'Content-Type': 'application/json',
-  //             },
-  //           });
-  //         });
-
-  //         const updatedDataList = dataList.filter(
-  //           (item) => !selectedDatas.includes(item.id)
-  //         );
-
-  //         setDataList(updatedDataList);
-  //         setIsSelectAll(false);
-  //         setSelectedDatas([]);
-
-  //         toast({
-  //           type: 'success',
-  //           content: 'Deleted data successfully!',
-  //         });
-  //       } catch (error) {
-  //         toast({
-  //           type: 'error',
-  //           content: 'Something went wrong while deleting data!',
-  //         });
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //       break;
-
-  //     default:
-  //       break;
+  // const toggleSelectedData = (itemLabel: string | number) => {
+  //   if (selectedDatas.includes(itemLabel)) {
+  //     setSelectedDatas(selectedDatas.filter((item) => item !== itemLabel));
+  //   } else {
+  //     setSelectedDatas([...selectedDatas, itemLabel]);
   //   }
   // };
 
-  const handleChangePage = (e: any) => {
+  const handlerSelect = async (e: any) => {
     switch (e.target.name) {
-      case 'pageSize':
-        setPageSize(e.target.value);
+      case 'backToData':
+        setIsArchive(true);
+        // setIsSelectAll(false);
+        break;
+
+      case 'selectAll':
+        setSelectedDatas(dataList.map((item) => item.id));
+        // setIsSelectAll(false);
+        break;
+
+      case 'deSelectAll':
+        setSelectedDatas([]);
+        // setIsSelectAll(false);
+        break;
+
+      case 'delete':
+        try {
+          await selectedDatas.map(async (id) => {
+            await fetch(`/api/dataset/data/${id}/delete`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+          });
+
+          const updatedDataList = dataList.filter(
+            (item) => !selectedDatas.includes(item.id)
+          );
+
+          setDataList(updatedDataList);
+          // setIsSelectAll(false);
+          setSelectedDatas([]);
+
+          toast({
+            type: 'success',
+            content: 'Deleted data successfully!',
+          });
+        } catch (error) {
+          toast({
+            type: 'error',
+            content: 'Something went wrong while deleting data!',
+          });
+        } finally {
+          setLoading(false);
+        }
         break;
 
       default:
@@ -279,7 +262,7 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
                     File name
                   </p>
                   <input
-                    onChange={handleSearch}
+                    // onChange={handleSearch}
                     type="text"
                     name="search"
                     id="search"
@@ -318,14 +301,14 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
               <button
                 type="button"
                 name="backToData"
-                // onClick={handlerSelect}
+                onClick={handlerSelect}
                 className="flex flex-row items-center rounded-lg bg-sea-green px-5 py-2 text-sm font-normal text-dark-navy-blue"
               >
                 Archive
               </button>
               <button
                 type="button"
-                // onClick={() => setIsOpen(true)}
+                onClick={() => setIsOpen(true)}
                 className="flex flex-row items-center justify-center gap-x-2 rounded-lg bg-mostly-white px-5 py-2 text-sm font-normal text-dark-navy-blue"
               >
                 <PlusIcon width={20} height={20} />
@@ -359,7 +342,7 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
               <button
                 type="button"
                 name="selectAll"
-                // onClick={handlerSelect}
+                onClick={handlerSelect}
                 className="flex flex-row items-center rounded-lg border border-dark-navy-blue/10 px-5 py-2 text-sm font-normal text-dark-navy-blue"
               >
                 Select All
@@ -367,7 +350,7 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
               <button
                 type="button"
                 name="deSelectAll"
-                // onClick={handlerSelect}
+                onClick={handlerSelect}
                 className="flex flex-row items-center rounded-lg border border-dark-navy-blue/10 px-5 py-2 text-sm font-normal text-dark-navy-blue"
               >
                 De-Select All
@@ -375,7 +358,7 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
               <button
                 type="button"
                 name="delete"
-                // onClick={handlerSelect}
+                onClick={handlerSelect}
                 className="flex flex-row items-center rounded-lg border border-rusty-red/10 px-5 py-2 text-sm font-normal text-rusty-red"
               >
                 Delete
@@ -401,140 +384,27 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
           </div>
         )}
 
-        {dataList && dataList.length ? (
-          <div className="flex h-[90%] w-full flex-col items-start overflow-y-auto pr-2">
-            <div className="flex flex-wrap gap-5">
-              {dataList
-                .filter((item) =>
-                  search !== '' && item.file
-                    ? item.file.filename
-                        .split('/')[1]
-                        ?.toLowerCase()
-                        ?.includes(search.toLowerCase())
-                    : true
-                )
-                .map((item: any) => (
-                  <div
-                    key={item.id}
-                    className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-y-2"
-                  >
-                    <div className="relative h-[120px] w-[120px]">
-                      {isArchive ? (
-                        <LazyLoadImage
-                          src={item.file?.url}
-                          className="aspect-square h-[120px] w-[120px] rounded-xl object-cover"
-                          effect="blur"
-                        />
-                      ) : (
-                        <LazyLoadImage
-                          onClick={() => handleAnnotate(item.id, 'annotate')}
-                          src={item.file?.url}
-                          className="aspect-square h-[120px] w-[120px] rounded-xl object-cover"
-                          effect="blur"
-                        />
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => toggleSelectedData(item.id)}
-                        className={clsx(
-                          'absolute left-2 top-2  h-4 w-4 rounded-full',
-                          selectedDatas.includes(item.id)
-                            ? 'bg-sea-green'
-                            : 'bg-light-greyish'
-                        )}
-                        aria-label="Save"
-                      />
-                      <div className="absolute -bottom-2 -right-1">
-                        {/* {item.status === 'in_progress' ? (
-                        item.workflowStepsData.find(
-                          (item: WorkflowSteps) =>
-                            item.status === 'in_progress'
-                        )?.workflowStep.stepDefinition.name === 'review' ? (
-                          <span className="text-base w-9 h-9 flex items-center justify-center rounded-full bg-chili-red text-grey-purple-white font-medium">
-                            <LazyLoadImage src="/images/svg/icon/dataset/data/icon-review-greypuplewhite-light.svg" />
-                          </span>
-                        ) : (
-                          <span className="text-base w-9 h-9 flex items-center justify-center rounded-full bg-blue-pastel text-grey-purple-white font-medium">
-                            <LazyLoadImage src="/images/svg/icon/dataset/data/icon-annotation-greypuplewhite-light.svg" />
-                          </span>
-                        )
-                      ) : ( */}
-                        {isArchive ? (
-                          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-neon-purple text-base">
-                            <LazyLoadImage src="/images/svg/icon/dataset/create-new-dataset/icon-archive-greypuplewhite-light.svg" />
-                          </span>
-                        ) : (
-                          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-dark-pastel-green text-base">
-                            <LazyLoadImage src="/images/svg/icon/dataset/data/icon-check-greypuplewhite-light.svg" />
-                          </span>
-                        )}
-
-                        {/* )} */}
-                      </div>
-                    </div>
-                    <p className="dark-navy-blue w-[120px] truncate text-center text-base font-medium">
-                      {item.file.filename.split('/')[1]}
-                    </p>
-                  </div>
-                ))}
-            </div>
-          </div>
-        ) : (
-          <div className="flex h-full w-full items-center justify-center gap-y-2">
-            <p className="text-center text-sm font-semibold text-gray-500">
-              No datas yet
-            </p>
-          </div>
-        )}
-        {pageCount ? (
-          <div className="flex h-[5%] flex-row items-center justify-between gap-x-2">
-            <div className="flex flex-row items-center justify-start">
-              <Pagination
-                total={pageCount}
-                initialPage={pageNumber}
-                disableCursorAnimation
-                showControls
-                onChange={handleChangePagePagination}
-              />
-            </div>
-            <div className="flex flex-row items-center justify-start gap-x-2 text-center">
-              <p className="text-sm font-normal text-dark-navy-blue">
-                Page&nbsp;
-                <strong>
-                  {pageNumber} of {pageCount}
-                </strong>
-                &nbsp;
-              </p>
-              <form className="flex flex-row items-center justify-center gap-x-3">
-                <select
-                  value={pageSize}
-                  name="pageSize"
-                  onChange={handleChangePage}
-                  className="rounded-md border border-light-slate-grey text-center text-sm font-normal text-dark-navy-blue"
-                >
-                  {[10, 25, 50, 100].map((pageSize) => (
-                    <option
-                      className="bg-white text-sm font-normal text-dark-navy-blue"
-                      key={pageSize}
-                      value={pageSize}
-                    >
-                      {pageSize}
-                    </option>
-                  ))}
-                </select>
-              </form>
-            </div>
-          </div>
-        ) : null}
+        <div className="flex h-[90%] w-full flex-col items-start overflow-y-auto pr-2">
+          <CoreTable
+            data={data?.data || []}
+            columns={defaultColumns}
+            loading={false}
+            page={page}
+            pageSize={pageSize}
+            total={data?.meta.itemCount || 0}
+            totalPage={data?.meta.pageCount || 0}
+            setPage={setPage}
+            setPageSize={setPageSize}
+          />
+        </div>
       </div>
-      {/* <UploadDataModal
+      <UploadDataModal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         setDatasetFiles={setDatasetFiles}
         setLoading={setLoading}
         datasetId={datasetId}
-        workspaceId={workspaceId}
-      /> */}
+      />
       {item && (
         <ConfirmModal
           size="3xl"
