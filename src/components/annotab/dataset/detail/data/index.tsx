@@ -70,7 +70,6 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
   const [loading, setLoading] = useState(false);
   const [item] = useState<any>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [setDatasetFiles] = useState<File[]>([]);
   const [type] = useState<'annotate' | 'delete'>('annotate');
   const [isOpenConfirm, setIsOpenConfirm] = useState(false);
   const [dataList, setDataList] = useState<DataProps[]>([]);
@@ -371,7 +370,6 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
       <UploadDataModal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        setDatasetFiles={setDatasetFiles}
         setLoading={setLoading}
         datasetId={datasetId}
       />

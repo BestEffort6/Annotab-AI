@@ -6,11 +6,10 @@ import {
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 
+import DatasetDetail from '@/components/annotab/dataset/detail';
 import { fetchDatas } from '@/hooks/queries/useDatas';
 import { authOptions } from '@/libs/auth';
 import { DEFAULT_PAGINATION } from '@/libs/constants';
-
-import DatasetDetail from '../../../../components/annotab/dataset/detail';
 
 export default async function DatasetDetailPage({
   params,

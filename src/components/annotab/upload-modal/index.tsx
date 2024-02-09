@@ -3,6 +3,8 @@ import {
   DocumentMagnifyingGlassIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import type { InvalidateQueryFilters } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import type { HTTPError } from 'ky';
 import { useSession } from 'next-auth/react';
 import { Fragment, useCallback } from 'react';
@@ -14,7 +16,6 @@ import { useUploadDatas } from '@/hooks/mutations/useUploadDatas';
 interface UploadDataModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  setDatasetFiles: any;
   setLoading: (loading: boolean) => void;
   datasetId: string;
 }
@@ -22,12 +23,13 @@ interface UploadDataModalProps {
 const UploadDataModal = ({
   isOpen,
   setIsOpen,
-  setDatasetFiles,
   setLoading,
   datasetId,
 }: UploadDataModalProps) => {
   const { mutate } = useUploadDatas();
   const { data: session } = useSession();
+
+  const queryClient = useQueryClient();
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -47,6 +49,10 @@ const UploadDataModal = ({
               content: 'Add datas successfully',
             });
             setIsOpen(false);
+
+            queryClient.invalidateQueries(
+              'uploadDatas' as InvalidateQueryFilters
+            );
           },
           onError: async (error) => {
             if (error.name === 'HTTPError') {
@@ -64,7 +70,7 @@ const UploadDataModal = ({
         }
       );
     },
-    [datasetId, setDatasetFiles, setIsOpen, setLoading]
+    [datasetId, mutate, queryClient, session, setIsOpen, setLoading]
   );
 
   const { getRootProps, getInputProps } = useDropzone({
