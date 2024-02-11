@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import React, { useMemo, useState } from 'react';
 
-import Data from './data';
+import DataList from './dataList';
 
 interface ListTabProps {
   label: string;
@@ -23,7 +23,7 @@ const DatasetDetail = ({ datasetId }: DatasetDetailProps) => {
     () => [
       {
         label: 'Data',
-        layout: <Data datasetId={datasetId} userId={datasetId} />,
+        layout: <DataList datasetId={datasetId} />,
       },
       {
         label: 'Workflow',

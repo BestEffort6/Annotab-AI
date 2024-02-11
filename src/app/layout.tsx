@@ -12,7 +12,7 @@ const openSans = Open_Sans({ subsets: ['latin'] });
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={openSans.className} suppressHydrationWarning>
+      <body className={openSans.className}>
         <Provider>{props.children}</Provider>
       </body>
     </html>

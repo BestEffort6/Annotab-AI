@@ -3,7 +3,6 @@
 import { ArrowUturnLeftIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
-import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
@@ -11,10 +10,8 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import ConfirmModal from '@/components/annotab/confirm-modal';
 import Loading from '@/components/annotab/loading';
 import CoreTable from '@/components/annotab/table';
-import toast from '@/components/annotab/toast';
 import UploadDataModal from '@/components/annotab/upload-modal';
 import { useDatas } from '@/hooks/queries/useDatas';
-import type { DataProps } from '@/interfaces/dataProps';
 import { DEFAULT_PAGINATION } from '@/libs/constants';
 
 const columnHelper = createColumnHelper<any>();
@@ -36,7 +33,6 @@ const listInfo = [
 
 interface DatasetProps {
   datasetId: string;
-  userId: string;
 }
 
 const defaultColumns = [
@@ -65,15 +61,12 @@ const defaultColumns = [
   }),
 ];
 
-const Data = ({ datasetId, userId }: DatasetProps) => {
-  const router = useRouter();
+const DataList = ({ datasetId }: DatasetProps) => {
   const [loading, setLoading] = useState(false);
   const [item] = useState<any>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [type] = useState<'annotate' | 'delete'>('annotate');
   const [isOpenConfirm, setIsOpenConfirm] = useState(false);
-  const [dataList, setDataList] = useState<DataProps[]>([]);
-  const [selectedDatas, setSelectedDatas] = useState<(string | number)[]>([]);
   const [isArchive, setIsArchive] = useState(false);
 
   const { data: session } = useSession();
@@ -87,140 +80,11 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
     datasetId
   );
 
-  const handlerUpdateArchive = async (isStatus: boolean) => {
-    const request = {
-      isStatus,
-    };
-
-    try {
-      await selectedDatas.map(async (id) => {
-        await fetch(
-          `/api/dataset/data/${id}/update-archive?datasetId=${datasetId}`,
-          {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(request),
-          }
-        );
-      });
-
-      const updatedDataList = dataList.filter(
-        (item) => !selectedDatas.includes(item.id)
-      );
-
-      setLoading(true);
-      setDataList(updatedDataList);
-      setIsArchive(false);
-      setSelectedDatas([]);
-
-      if (isArchive) {
-        toast({
-          type: 'success',
-          content: 'Move back dataset successfully! ',
-        });
-      } else {
-        toast({
-          type: 'success',
-          content: 'Move to archive successfully!',
-        });
-      }
-    } catch (error) {
-      toast({
-        type: 'error',
-        content: 'Something went wrong while deleting data!',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRedirectAnnotation = async () => {
-    setLoading(true);
-    let annotationRes: any;
-
-    try {
-      const request = {
-        user_id: userId,
-        image: item.file.url,
-        resize_ratio: 1,
-      };
-
-      annotationRes = await fetch(`/api/annotation/init`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(request),
-      });
-
-      if (annotationRes) {
-        router.push(`/dataset/${datasetId}/image/${item.id}`);
-      }
-    } catch (error) {
-      toast({ type: 'error', content: 'Something went wrong!' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handlerSelect = async (e: any) => {
-    switch (e.target.name) {
-      case 'backToData':
-        setIsArchive(true);
-        break;
-
-      case 'selectAll':
-        setSelectedDatas(dataList.map((item) => item.id));
-        break;
-
-      case 'deSelectAll':
-        setSelectedDatas([]);
-        break;
-
-      case 'delete':
-        try {
-          await selectedDatas.map(async (id) => {
-            await fetch(`/api/dataset/data/${id}/delete`, {
-              method: 'DELETE',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-          });
-
-          const updatedDataList = dataList.filter(
-            (item) => !selectedDatas.includes(item.id)
-          );
-
-          setDataList(updatedDataList);
-          setSelectedDatas([]);
-
-          toast({
-            type: 'success',
-            content: 'Deleted data successfully!',
-          });
-        } catch (error) {
-          toast({
-            type: 'error',
-            content: 'Something went wrong while deleting data!',
-          });
-        } finally {
-          setLoading(false);
-        }
-        break;
-
-      default:
-        break;
-    }
-  };
-
   return (
     <>
       {loading && <Loading loading />}
       <div className="flex h-full w-full flex-col gap-y-2">
-        {!isArchive && selectedDatas.length === 0 ? (
+        {!isArchive ? (
           <div className="flex h-[5%] flex-row items-center justify-center">
             <div className="flex w-1/2 flex-row gap-x-4">
               <form className="flex w-2/3 flex-row items-center justify-start gap-x-3">
@@ -270,7 +134,6 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
               <button
                 type="button"
                 name="backToData"
-                onClick={handlerSelect}
                 className="flex flex-row items-center rounded-lg bg-sea-green px-5 py-2 text-sm font-normal text-dark-navy-blue"
               >
                 Archive
@@ -311,7 +174,6 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
               <button
                 type="button"
                 name="selectAll"
-                onClick={handlerSelect}
                 className="flex flex-row items-center rounded-lg border border-dark-navy-blue/10 px-5 py-2 text-sm font-normal text-dark-navy-blue"
               >
                 Select All
@@ -319,7 +181,6 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
               <button
                 type="button"
                 name="deSelectAll"
-                onClick={handlerSelect}
                 className="flex flex-row items-center rounded-lg border border-dark-navy-blue/10 px-5 py-2 text-sm font-normal text-dark-navy-blue"
               >
                 De-Select All
@@ -327,7 +188,6 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
               <button
                 type="button"
                 name="delete"
-                onClick={handlerSelect}
                 className="flex flex-row items-center rounded-lg border border-rusty-red/10 px-5 py-2 text-sm font-normal text-rusty-red"
               >
                 Delete
@@ -335,7 +195,6 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
               {!isArchive ? (
                 <button
                   type="button"
-                  onClick={() => handlerUpdateArchive(true)}
                   className="flex flex-row items-center rounded-lg border bg-purple-grey px-5 py-2 text-sm font-normal text-grey-purple-white"
                 >
                   Move to Archive
@@ -343,7 +202,6 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
               ) : (
                 <button
                   type="button"
-                  onClick={() => handlerUpdateArchive(false)}
                   className="flex flex-row items-center rounded-lg border bg-purple-grey px-5 py-2 text-sm font-normal text-grey-purple-white"
                 >
                   Move back to Dataset
@@ -382,7 +240,7 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
             if (type === 'delete') {
               // handle delete
             } else {
-              handleRedirectAnnotation();
+              // handle RedirectAnnotation
             }
           }}
           title={
@@ -415,4 +273,4 @@ const Data = ({ datasetId, userId }: DatasetProps) => {
   );
 };
 
-export default Data;
+export default DataList;

@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import ky from 'ky';
 
 import type { ApiResponse } from '@/interfaces/api-response';
-import type { DataProps } from '@/interfaces/dataProps';
+import type { Data } from '@/interfaces/data';
 import { Env } from '@/libs/Env.mjs';
 
 export const uploadDatas = async (
@@ -17,7 +17,7 @@ export const uploadDatas = async (
       },
       body: formData,
     })
-    .json()) as ApiResponse<DataProps>;
+    .json()) as ApiResponse<Data>;
 
   return response;
 };

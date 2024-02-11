@@ -3,7 +3,6 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
-import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 
 import DatasetDetail from '@/components/annotab/dataset/detail';
@@ -18,10 +17,6 @@ export default async function DatasetDetailPage({
 }) {
   const session = await getServerSession(authOptions);
   const queryClient = new QueryClient();
-
-  if (!session) {
-    redirect('/sign-in');
-  }
 
   await queryClient.prefetchQuery({
     queryKey: [
