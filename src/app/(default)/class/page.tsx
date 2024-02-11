@@ -1,4 +1,4 @@
-import ClassCards from '@/components/class-management/class-cards';
+import ClassCards from '@/components/annotab/class/class-cards';
 
 const Classes = () => {
   return (

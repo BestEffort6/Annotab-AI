@@ -57,7 +57,7 @@ export default function DefaultLayout({
       case path.includes('settings/account'):
       case path.includes('settings/role-permission'):
         return (
-          <div className="min-h-screen w-full bg-mostly-white ">
+          <div className="min-h-screen w-full bg-mostly-white">
             <SettingsNavbar />
             <div className="flex flex-row justify-center">
               <SettingsSidebar currentRoute={path} />

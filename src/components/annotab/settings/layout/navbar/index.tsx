@@ -7,7 +7,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 const SettingsNavbar = () => {
   const router = useRouter();
   return (
-    <div className="flex h-16 w-full flex-row border-b bg-mostly-white dark:bg-light-purple-grey">
+    <div className="sticky top-0 z-50 flex h-16 w-full flex-row border-b bg-mostly-white dark:bg-light-purple-grey">
       <div className="flex w-1/3">
         <LazyLoadImage
           src="/images/svg/logo-icon-dark.svg"
@@ -53,7 +53,11 @@ const SettingsNavbar = () => {
                 <Menu.Item>
                   <button
                     type="button"
-                    onClick={() => signOut()}
+                    onClick={() =>
+                      signOut({
+                        callbackUrl: '/sign-in',
+                      })
+                    }
                     className="w-full rounded-md px-4 py-2 text-base font-normal text-black hover:bg-purple-grey/80 hover:text-grey-purple-white"
                   >
                     Sign Out
