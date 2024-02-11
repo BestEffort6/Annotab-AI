@@ -25,3 +25,7 @@ export interface UpdateCurrentWorkspaceFormData extends FormData {
     fileName?: string
   ): void;
 }
+
+export interface SwitchCurrentWorkspacePayload {
+  workspaceId: string;
+}

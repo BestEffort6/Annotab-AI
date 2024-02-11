@@ -1,4 +1,4 @@
-import ClassDetails from '@/components/class-management/class-details';
+import ClassDetails from '@/components/annotab/class/class-details';
 
 const Class = async () => {
   return <ClassDetails />;

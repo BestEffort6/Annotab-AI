@@ -39,7 +39,7 @@ const WorkspaceSidebar = () => {
     },
     {
       value: 'Class Management',
-      link: '/classes',
+      link: '/class',
       src: '/images/svg/icon-classmanagement-darknavyblue-light.svg',
       srcActive: '/images/svg/icon-classmanagement-darknavyblue-light.svg',
     },
