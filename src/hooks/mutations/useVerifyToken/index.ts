@@ -30,11 +30,7 @@ export const verifyToken = async (payload: VerifyTokenPayload) => {
 export const useVerifyToken = () => {
   return useMutation({
     mutationKey: ['verifyToken'],
-    mutationFn: ({
-      payload,
-    }: {
-      accessToken: string | undefined;
-      payload: VerifyTokenPayload;
-    }) => verifyToken(payload),
+    mutationFn: ({ payload }: { payload: VerifyTokenPayload }) =>
+      verifyToken(payload),
   });
 };
