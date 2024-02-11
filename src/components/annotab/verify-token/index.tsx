@@ -1,7 +1,8 @@
 'use client';
 
 import type { HTTPError } from 'ky';
-import { redirect, useSearchParams } from 'next/navigation';
+import { redirect, useRouter, useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 
 import { useLayoutActions } from '@/components/providers/LayoutProvider';
@@ -11,6 +12,8 @@ import type { TokenTypes } from '@/interfaces/token';
 import toast from '../toast';
 
 const VerifyToken = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
   const { setLoading } = useLayoutActions();
   const searchParams = useSearchParams();
 
@@ -43,6 +46,11 @@ const VerifyToken = () => {
           },
           onSettled() {
             setLoading(false);
+            if (session) {
+              router.push('/');
+            } else {
+              router.push('/sign-in');
+            }
           },
         }
       );
