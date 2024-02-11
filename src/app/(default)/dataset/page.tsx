@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 import { getServerSession } from 'next-auth';
 
-import Dataset from '@/components/annotab/dataset';
+import DatasetScreen from '@/components/annotab/dataset';
 import { fetchDatasets } from '@/hooks/queries/useDatasets';
 import { authOptions } from '@/libs/auth';
 import { DEFAULT_PAGINATION } from '@/libs/constants';
@@ -31,7 +31,7 @@ export default async function DatasetPage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Dataset />
+      <DatasetScreen />
     </HydrationBoundary>
   );
 }
