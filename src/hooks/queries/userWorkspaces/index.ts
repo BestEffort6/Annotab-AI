@@ -29,13 +29,11 @@ const fetchWorkspaces = async (
 const useWorkspaces = (
   accessToken: string | undefined,
   page: number,
-  pageSize: number,
-  initialData?: any
+  pageSize: number
 ) => {
   return useQuery({
     queryKey: ['workspaces', accessToken, page, pageSize],
     queryFn: () => fetchWorkspaces(accessToken, page, pageSize),
-    initialData,
     placeholderData: keepPreviousData,
     enabled: !!accessToken,
     staleTime: 1000 * 10,
