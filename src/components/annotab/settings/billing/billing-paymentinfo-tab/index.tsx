@@ -4,16 +4,23 @@ import {
   CreditCardIcon,
   EyeIcon,
 } from '@heroicons/react/24/outline';
+import { isEmpty } from 'lodash';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { FaCcMastercard } from 'react-icons/fa';
 import { RiVisaLine } from 'react-icons/ri';
 
 import Popup from '@/components/annotab/popup';
+import { usePaymentMethod } from '@/hooks/queries/usePaymentMethod';
 
 const BillingPaymentinfoTab = () => {
+  const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+
+  const { data } = usePaymentMethod(session?.user.access.token);
+
   return (
     <>
       <div className="my-[40px]">
@@ -47,83 +54,38 @@ const BillingPaymentinfoTab = () => {
               Add
             </Link>
           </div>
-          <div className="flex flex-wrap gap-[14px]">
-            <div className="w-[calc(33.33%-9.6px)] rounded-[8px] border bg-mostly-white p-[15px]">
-              <div className="flex gap-[10px]">
-                <CreditCardIcon width={20} />
-                <div>
-                  <h5 className="text-[14px] font-normal text-dark-navy-blue">
-                    Visa
-                  </h5>
-                  <p className="text-[14px] font-normal text-dark-navy-blue">
-                    XXX
-                  </p>
+          {data && !isEmpty(data.data) && (
+            <div className="flex flex-wrap gap-[14px]">
+              <div className="w-[calc(33.33%-9.6px)] rounded-[8px] border bg-mostly-white p-[15px]">
+                <div className="flex gap-[10px]">
+                  <CreditCardIcon width={20} />
+                  <div>
+                    <h5 className="text-[14px] font-normal uppercase text-dark-navy-blue">
+                      {data.data.stripePaymentMethod.card?.brand}
+                    </h5>
+                    <p className="text-[14px] font-normal text-dark-navy-blue">
+                      {`**** **** **** ${data.data.stripePaymentMethod.card?.last4}`}
+                    </p>
+                    <p className="text-[14px] font-normal text-dark-navy-blue">
+                      {`Expires ${data.data.stripePaymentMethod.card?.exp_month}/${data.data.stripePaymentMethod.card?.exp_year}`}
+                    </p>
+                  </div>
+                  <h6 className="ml-auto text-[14px] font-normal text-neon-purple">
+                    Primary
+                  </h6>
                 </div>
-                <h6 className="ml-auto text-[14px] font-normal text-neon-purple">
-                  Primary
-                </h6>
-              </div>
-              <div className="text-end">
-                <button
-                  onClick={() => setIsPaymentOpen(true)}
-                  type="button"
-                  className="ml-auto rounded-md border border-dark-navy-blue/25 bg-mostly-white px-[16px] py-[6px] text-[14px] font-normal text-dark-navy-blue"
-                >
-                  Edit
-                </button>
+                <div className="text-end">
+                  <button
+                    onClick={() => setIsPaymentOpen(true)}
+                    type="button"
+                    className="ml-auto rounded-md border border-dark-navy-blue/25 bg-mostly-white px-[16px] py-[6px] text-[14px] font-normal text-dark-navy-blue"
+                  >
+                    Edit
+                  </button>
+                </div>
               </div>
             </div>
-            <div className="w-[calc(33.33%-9.6px)] rounded-[8px] border bg-mostly-white p-[15px]">
-              <div className="flex gap-[10px]">
-                <CreditCardIcon width={20} />
-                <div>
-                  <h5 className="text-[14px] font-normal text-dark-navy-blue">
-                    Visa
-                  </h5>
-                  <p className="text-[14px] font-normal text-dark-navy-blue">
-                    XXX
-                  </p>
-                </div>
-                <h6 className="ml-auto text-[14px] font-normal text-neon-purple">
-                  Primary
-                </h6>
-              </div>
-              <div className="text-end">
-                <button
-                  onClick={() => setIsPaymentOpen(true)}
-                  type="button"
-                  className="ml-auto rounded-md border border-dark-navy-blue/25 bg-mostly-white px-[16px] py-[6px] text-[14px] font-normal text-dark-navy-blue"
-                >
-                  Edit
-                </button>
-              </div>
-            </div>
-            <div className="w-[calc(33.33%-9.6px)] rounded-[8px] border bg-mostly-white p-[15px]">
-              <div className="flex gap-[10px]">
-                <CreditCardIcon width={20} />
-                <div>
-                  <h5 className="text-[14px] font-normal text-dark-navy-blue">
-                    Visa
-                  </h5>
-                  <p className="text-[14px] font-normal text-dark-navy-blue">
-                    XXX
-                  </p>
-                </div>
-                <h6 className="ml-auto text-[14px] font-normal text-neon-purple">
-                  Primary
-                </h6>
-              </div>
-              <div className="text-end">
-                <button
-                  onClick={() => setIsPaymentOpen(true)}
-                  type="button"
-                  className="ml-auto rounded-md border border-dark-navy-blue/25 bg-mostly-white px-[16px] py-[6px] text-[14px] font-normal text-dark-navy-blue"
-                >
-                  Edit
-                </button>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
         <div className="mb-[20px] rounded-[8px] border bg-mostly-white p-[18px]">
           <h5 className="text-[14px] font-[600] text-dark-navy-blue">
