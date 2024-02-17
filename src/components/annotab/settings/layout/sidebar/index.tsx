@@ -45,7 +45,7 @@ const SettingsSidebar = ({ currentRoute }: any) => {
     <div className="sticky top-[64px] h-[calc(100vh-64px)] w-1/4 px-4 py-6 text-black 2xl:w-1/6">
       <Link
         href="/"
-        className="mb-[30px] block w-full max-w-[180px] rounded-lg border border-gray-100 bg-gray-100 px-2 py-1 text-center text-dark-navy-blue hover:bg-gray-100/80 hover:text-black/80"
+        className="mb-[30px] block w-full max-w-[180px] rounded-lg border border-gray-100 bg-gray-100 px-2 py-1 text-center text-[14px] text-dark-navy-blue hover:bg-gray-100/80 hover:text-black/80"
       >
         Back to workspace
       </Link>

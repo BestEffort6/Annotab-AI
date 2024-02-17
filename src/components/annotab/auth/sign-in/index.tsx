@@ -39,6 +39,9 @@ const SignInForm = () => {
       .then(() => {
         router.push('/');
       })
+      .catch((err) => {
+        console.log('error: ', err);
+      })
       .finally(() => {
         setLoading(false);
       });
